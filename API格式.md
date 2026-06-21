@@ -994,6 +994,151 @@
 
 说明：仅 `pending` 订单可取消。
 
+## Admin 管理查询
+
+以下 HTTP 接口均需要登录，并要求具备 `role:manage` 权限。分页参数统一为 `page`、`page_size`，`page_size` 最大为 `100`。
+
+### 查询虚拟账户
+
+`GET /api/v1/admin/virtual-orders?page=1&page_size=20&owner_id=uuid&owner_type=user&currency_code=COIN&status=active`
+
+说明：当前数据库没有独立“虚拟订单”表，此接口按现有 `wallets` 虚拟账户/钱包表查询。
+
+成功响应：
+
+```json
+{
+  "items": [
+    {
+      "wallet_id": "uuid",
+      "owner_id": "uuid",
+      "owner_type": "user",
+      "balance": "100.0000",
+      "currency_code": "COIN",
+      "status": "active",
+      "updated_at": "2026-06-21T00:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "page_size": 20
+}
+```
+
+### 查询钱包流水
+
+`GET /api/v1/admin/wallet-transactions?page=1&page_size=20&wallet_id=uuid&reference_id=uuid&tx_type=consume&from=2026-06-21&to=2026-06-22`
+
+支持按钱包、关联单据、流水类型和创建时间范围过滤。
+
+成功响应：
+
+```json
+{
+  "items": [
+    {
+      "tx_id": "uuid",
+      "wallet_id": "uuid",
+      "tx_type": "consume",
+      "amount": "-10.0000",
+      "balance_after": "90.0000",
+      "reference_id": "order-id",
+      "idempotency_key": "order:order-id:pay:key",
+      "description": "order payment",
+      "created_at": "2026-06-21T00:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "page_size": 20
+}
+```
+
+### 查询全局订单
+
+`GET /api/v1/admin/orders?page=1&page_size=20&user_id=uuid&app_id=uuid&wallet_id=uuid&status=paid&currency_code=COIN&from=2026-06-21&to=2026-06-22`
+
+支持按用户、应用、钱包、状态、币种和创建时间范围过滤。
+
+成功响应：
+
+```json
+{
+  "items": [
+    {
+      "order_id": "uuid",
+      "user_id": "uuid",
+      "app_id": "uuid",
+      "wallet_id": "uuid",
+      "amount": "10.0000",
+      "currency_code": "COIN",
+      "status": "paid",
+      "tx_id": "wallet-transaction-id",
+      "subscription_id": "subscription-id",
+      "idempotency_key": "purchase-unique-key",
+      "description": "buy app",
+      "created_at": "2026-06-21T00:00:00Z",
+      "paid_at": "2026-06-21T00:00:00Z",
+      "updated_at": "2026-06-21T00:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "page_size": 20
+}
+```
+
+### 查询变更日志
+
+`GET /api/v1/admin/change-logs?page=1&page_size=20&event_type=role_permissions_updated&actor_id=uuid&resource=1&trace_id=trace&from=2026-06-21&to=2026-06-22`
+
+说明：变更日志来源于 `audit_events`，包括权限变更、应用发布、补偿失败等审计事件。
+
+成功响应：
+
+```json
+{
+  "items": [
+    {
+      "event_id": "uuid",
+      "event_type": "role_permissions_updated",
+      "trace_id": "trace-id",
+      "actor_id": "user-id",
+      "resource": "role-id",
+      "metadata": "{}",
+      "error": "",
+      "created_at": "2026-06-21T00:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "page_size": 20
+}
+```
+
+## gRPC 接口
+
+gRPC 默认与 HTTP 同进程启动，端口由 `grpc.port` 配置，默认 `12661`。proto 文件位于 `proto/*/v1`，生成代码位于 `gen/go`。
+
+### wallet.v1.WalletService
+
+- `GetWallet(GetWalletRequest) returns (Wallet)`：按 `owner_id + owner_type + currency_code` 查询钱包。
+- `GetOrCreateWallet(GetOrCreateWalletRequest) returns (Wallet)`：按 `owner_id + owner_type + currency_code` 查询或创建钱包。
+
+### admin.v1.AdminQueryService
+
+- `ListVirtualOrders(ListVirtualOrdersRequest) returns (ListVirtualOrdersResponse)`：查询虚拟账户，字段与 HTTP `/api/v1/admin/virtual-orders` 对齐。
+- `ListWalletTransactions(ListWalletTransactionsRequest) returns (ListWalletTransactionsResponse)`：查询钱包流水，字段与 HTTP `/api/v1/admin/wallet-transactions` 对齐。
+- `ListOrders(ListOrdersRequest) returns (ListOrdersResponse)`：查询全局订单，字段与 HTTP `/api/v1/admin/orders` 对齐。
+- `ListChangeLogs(ListChangeLogsRequest) returns (ListChangeLogsResponse)`：查询变更日志，字段与 HTTP `/api/v1/admin/change-logs` 对齐。
+
+通用约束：
+
+- `page` 小于 `1` 时按 `1` 处理。
+- `page_size` 小于 `1` 时按 `20` 处理，大于 `100` 时按 `100` 处理。
+- UUID 过滤字段格式非法时返回 `InvalidArgument`。
+- 时间过滤字段 `from/to` 支持 `RFC3339Nano` 或 `YYYY-MM-DD`，格式非法时返回 `InvalidArgument`。
+
 ### 常见业务错误
 
 - `APP_NOT_FOUND`：应用不存在或不是 `published` 状态。

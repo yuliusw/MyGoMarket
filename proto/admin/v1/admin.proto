@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package admin.v1;
+
+option go_package = "github.com/yuliusw/RPA-market/gen/go/admin/v1;adminv1";
+
+service AdminQueryService {
+  rpc ListVirtualOrders(ListVirtualOrdersRequest) returns (ListVirtualOrdersResponse) {}
+  rpc ListWalletTransactions(ListWalletTransactionsRequest) returns (ListWalletTransactionsResponse) {}
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse) {}
+  rpc ListChangeLogs(ListChangeLogsRequest) returns (ListChangeLogsResponse) {}
+}
+
+message ListVirtualOrdersRequest {
+  string owner_id = 1;
+  string owner_type = 2;
+  string currency_code = 3;
+  string status = 4;
+  int32 page = 5;
+  int32 page_size = 6;
+}
+
+message ListVirtualOrdersResponse {
+  repeated VirtualOrder items = 1;
+  int64 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListWalletTransactionsRequest {
+  string wallet_id = 1;
+  string reference_id = 2;
+  string tx_type = 3;
+  string from = 4;
+  string to = 5;
+  int32 page = 6;
+  int32 page_size = 7;
+}
+
+message ListWalletTransactionsResponse {
+  repeated WalletTransaction items = 1;
+  int64 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListOrdersRequest {
+  string user_id = 1;
+  string app_id = 2;
+  string wallet_id = 3;
+  string status = 4;
+  string currency_code = 5;
+  string from = 6;
+  string to = 7;
+  int32 page = 8;
+  int32 page_size = 9;
+}
+
+message ListOrdersResponse {
+  repeated Order items = 1;
+  int64 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListChangeLogsRequest {
+  string event_type = 1;
+  string trace_id = 2;
+  string actor_id = 3;
+  string resource = 4;
+  string from = 5;
+  string to = 6;
+  int32 page = 7;
+  int32 page_size = 8;
+}
+
+message ListChangeLogsResponse {
+  repeated ChangeLog items = 1;
+  int64 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message VirtualOrder {
+  string wallet_id = 1;
+  string owner_id = 2;
+  string owner_type = 3;
+  string balance = 4;
+  string currency_code = 5;
+  string status = 6;
+  string updated_at = 7;
+}
+
+message WalletTransaction {
+  string tx_id = 1;
+  string wallet_id = 2;
+  string tx_type = 3;
+  string amount = 4;
+  string balance_after = 5;
+  string reference_id = 6;
+  string idempotency_key = 7;
+  string description = 8;
+  string created_at = 9;
+}
+
+message Order {
+  string order_id = 1;
+  string user_id = 2;
+  string app_id = 3;
+  string wallet_id = 4;
+  string amount = 5;
+  string currency_code = 6;
+  string status = 7;
+  string tx_id = 8;
+  string subscription_id = 9;
+  string idempotency_key = 10;
+  string description = 11;
+  string created_at = 12;
+  string paid_at = 13;
+  string updated_at = 14;
+}
+
+message ChangeLog {
+  string event_id = 1;
+  string event_type = 2;
+  string trace_id = 3;
+  string actor_id = 4;
+  string resource = 5;
+  string metadata = 6;
+  string error = 7;
+  string created_at = 8;
+}

@@ -5,6 +5,7 @@ export const menuItems = [
   { name: '应用市场', path: '/market' },
   { name: '钱包', path: '/wallet' },
   { name: '订单', path: '/orders' },
+  { name: '管理', path: '/admin' },
 ]
 
 const routes: RouteRecordRaw[] = [
@@ -24,6 +25,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'market', name: 'Market', component: () => import('../components/AppMarket.vue') },
       { path: 'wallet', name: 'Wallet', component: () => import('../components/Wallet.vue') },
       { path: 'orders', name: 'Orders', component: () => import('../components/Orders.vue') },
+      { path: 'admin', name: 'Admin', component: () => import('../components/Admin.vue') },
     ],
   },
 ]

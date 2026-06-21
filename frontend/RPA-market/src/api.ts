@@ -51,6 +51,24 @@ export interface Order {
   updated_at: string
 }
 
+export interface ChangeLog {
+  event_id: string
+  event_type: string
+  trace_id: string
+  actor_id: string
+  resource: string
+  metadata: string
+  error: string
+  created_at: string
+}
+
+export interface PageResult<T> {
+  items: T[]
+  total: number
+  page: number
+  page_size: number
+}
+
 export async function listApps(params: Record<string, unknown>) {
   return request.get('/market/apps', { params }) as Promise<{
     data: MarketApp[]
@@ -112,6 +130,22 @@ export async function listOrders(page = 1, pageSize = 20) {
     page: number
     page_size: number
   }>
+}
+
+export async function listAdminVirtualOrders(params: Record<string, unknown>) {
+  return request.get('/admin/virtual-orders', { params }) as Promise<PageResult<Wallet>>
+}
+
+export async function listAdminWalletTransactions(params: Record<string, unknown>) {
+  return request.get('/admin/wallet-transactions', { params }) as Promise<PageResult<WalletTransaction>>
+}
+
+export async function listAdminOrders(params: Record<string, unknown>) {
+  return request.get('/admin/orders', { params }) as Promise<PageResult<Order>>
+}
+
+export async function listAdminChangeLogs(params: Record<string, unknown>) {
+  return request.get('/admin/change-logs', { params }) as Promise<PageResult<ChangeLog>>
 }
 
 function uniqueKey(prefix: string) {
