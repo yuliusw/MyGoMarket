@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760">
+<style>
+text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'SimHei', sans-serif; fill: #111827; }
+.title { font-size: 22px; font-weight: 700; }
+.subtitle { font-size: 12px; fill: #6b7280; }
+.label { font-size: 14px; font-weight: 600; }
+.small { font-size: 12px; fill: #4b5563; }
+.tiny { font-size: 11px; fill: #6b7280; }
+.container-title { font-size: 15px; font-weight: 700; fill: #374151; }
+</style>
+<defs>
+  <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+  <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+  <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+  <marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+  <marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+</defs>
+<rect width="1200" height="760" fill="#ffffff"/>
+<text x="40" y="38" class="title">RPA Market 项目结构图</text>
+<rect x="40" y="70" width="1120" height="620" rx="14" fill="#eff6ff" fill-opacity="0.45" stroke="#bfdbfe" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="56" y="94" class="container-title">单体仓库 / RPA-market</text>
+<rect x="70" y="120" width="250" height="190" rx="14" fill="#f9fafb" fill-opacity="0.45" stroke="#d1d5db" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="86" y="144" class="container-title">后端启动与配置</text>
+<rect x="95" y="160" width="90" height="55" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="140.0" y="179.5" text-anchor="middle" class="label">main.go</text>
+<text x="140.0" y="198.5" text-anchor="middle" class="small">统一启动</text>
+<rect x="205" y="160" width="90" height="55" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="250.0" y="179.5" text-anchor="middle" class="label">app.go</text>
+<text x="250.0" y="198.5" text-anchor="middle" class="small">聚合入口</text>
+<rect x="95" y="235" width="200" height="45" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="195.0" y="249.5" text-anchor="middle" class="label">config/</text>
+<text x="195.0" y="268.5" text-anchor="middle" class="small">config.yaml,</text>
+<text x="195.0" y="282.5" text-anchor="middle" class="small">Casbin</text>
+<rect x="350" y="120" width="360" height="450" rx="14" fill="#f0fdf4" fill-opacity="0.45" stroke="#bbf7d0" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="366" y="144" class="container-title">common 基础设施</text>
+<rect x="380" y="165" width="135" height="55" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="447.5" y="184.5" text-anchor="middle" class="label">config</text>
+<text x="447.5" y="203.5" text-anchor="middle" class="small">配置加载</text>
+<rect x="540" y="165" width="135" height="55" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="607.5" y="184.5" text-anchor="middle" class="label">database</text>
+<text x="607.5" y="203.5" text-anchor="middle" class="small">GORM Redis</text>
+<text x="607.5" y="217.5" text-anchor="middle" class="small">MinIO</text>
+<rect x="380" y="253" width="135" height="55" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="447.5" y="264.5" text-anchor="middle" class="label">middlewar</text>
+<text x="447.5" y="281.5" text-anchor="middle" class="label">e</text>
+<text x="447.5" y="300.5" text-anchor="middle" class="small">JWT Casbin</text>
+<text x="447.5" y="314.5" text-anchor="middle" class="small">限流 Trace</text>
+<rect x="540" y="253" width="135" height="55" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="607.5" y="272.5" text-anchor="middle" class="label">queue</text>
+<text x="607.5" y="291.5" text-anchor="middle" class="small">RocketMQ</text>
+<text x="607.5" y="305.5" text-anchor="middle" class="small">Kafka 封装</text>
+<rect x="380" y="341" width="135" height="55" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="447.5" y="360.5" text-anchor="middle" class="label">audit</text>
+<text x="447.5" y="379.5" text-anchor="middle" class="small">审计与补偿 worker</text>
+<rect x="540" y="341" width="135" height="55" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="607.5" y="352.5" text-anchor="middle" class="label">grpcserve</text>
+<text x="607.5" y="369.5" text-anchor="middle" class="label">r</text>
+<text x="607.5" y="388.5" text-anchor="middle" class="small">gRPC Server</text>
+<text x="607.5" y="402.5" text-anchor="middle" class="small">封装</text>
+<rect x="380" y="429" width="135" height="55" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="447.5" y="448.5" text-anchor="middle" class="label">utils</text>
+<text x="447.5" y="467.5" text-anchor="middle" class="small">JWT Hash</text>
+<text x="447.5" y="481.5" text-anchor="middle" class="small">CasbinPool</text>
+<rect x="740" y="120" width="380" height="450" rx="14" fill="#faf5ff" fill-opacity="0.45" stroke="#ddd6fe" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="756" y="144" class="container-title">services 业务域</text>
+<rect x="770" y="165" width="145" height="60" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="842.5" y="187.0" text-anchor="middle" class="label">iam</text>
+<text x="842.5" y="206.0" text-anchor="middle" class="small">注册/登录/群组/RBAC</text>
+<rect x="940" y="165" width="145" height="60" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="1012.5" y="187.0" text-anchor="middle" class="label">market</text>
+<text x="1012.5" y="206.0" text-anchor="middle" class="small">应用发布/下载/热榜</text>
+<rect x="770" y="260" width="145" height="60" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="842.5" y="282.0" text-anchor="middle" class="label">wallet</text>
+<text x="842.5" y="301.0" text-anchor="middle" class="small">钱包查询/创建 gRPC</text>
+<rect x="940" y="260" width="145" height="60" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="1012.5" y="274.0" text-anchor="middle" class="label">entitlemen</text>
+<text x="1012.5" y="291.0" text-anchor="middle" class="label">t</text>
+<text x="1012.5" y="310.0" text-anchor="middle" class="small">权益/优惠券雏形</text>
+<rect x="770" y="355" width="145" height="60" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="842.5" y="377.0" text-anchor="middle" class="label">engine</text>
+<text x="842.5" y="396.0" text-anchor="middle" class="small">执行引擎预留</text>
+<rect x="940" y="355" width="145" height="60" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="1012.5" y="377.0" text-anchor="middle" class="label">ai</text>
+<text x="1012.5" y="396.0" text-anchor="middle" class="small">AI 模块预留</text>
+<rect x="70" y="340" width="250" height="160" rx="14" fill="#fff7ed" fill-opacity="0.45" stroke="#fed7aa" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="86" y="364" class="container-title">frontend/RPA-market</text>
+<rect x="95" y="385" width="200" height="55" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="195.0" y="404.5" text-anchor="middle" class="label">Vue 3 + Vite</text>
+<text x="195.0" y="423.5" text-anchor="middle" class="small">Router + request</text>
+<text x="195.0" y="437.5" text-anchor="middle" class="small">封装</text>
+<rect x="70" y="525" width="250" height="125" rx="14" fill="#f0fdfa" fill-opacity="0.45" stroke="#99f6e4" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="86" y="549" class="container-title">script / deployments</text>
+<rect x="95" y="565" width="200" height="55" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="195.0" y="584.5" text-anchor="middle" class="label">Docker Compose</text>
+<text x="195.0" y="603.5" text-anchor="middle" class="small">DB Redis MinIO MQ</text>
+<text x="195.0" y="617.5" text-anchor="middle" class="small">监控</text>
+<path d="M 320 210 L 350 210" fill="none" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arrow-blue)"/>
+<rect x="287" y="183" width="96" height="19" rx="8" fill="#ffffff" opacity="0.92"/>
+<text x="335" y="198" text-anchor="middle" class="tiny">依赖</text>
+<path d="M 710 305 L 740 305" fill="none" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arrow-blue)"/>
+<rect x="677" y="277" width="96" height="19" rx="8" fill="#ffffff" opacity="0.92"/>
+<text x="725" y="292" text-anchor="middle" class="tiny">调用</text>
+<path d="M 320 592 L 740 592 L 740 515" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)" stroke-dasharray="5 4"/>
+<rect x="482" y="565" width="96" height="19" rx="8" fill="#ffffff" opacity="0.92"/>
+<text x="530" y="580" text-anchor="middle" class="tiny">部署支撑</text>
+<rect x="820" y="625" width="250" height="68" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+<text x="834" y="645" class="small" font-weight="700">图例</text>
+<line x1="834" y1="663" x2="864" y2="663" stroke="#2563eb" stroke-width="1.8" marker-end="url(#arrow-blue)"/>
+<text x="874" y="667" class="tiny">同步启动/调用</text>
+<line x1="834" y1="685" x2="864" y2="685" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)" stroke-dasharray="5 4"/>
+<text x="874" y="689" class="tiny">部署或预留关系</text>
+</svg>

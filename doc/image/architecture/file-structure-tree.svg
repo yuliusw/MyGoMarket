@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 980" width="1280" height="980">
+<style>
+text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'SimHei', sans-serif; fill: #111827; }
+.title { font-size: 22px; font-weight: 700; }
+.note { font-size: 12px; fill: #6b7280; }
+.dir { font-size: 14px; font-weight: 700; }
+.file { font-size: 13px; fill: #374151; }
+.desc { font-size: 12px; fill: #6b7280; }
+</style>
+<rect width="1280" height="980" fill="#ffffff"/>
+<text x="40" y="38" class="title">RPA Market 文件结构可视化</text>
+<text x="40" y="60" class="note">基于现有 README、部署文档、代码目录和配置文件整理，突出介绍时最有用的结构节点。</text>
+<rect x="40" y="95" width="270" height="60" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="56" y="120" class="dir">RPA-market/</text>
+<text x="56" y="140" class="desc">Go + Vue 单体仓库</text>
+<path d="M 175 155 L 80 215" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="70" y="190" width="250" height="58" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="86" y="215" class="file">main.go</text>
+<text x="86" y="235" class="desc">后端统一启动入口</text>
+<path d="M 175 155 L 80 303" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="70" y="278" width="250" height="58" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="86" y="303" class="dir">config/</text>
+<text x="86" y="323" class="desc">运行配置与 Casbin 模型</text>
+<path d="M 175 155 L 80 391" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="70" y="366" width="250" height="58" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="86" y="391" class="dir">common/</text>
+<text x="86" y="411" class="desc">公共基础设施</text>
+<path d="M 175 155 L 80 479" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="70" y="454" width="250" height="58" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="86" y="479" class="dir">services/</text>
+<text x="86" y="499" class="desc">业务域模块</text>
+<path d="M 175 155 L 80 567" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="70" y="542" width="250" height="58" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="86" y="567" class="dir">proto/ + gen/</text>
+<text x="86" y="587" class="desc">gRPC 契约与生成代码</text>
+<path d="M 175 155 L 80 655" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="70" y="630" width="250" height="58" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="86" y="655" class="dir">frontend/RPA-market/</text>
+<text x="86" y="675" class="desc">Vue 3 + Vite + TypeScript</text>
+<path d="M 175 155 L 80 743" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="70" y="718" width="250" height="58" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="86" y="743" class="dir">script/</text>
+<text x="86" y="763" class="desc">本地部署、初始化、监控、压测</text>
+<path d="M 175 155 L 80 831" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="70" y="806" width="250" height="58" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="86" y="831" class="dir">doc/image/</text>
+<text x="86" y="851" class="desc">本次生成的架构图</text>
+<path d="M 320 219 L 360 152" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="130" width="230" height="38" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="376" y="155" class="file">config.InitConfig</text>
+<text x="376" y="185" class="desc">加载 config.yaml</text>
+<path d="M 320 219 L 360 200" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="178" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="203" class="file">InitGORM / Redis / MinIO</text>
+<text x="376" y="233" class="desc">初始化基础依赖</text>
+<path d="M 320 219 L 360 248" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="226" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="251" class="file">RocketMQ + Casbin</text>
+<text x="376" y="281" class="desc">权限缓存同步</text>
+<path d="M 320 219 L 360 296" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="274" width="230" height="38" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="376" y="299" class="file">IAM + Market routes</text>
+<text x="376" y="329" class="desc">注册 HTTP API</text>
+<path d="M 320 219 L 360 344" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="322" width="230" height="38" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="376" y="347" class="file">gRPC server</text>
+<text x="376" y="377" class="desc">WalletService :12661</text>
+<path d="M 320 307 L 360 392" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="370" width="230" height="38" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="376" y="395" class="file">config.yaml</text>
+<text x="376" y="425" class="desc">本地 HTTP/gRPC/DB/Redis/MinIO 配置</text>
+<path d="M 320 307 L 360 440" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="418" width="230" height="38" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="376" y="443" class="file">casbin/RBAC.conf</text>
+<text x="376" y="473" class="desc">domain RBAC model</text>
+<path d="M 320 395 L 360 542" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="520" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="545" class="dir">config/</text>
+<text x="376" y="575" class="desc">配置加载与环境变量覆盖</text>
+<path d="M 320 395 L 360 590" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="568" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="593" class="dir">database/</text>
+<text x="376" y="623" class="desc">GORM / Redis / MinIO 初始化</text>
+<path d="M 320 395 L 360 638" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="616" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="641" class="dir">middleware/</text>
+<text x="376" y="671" class="desc">JWT / Casbin / 限流 / Trace / 请求池</text>
+<path d="M 320 395 L 360 686" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="664" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="689" class="dir">queue/</text>
+<text x="376" y="719" class="desc">RocketMQ / Kafka 封装</text>
+<path d="M 320 395 L 360 734" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="712" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="737" class="dir">audit/</text>
+<text x="376" y="767" class="desc">审计批量落库与 MinIO 删除重试</text>
+<path d="M 320 395 L 360 782" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="760" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="785" class="dir">grpcserver/</text>
+<text x="376" y="815" class="desc">gRPC server 注册 WalletService</text>
+<path d="M 320 395 L 360 830" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="360" y="808" width="230" height="38" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="376" y="833" class="dir">utils/</text>
+<text x="376" y="863" class="desc">JWT / Hash / Casbin Manager / Lock / Pool</text>
+<path d="M 320 483 L 710 152" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="130" width="230" height="38" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="726" y="155" class="dir">iam/</text>
+<text x="726" y="185" class="desc">注册、登录、资料、群组、RBAC</text>
+<path d="M 320 483 L 710 200" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="178" width="230" height="38" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="726" y="203" class="dir">market/</text>
+<text x="726" y="233" class="desc">应用发布、更新、下载、热榜、补偿</text>
+<path d="M 320 483 L 710 248" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="226" width="230" height="38" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="726" y="251" class="dir">wallet/</text>
+<text x="726" y="281" class="desc">钱包领域与 gRPC 查询/创建</text>
+<path d="M 320 483 L 710 296" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="274" width="230" height="38" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="726" y="299" class="dir">entitlement/</text>
+<text x="726" y="329" class="desc">权益、优惠券领域雏形</text>
+<path d="M 320 483 L 710 344" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="322" width="230" height="38" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="726" y="347" class="dir">engine/ ai/ file/</text>
+<text x="726" y="377" class="desc">预留扩展模块</text>
+<path d="M 320 571 L 710 427" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="405" width="230" height="38" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="726" y="430" class="file">proto/wallet/v1/wallet.proto</text>
+<text x="726" y="460" class="desc">GetWallet / GetOrCreateWallet</text>
+<path d="M 320 571 L 710 475" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="453" width="230" height="38" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="726" y="478" class="dir">gen/go/wallet/v1/</text>
+<text x="726" y="508" class="desc">protoc 生成代码</text>
+<path d="M 320 659 L 710 572" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="550" width="230" height="38" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="726" y="575" class="file">src/main.ts</text>
+<text x="726" y="605" class="desc">前端入口</text>
+<path d="M 320 659 L 710 620" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="598" width="230" height="38" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="726" y="623" class="file">src/router/index.ts</text>
+<text x="726" y="653" class="desc">页面路由</text>
+<path d="M 320 659 L 710 668" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="646" width="230" height="38" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="726" y="671" class="dir">src/components/</text>
+<text x="726" y="701" class="desc">Home/Login/Group/Profile/AppMarket</text>
+<path d="M 320 659 L 710 716" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="710" y="694" width="230" height="38" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="726" y="719" class="file">src/utils/request.ts</text>
+<text x="726" y="749" class="desc">HTTP 请求封装</text>
+<path d="M 320 747 L 970 152" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="130" width="240" height="38" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="986" y="155" class="file">docker-compose.yaml</text>
+<text x="986" y="185" class="desc">App / DB / Redis / MinIO / MQ / PLG</text>
+<path d="M 320 747 L 970 200" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="178" width="240" height="38" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="986" y="203" class="file">init_better.sql</text>
+<text x="986" y="233" class="desc">数据库表、索引、分区、种子数据</text>
+<path d="M 320 747 L 970 248" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="226" width="240" height="38" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="986" y="251" class="file">config.yaml</text>
+<text x="986" y="281" class="desc">容器内应用配置</text>
+<path d="M 320 747 L 970 296" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="274" width="240" height="38" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="986" y="299" class="dir">k6-scripts/</text>
+<text x="986" y="329" class="desc">接口压测脚本与结果</text>
+<path d="M 320 747 L 970 344" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="322" width="240" height="38" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="986" y="347" class="file">grafana/ prometheus.yml loki-config.yaml</text>
+<text x="986" y="377" class="desc">可观测配置</text>
+<path d="M 320 835 L 970 447" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="425" width="240" height="38" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="986" y="450" class="dir">architecture/</text>
+<text x="986" y="480" class="desc">结构图、系统图、文件树</text>
+<path d="M 320 835 L 970 495" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="473" width="240" height="38" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="986" y="498" class="dir">business/</text>
+<text x="986" y="528" class="desc">IAM / Market / Wallet 流程</text>
+<path d="M 320 835 L 970 543" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="521" width="240" height="38" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="986" y="546" class="dir">data/</text>
+<text x="986" y="576" class="desc">核心数据关系</text>
+<path d="M 320 835 L 970 591" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+<rect x="970" y="569" width="240" height="38" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="986" y="594" class="dir">deployment/</text>
+<text x="986" y="624" class="desc">Docker Compose 部署架构</text>
+<rect x="40" y="900" width="770" height="52" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+<rect x="56" y="917" width="18" height="18" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
+<text x="82" y="931" class="note">启动/配置/接口契约</text>
+<rect x="178" y="917" width="18" height="18" rx="4" fill="#f0fdf4" stroke="#bbf7d0"/>
+<text x="204" y="931" class="note">公共基础设施</text>
+<rect x="300" y="917" width="18" height="18" rx="4" fill="#faf5ff" stroke="#ddd6fe"/>
+<text x="326" y="931" class="note">业务域</text>
+<rect x="422" y="917" width="18" height="18" rx="4" fill="#fff7ed" stroke="#fed7aa"/>
+<text x="448" y="931" class="note">前端</text>
+<rect x="544" y="917" width="18" height="18" rx="4" fill="#f0fdfa" stroke="#99f6e4"/>
+<text x="570" y="931" class="note">部署/监控/压测</text>
+<rect x="666" y="917" width="18" height="18" rx="4" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="692" y="931" class="note">文档与预留</text>
+</svg>

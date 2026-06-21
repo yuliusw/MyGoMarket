@@ -23,6 +23,8 @@ import (
 	"github.com/yuliusw/RPA-market/common/utils/pool"
 	"github.com/yuliusw/RPA-market/services/iam"
 	"github.com/yuliusw/RPA-market/services/market"
+	"github.com/yuliusw/RPA-market/services/order"
+	"github.com/yuliusw/RPA-market/services/wallet"
 	"google.golang.org/grpc"
 )
 
@@ -55,6 +57,8 @@ func main() {
 	log.Println("Registering routes...")
 	iam.RegisterHandlers(r)
 	market.RegisterMarketHandlers(r)
+	order.RegisterOrderHandlers(r)
+	wallet.RegisterWalletHandlers(r)
 	// 5. 启动服务并监听退出信号
 	port := fmt.Sprintf(":%d", intOrDefault(config.AppConfig.Server.Port, 12660))
 	server := &http.Server{

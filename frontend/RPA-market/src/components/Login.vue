@@ -53,7 +53,7 @@ const handleSubmit = async () => {
       })
       localStorage.setItem('auth_token', res.token)
       alert('登录成功！')
-      router.push('/home')
+      router.push('/market')
     } else {
       // 对应后端 Register 接口
       await request.post('/iam/register', form)
@@ -61,7 +61,7 @@ const handleSubmit = async () => {
       isLogin.value = true
     }
   } catch (err: any) {
-    alert(err.error || '操作失败')
+    alert(err.message || err.error || '操作失败')
   }
 }
 </script>

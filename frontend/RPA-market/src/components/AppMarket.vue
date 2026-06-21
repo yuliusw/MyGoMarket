@@ -1,574 +1,395 @@
 <template>
-  <div class="market-manager">
-    <div class="app-sidebar">
-      <div class="sidebar-header">
-        <h3>应用市场管理</h3>
-        <button @click="openPublishForm" class="btn-xs btn-blue">+ 发布新应用</button>
+  <section>
+    <div class="page-title">
+      <div>
+        <h1>应用市场</h1>
+        <p>浏览已上架 RPA 应用，购买后会自动生成订单、扣款并发放订阅。</p>
       </div>
-
-      <div class="filter-section">
-        <input
-          v-model="listQuery.keyword"
-          @keyup.enter="loadApps"
-          placeholder="搜索应用名称..."
-          class="filter-input"
-        />
-        <div class="filter-row">
-          <select v-model="listQuery.status" @change="loadApps" class="filter-select">
-            <option value="">全部状态</option>
-            <option value="published">已上架</option>
-            <option value="off_shelved">已下架</option>
-          </select>
-          <button @click="loadApps" class="btn-xs btn-outline">查询</button>
-        </div>
-      </div>
-
-      <ul class="app-list">
-        <li
-          v-for="app in apps"
-          :key="app.app_id"
-          :class="{ active: currentApp?.app_id === app.app_id && !isPublishing }"
-          @click="selectApp(app)"
-        >
-          <div class="app-item-title">
-            <span class="name">{{ app.name }}</span>
-            <span :class="['status-badge', app.status]">{{
-              app.status === 'published' ? '上架' : '下架'
-            }}</span>
-          </div>
-          <div class="app-item-meta">
-            {{ app.category || '未分类' }} · {{ formatDate(app.create_at) }}
-          </div>
-        </li>
-      </ul>
-      <div class="pagination">
-        <button :disabled="listQuery.page <= 1" @click="changePage(-1)">上一页</button>
-        <span>{{ listQuery.page }}</span>
-        <button @click="changePage(1)">下一页</button>
-      </div>
+      <button class="btn" @click="showPublish = !showPublish">
+        {{ showPublish ? '关闭发布' : '发布应用' }}
+      </button>
     </div>
 
-    <div class="app-detail-container">
-      <div v-if="isPublishing" class="publish-section">
-        <h2>🚀 发布新应用</h2>
-        <div class="form-group">
-          <label>应用名称 <span class="required">*</span></label>
-          <input v-model="publishForm.name" placeholder="输入应用名称" />
-        </div>
-        <div class="form-group">
-          <label>应用分类</label>
-          <input v-model="publishForm.category" placeholder="如：效率工具、报表处理" />
-        </div>
-        <div class="form-group">
-          <label>标签 (用逗号分隔)</label>
-          <input v-model="publishForm.tagsStr" placeholder="如：Excel, 自动化" />
-        </div>
-        <div class="form-group">
-          <label>安装包文件 (最大 100MB) <span class="required">*</span></label>
-          <input type="file" @change="handleFileSelect" accept=".zip,.rar,.exe,.apk" />
-        </div>
-        <button @click="submitPublish" class="btn-md btn-blue" :disabled="isUploading">
-          {{ isUploading ? '上传中...' : '确认发布' }}
-        </button>
+    <div v-if="showPublish" class="panel publish-panel">
+      <div class="field">
+        <label>应用名称</label>
+        <input v-model="publishForm.name" placeholder="例如：发票批量识别机器人" />
       </div>
-
-      <div v-else-if="currentApp" class="detail-section">
-        <div class="detail-header">
-          <h2>{{ currentApp.name }}</h2>
-          <div class="actions">
-            <button @click="handleDownload" class="btn-xs btn-blue">📥 下载文件</button>
-            <button
-              v-if="currentApp.status === 'published'"
-              @click="handleOffShelf"
-              class="btn-xs btn-warn"
-            >
-              🚫 下架
-            </button>
-            <button @click="handleDelete" class="btn-xs btn-danger">🗑️ 彻底删除</button>
-          </div>
-        </div>
-
-        <div class="app-meta-cards">
-          <div class="card">
-            <strong>App ID:</strong> <br />
-            <span class="text-xs">{{ currentApp.app_id }}</span>
-          </div>
-          <div class="card">
-            <strong>文件大小:</strong> <br />
-            {{ formatBytes(currentApp.metadata?.file_size) }}
-          </div>
-          <div class="card">
-            <strong>更新时间:</strong> <br />
-            {{ formatDate(currentApp.update_at) }}
-          </div>
-        </div>
-
-        <hr class="divider" />
-
-        <h3>基础信息修改</h3>
-        <div class="form-group">
-          <label>应用名称</label>
-          <input v-model="editForm.name" />
-        </div>
-        <div class="form-group">
-          <label>应用分类</label>
-          <input v-model="editForm.category" />
-        </div>
-        <div class="form-group">
-          <label>标签 (用逗号分隔)</label>
-          <input v-model="editForm.tagsStr" />
-        </div>
-        <div class="form-group">
-          <label>状态</label>
-          <select v-model="editForm.status">
-            <option value="published">已上架 (published)</option>
-            <option value="off_shelved">已下架 (off_shelved)</option>
-          </select>
-        </div>
-        <button @click="submitUpdate" class="btn-xs btn-blue">保存修改</button>
+      <div class="field">
+        <label>分类</label>
+        <input v-model="publishForm.category" placeholder="财务 / 运营 / 数据处理" />
       </div>
-
-      <div class="empty-notice" v-else>
-        <p>⬅️ 请在左侧选择一个应用，或点击“发布新应用”</p>
+      <div class="field">
+        <label>标签，英文逗号分隔</label>
+        <input v-model="publishForm.tags" placeholder="invoice,ocr,rpa" />
       </div>
+      <div class="field">
+        <label>安装包，仅支持 zip/gz/tgz</label>
+        <input type="file" accept=".zip,.gz,.tgz" @change="selectFile" />
+      </div>
+      <button class="btn" :disabled="publishing" @click="submitPublish">
+        {{ publishing ? '发布中...' : '提交发布' }}
+      </button>
     </div>
-  </div>
+
+    <div class="panel toolbar">
+      <div class="field">
+        <label>搜索</label>
+        <input v-model="query.keyword" placeholder="应用名称" @keyup.enter="loadApps" />
+      </div>
+      <div class="field">
+        <label>状态</label>
+        <select v-model="query.status" @change="loadApps">
+          <option value="published">已上架</option>
+          <option value="off_shelved">已下架</option>
+          <option value="">全部</option>
+        </select>
+      </div>
+      <button class="btn secondary" @click="loadApps">刷新</button>
+    </div>
+
+    <p v-if="message" :class="messageType">{{ message }}</p>
+
+    <div class="grid">
+      <article v-for="app in apps" :key="app.app_id" class="panel app-card">
+        <div class="card-head">
+          <div>
+            <h2>{{ app.name }}</h2>
+            <p>{{ app.category || '未分类' }} · {{ formatDate(app.create_at) }}</p>
+          </div>
+          <span :class="['badge', app.status]">{{ app.status }}</span>
+        </div>
+
+        <div class="tags">
+          <span v-for="tag in app.tags || []" :key="tag">{{ tag }}</span>
+          <span v-if="!app.tags?.length">暂无标签</span>
+        </div>
+
+        <dl>
+          <div>
+            <dt>价格</dt>
+            <dd>{{ priceOf(app) }} COIN</dd>
+          </div>
+          <div>
+            <dt>文件</dt>
+            <dd>{{ fileSizeOf(app) }}</dd>
+          </div>
+          <div>
+            <dt>App ID</dt>
+            <dd class="mono">{{ app.app_id }}</dd>
+          </div>
+        </dl>
+
+        <div class="actions">
+          <button class="btn" :disabled="app.status !== 'published' || purchasingId === app.app_id" @click="buy(app)">
+            {{ purchasingId === app.app_id ? '购买中...' : '购买并发放' }}
+          </button>
+          <button class="btn secondary" @click="download(app)">下载</button>
+          <button class="btn secondary" :disabled="app.status !== 'published'" @click="offShelf(app)">下架</button>
+          <button class="btn danger" @click="remove(app)">删除</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="pager">
+      <button class="btn secondary" :disabled="query.page <= 1" @click="page(-1)">上一页</button>
+      <span>第 {{ query.page }} 页，共 {{ total }} 个</span>
+      <button class="btn secondary" :disabled="apps.length < query.page_size" @click="page(1)">下一页</button>
+    </div>
+
+    <aside v-if="lastOrder" class="panel result-panel">
+      <strong>最近购买结果</strong>
+      <p>订单状态：<span class="success">{{ lastOrder.status }}</span></p>
+      <p>订单：<code>{{ lastOrder.order_id }}</code></p>
+      <p>流水：<code>{{ lastOrder.tx_id }}</code></p>
+      <p>订阅：<code>{{ lastOrder.subscription_id }}</code></p>
+    </aside>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import request from '../utils/request' // 替换为你的 Axios 实例路径
+import { onMounted, reactive, ref } from 'vue'
+import {
+  deleteApp,
+  listApps,
+  offShelfApp,
+  publishApp,
+  purchaseApp,
+  type MarketApp,
+  type Order,
+} from '../api'
 
-// --- 数据接口定义 ---
-interface AppItem {
-  app_id: string
-  name: string
-  developer_id: string
-  category: string
-  tags: string[]
-  metadata: Record<string, any>
-  status: string
-  create_at: string
-  update_at: string
-}
+const apps = ref<MarketApp[]>([])
+const total = ref(0)
+const showPublish = ref(false)
+const publishing = ref(false)
+const purchasingId = ref('')
+const message = ref('')
+const messageType = ref<'success' | 'error'>('success')
+const lastOrder = ref<Order | null>(null)
 
-// --- 状态变量 ---
-const apps = ref<AppItem[]>([])
-const currentApp = ref<AppItem | null>(null)
-const isPublishing = ref(false)
-const isUploading = ref(false)
+const query = reactive({ page: 1, page_size: 12, keyword: '', status: 'published' })
+const publishForm = reactive({ name: '', category: '', tags: '', file: null as File | null })
 
-// 列表查询参数
-const listQuery = reactive({
-  page: 1,
-  page_size: 10,
-  keyword: '',
-  category: '',
-  status: 'published', // 默认看上架的
-})
-
-// 发布表单数据
-const publishForm = reactive({
-  name: '',
-  category: '',
-  tagsStr: '',
-  file: null as File | null,
-})
-
-// 编辑表单数据
-const editForm = reactive({
-  name: '',
-  category: '',
-  tagsStr: '',
-  status: '',
-})
-
-// --- API 方法 ---
-
-// 1. 获取列表
-const loadApps = async () => {
+async function loadApps() {
   try {
-    const res: any = await request.get('/market/apps', { params: listQuery })
+    const res = await listApps(query)
     apps.value = res.data || []
-  } catch (err: any) {
-    alert(err.response?.data?.error || '获取列表失败')
+    total.value = res.total || 0
+  } catch (err) {
+    notify(errorMessage(err, '应用列表加载失败'), 'error')
   }
 }
 
-// 分页切换
-const changePage = (step: number) => {
-  listQuery.page += step
+function page(step: number) {
+  query.page += step
   loadApps()
 }
 
-// 选择应用查看详情
-const selectApp = (app: AppItem) => {
-  isPublishing.value = false
-  currentApp.value = app
-  // 填充编辑表单
-  editForm.name = app.name
-  editForm.category = app.category
-  editForm.tagsStr = app.tags ? app.tags.join(',') : ''
-  editForm.status = app.status
+function selectFile(event: Event) {
+  const input = event.target as HTMLInputElement
+  publishForm.file = input.files?.[0] || null
 }
 
-// 切换到发布模式
-const openPublishForm = () => {
-  currentApp.value = null
-  isPublishing.value = true
-  publishForm.name = ''
-  publishForm.category = ''
-  publishForm.tagsStr = ''
-  publishForm.file = null
-}
-
-// 处理文件选择
-const handleFileSelect = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  const file = target.files?.[0] // 使用可选链安全提取
-  if (file) {
-    publishForm.file = file
-  }
-}
-
-// 2. 提交发布 (带有文件的 FormData)
-const submitPublish = async () => {
+async function submitPublish() {
   if (!publishForm.name || !publishForm.file) {
-    alert('应用名称和安装包文件是必填项！')
+    notify('应用名称和安装包必填', 'error')
     return
   }
-
-  isUploading.value = true
-  const formData = new FormData()
-  formData.append('name', publishForm.name)
-  formData.append('category', publishForm.category)
-
-  // 处理 tags 数组 (按逗号分隔后追加)
-  if (publishForm.tagsStr) {
-    const tags = publishForm.tagsStr
-      .split(',')
-      .map((t) => t.trim())
-      .filter((t) => t)
-    tags.forEach((tag) => formData.append('tags', tag))
-  }
-
-  formData.append('app_file', publishForm.file)
+  publishing.value = true
+  const form = new FormData()
+  form.append('name', publishForm.name)
+  form.append('category', publishForm.category)
+  publishForm.tags
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter(Boolean)
+    .forEach((tag) => form.append('tags', tag))
+  form.append('app_file', publishForm.file)
+  form.append('idempotency_key', `publish-${Date.now()}`)
 
   try {
-    await request.post('/market/apps', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-    alert('发布成功！')
-    isPublishing.value = false
-    loadApps()
-  } catch (err: any) {
-    alert(err.response?.data?.error || '发布失败')
+    await publishApp(form)
+    notify('发布成功')
+    showPublish.value = false
+    publishForm.name = ''
+    publishForm.category = ''
+    publishForm.tags = ''
+    publishForm.file = null
+    await loadApps()
+  } catch (err) {
+    notify(errorMessage(err, '发布失败'), 'error')
   } finally {
-    isUploading.value = false
+    publishing.value = false
   }
 }
 
-// 3. 提交修改 (普通 JSON)
-const submitUpdate = async () => {
-  if (!currentApp.value) return
+async function buy(app: MarketApp) {
+  purchasingId.value = app.app_id
   try {
-    const tags = editForm.tagsStr
-      .split(',')
-      .map((t) => t.trim())
-      .filter((t) => t)
-    const payload = {
-      name: editForm.name,
-      category: editForm.category,
-      tags: tags,
-      status: editForm.status,
-    }
-    await request.put(`/market/apps/${currentApp.value.app_id}`, payload)
-    alert('信息修改成功！')
-    loadApps() // 刷新列表
-  } catch (err: any) {
-    alert(err.response?.data?.error || '修改失败')
+    const order = await purchaseApp(app.app_id, priceOf(app))
+    lastOrder.value = order
+    notify(`购买成功，订阅 ${order.subscription_id}`)
+  } catch (err) {
+    notify(errorMessage(err, '购买失败，请检查登录状态和钱包余额'), 'error')
+  } finally {
+    purchasingId.value = ''
   }
 }
 
-// 4. 下载文件
-const handleDownload = () => {
-  if (!currentApp.value) return
-  // 直接通过浏览器跳转到下载直链接口 (这样可以触发浏览器自带的下载行为，且携带当前域名 Cookie(如果同域) )
-  // 注意：如果是前后端分离，推荐拼接 baseURL
-  const baseURL = request.defaults.baseURL || ''
-  window.open(`${baseURL}/market/apps/${currentApp.value.app_id}/download`, '_blank')
-}
-
-// 5. 下架
-const handleOffShelf = async () => {
-  if (!currentApp.value || !confirm('确定要下架该应用吗？')) return
+async function offShelf(app: MarketApp) {
+  if (!confirm(`确认下架 ${app.name}？`)) return
   try {
-    // 我们可以直接复用 Update 接口，或者如果你后端保留了独立接口，可以调独立的
-    await request.put(`/market/apps/${currentApp.value.app_id}`, { status: 'off_shelved' })
-    alert('已成功下架！')
-    loadApps()
-    selectApp({ ...currentApp.value, status: 'off_shelved' }) // 更新当前视图
-  } catch (err: any) {
-    alert('下架失败')
+    await offShelfApp(app.app_id)
+    notify('已下架')
+    await loadApps()
+  } catch (err) {
+    notify(errorMessage(err, '下架失败'), 'error')
   }
 }
 
-// 6. 彻底删除
-const handleDelete = async () => {
-  if (!currentApp.value || !confirm('警告：这将彻底删除应用记录和物理文件，不可逆！确认删除？'))
-    return
+async function remove(app: MarketApp) {
+  if (!confirm(`确认删除 ${app.name}？此操作不可逆。`)) return
   try {
-    await request.delete(`/market/apps/${currentApp.value.app_id}`)
-    alert('删除成功！')
-    currentApp.value = null
-    loadApps()
-  } catch (err: any) {
-    alert(err.response?.data?.error || '删除失败')
+    await deleteApp(app.app_id)
+    notify('已删除')
+    await loadApps()
+  } catch (err) {
+    notify(errorMessage(err, '删除失败'), 'error')
   }
 }
 
-// --- 辅助工具函数 ---
-const formatDate = (dateStr: string) => {
-  if (!dateStr) return '-'
-  const d = new Date(dateStr)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+function download(app: MarketApp) {
+  window.open(`/api/v1/market/apps/${app.app_id}/download`, '_blank')
 }
 
-const formatBytes = (bytes?: number) => {
-  if (!bytes) return '未知大小'
-  if (bytes < 1024) return bytes + ' B'
-  else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB'
-  else return (bytes / 1048576).toFixed(1) + ' MB'
+function priceOf(app: MarketApp) {
+  const value = app.metadata?.price
+  if (typeof value === 'number') return value.toFixed(4)
+  if (typeof value === 'string' && value.trim()) {
+    const parsed = Number(value)
+    if (Number.isFinite(parsed)) return parsed.toFixed(4)
+  }
+  return '10.0000'
 }
 
-onMounted(() => {
-  loadApps()
-})
+function fileSizeOf(app: MarketApp) {
+  const value = app.metadata?.file_size
+  if (typeof value !== 'number') return '未知'
+  if (value < 1024) return `${value} B`
+  if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`
+  return `${(value / 1024 / 1024).toFixed(1)} MB`
+}
+
+function formatDate(value: string) {
+  if (!value) return '-'
+  return new Date(value).toLocaleDateString()
+}
+
+function notify(text: string, type: 'success' | 'error' = 'success') {
+  message.value = text
+  messageType.value = type
+}
+
+function errorMessage(err: unknown, fallback: string) {
+  if (typeof err === 'object' && err && 'message' in err) return String((err as { message: unknown }).message)
+  return fallback
+}
+
+onMounted(loadApps)
 </script>
 
 <style scoped>
-.market-manager {
-  display: flex;
-  background: white;
-  min-height: 75vh;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+.publish-panel,
+.toolbar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  gap: 14px;
+  align-items: end;
+  padding: 18px;
+  margin-bottom: 18px;
 }
 
-/* 左侧栏样式 */
-.app-sidebar {
-  width: 320px;
-  border-right: 1px solid #eee;
-  display: flex;
-  flex-direction: column;
-  background: #fcfcfc;
+.toolbar {
+  grid-template-columns: minmax(220px, 1fr) 180px auto;
 }
 
-.sidebar-header {
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.app-card {
+  padding: 20px;
+}
+
+.card-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
+  gap: 14px;
 }
 
-.filter-section {
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
-  background: #fff;
+h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 800;
 }
-.filter-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+
+.card-head p {
+  color: #64748b;
 }
-.filter-row {
+
+.badge {
+  height: 26px;
+  border-radius: 999px;
+  padding: 3px 10px;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.badge.published {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.off_shelved {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.tags {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.tags span {
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+dl {
+  display: grid;
   gap: 10px;
 }
-.filter-select {
-  flex: 1;
-  padding: 6px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+
+dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.app-list {
-  list-style: none;
-  padding: 0;
+dt {
+  color: #64748b;
+}
+
+dd {
   margin: 0;
-  flex: 1;
-  overflow-y: auto;
-}
-.app-list li {
-  padding: 15px 20px;
-  border-bottom: 1px solid #f1f1f1;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.app-list li:hover {
-  background: #f5f8fa;
-}
-.app-list li.active {
-  background: #eef6ff;
-  border-left: 4px solid #009ef7;
+  color: #0f172a;
+  font-weight: 700;
+  text-align: right;
 }
 
-.app-item-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-}
-.app-item-title .name {
-  font-weight: bold;
-  color: #333;
-}
-.app-item-meta {
-  font-size: 0.8rem;
-  color: #888;
+.mono,
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  word-break: break-all;
 }
 
-.status-badge {
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 12px;
-}
-.status-badge.published {
-  background: #e8fff3;
-  color: #50cd89;
-}
-.status-badge.off_shelved {
-  background: #fff5f8;
-  color: #f1416c;
-}
-
-.pagination {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 20px;
-  border-top: 1px solid #eee;
-  background: #fff;
-}
-
-/* 右侧内容区样式 */
-.app-detail-container {
-  flex: 1;
-  padding: 30px;
-  overflow-y: auto;
-}
-
-.publish-section h2,
-.detail-header h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #181c32;
-}
-
-.detail-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px dashed #eee;
-  padding-bottom: 15px;
-  margin-bottom: 20px;
-}
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
+  margin-top: 20px;
 }
 
-.app-meta-cards {
+.pager {
   display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-.card {
-  flex: 1;
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #333;
-}
-.text-xs {
-  font-size: 0.75rem;
-  word-break: break-all;
-  color: #777;
-}
-
-.divider {
-  border: 0;
-  border-top: 2px solid #f1f1f1;
-  margin: 30px 0;
-}
-
-.form-group {
-  margin-bottom: 15px;
-  max-width: 500px;
-}
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-.required {
-  color: #f1416c;
-}
-
-/* 按钮样式 */
-.btn-xs {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: white;
-}
-.btn-md {
-  padding: 10px 20px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: white;
-}
-.btn-blue {
-  background: #009ef7;
-}
-.btn-blue:disabled {
-  background: #9cd4f5;
-  cursor: not-allowed;
-}
-.btn-outline {
-  background: white;
-  border: 1px solid #ddd;
-  color: #333;
-}
-.btn-warn {
-  background: #ffc107;
-  color: #333;
-}
-.btn-danger {
-  background: #f1416c;
-}
-
-.empty-notice {
-  height: 100%;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  color: #999;
+  justify-content: center;
+  gap: 14px;
+  margin: 22px 0;
+}
+
+.result-panel {
+  padding: 18px;
+  margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .publish-panel,
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

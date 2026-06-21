@@ -136,6 +136,7 @@ func PublishApp(c *gin.Context) {
 		}
 		existing, err := appRepo.GetByDeveloperIDAndIdempotencyKey(c.Request.Context(), developerID, idempotencyKey)
 		if err == nil {
+			logMarketAudit("publish_idempotent_returned", traceID, developerID, existing.AppID, "", nil)
 			c.JSON(http.StatusOK, gin.H{"message": "App published successfully", "app_id": existing.AppID, "idempotent": true})
 			return
 		}

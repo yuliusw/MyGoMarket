@@ -12,6 +12,8 @@ var (
 	ErrInsufficientBalance = errors.New("wallet: insufficient balance")
 	ErrWalletInactive      = errors.New("wallet: status is not active")
 	ErrInvalidAmount       = errors.New("wallet: amount must be positive")
+	ErrIdempotencyConflict = errors.New("wallet: idempotency key already used for another operation")
+	ErrInvalidTransfer     = errors.New("wallet: invalid transfer")
 )
 
 type OwnerType string

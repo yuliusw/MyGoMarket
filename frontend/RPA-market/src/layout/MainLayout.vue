@@ -1,25 +1,30 @@
 <template>
-  <div class="app-layout">
-    <!-- 左侧边栏 -->
+  <div class="shell">
     <aside class="sidebar">
-      <div class="logo">RPA Market</div>
+      <div class="brand">
+        <span class="brand-mark">R</span>
+        <div>
+          <strong>RPA Market</strong>
+          <small>应用购买工作台</small>
+        </div>
+      </div>
       <nav class="menu">
         <router-link
           v-for="item in menuList"
           :key="item.path"
           :to="item.path"
           class="menu-item"
-          active-class="active"
+          active-class="is-active"
         >
           {{ item.name }}
         </router-link>
       </nav>
+      <router-link class="login-link" to="/login">登录 / 注册</router-link>
     </aside>
 
-    <!-- 右侧主体内容 -->
-    <main class="main-content">
+    <main class="content">
       <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
+        <transition name="page" mode="out-in">
           <component :is="Component" />
         </transition>
       </router-view>
@@ -28,76 +33,137 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { menuItems } from '../router'
 
-// 响应式菜单数据
-const menuList = ref(menuItems)
+const menuList = menuItems
 </script>
 
 <style scoped>
-.app-layout {
+.shell {
   display: flex;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 36rem),
+    linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
 }
 
 .sidebar {
-  width: 240px;
-  background-color: #1e1e2d;
-  color: #fff;
+  position: sticky;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  padding: 24px;
+  background: #0f172a;
+  color: #e2e8f0;
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  gap: 28px;
 }
 
-.logo {
-  padding: 20px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  border-bottom: 1px solid #2b2b40;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-mark {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.brand strong {
+  display: block;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.brand small {
+  color: #94a3b8;
 }
 
 .menu {
   display: flex;
   flex-direction: column;
-  padding: 10px 0;
+  gap: 8px;
 }
 
 .menu-item {
-  padding: 15px 20px;
-  color: #a2a3b7;
+  padding: 12px 14px;
+  border-radius: 14px;
+  color: #cbd5e1;
   text-decoration: none;
-  transition: all 0.3s;
+  transition: 0.2s ease;
 }
 
 .menu-item:hover {
-  background-color: #2b2b40;
+  background: rgba(148, 163, 184, 0.12);
+  color: #ffffff;
+}
+
+.menu-item.is-active {
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.login-link {
+  margin-top: auto;
+  padding: 12px 14px;
+  border: 1px solid rgba(226, 232, 240, 0.18);
+  border-radius: 14px;
+  color: #e2e8f0;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  border-color: rgba(226, 232, 240, 0.45);
   color: #fff;
 }
 
-.menu-item.active {
-  background-color: #009ef7;
-  color: #fff;
-  font-weight: bold;
-}
-
-.main-content {
+.content {
   flex: 1;
-  padding: 20px;
-  background-color: #f5f8fa;
-  overflow-y: auto;
+  min-width: 0;
+  padding: 32px;
 }
 
-/* 切换动效 */
-.fade-enter-active,
-.fade-leave-active {
+.page-enter-active,
+.page-leave-active {
   transition: opacity 0.2s ease;
 }
-.fade-enter-from,
-.fade-leave-to {
+.page-enter-from,
+.page-leave-to {
   opacity: 0;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .menu {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .login-link {
+    margin-top: 0;
+  }
+
+  .content {
+    padding: 18px;
+  }
 }
 </style>

@@ -2,6 +2,8 @@ package iam
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/yuliusw/RPA-market/common/audit"
+	"github.com/yuliusw/RPA-market/common/database"
 	"github.com/yuliusw/RPA-market/common/middleware"
 	"github.com/yuliusw/RPA-market/common/utils/logs"
 	"github.com/yuliusw/RPA-market/services/iam/app"
@@ -74,5 +76,6 @@ func RegisterHandlers(r *gin.Engine) {
 		private.GET("/roles/:role_id", middleware.OptionalCasbinRequire("role:manage"), app.GetRole)
 		private.PUT("/roles/:role_id/permissions", middleware.OptionalCasbinRequire("role:manage"), app.ReplaceRolePermissions)
 		private.GET("/permissions", middleware.OptionalCasbinRequire("role:manage"), app.ListPermissions)
+		private.GET("/audit/events/export", middleware.OptionalCasbinRequire("role:manage"), audit.ExportCSVHandler(database.DB))
 	}
 }

@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 860" width="1280" height="860">
+<style>
+text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', 'SimHei', sans-serif; fill: #111827; }
+.title { font-size: 22px; font-weight: 700; }
+.subtitle { font-size: 12px; fill: #6b7280; }
+.label { font-size: 14px; font-weight: 600; }
+.small { font-size: 12px; fill: #4b5563; }
+.tiny { font-size: 11px; fill: #6b7280; }
+.container-title { font-size: 15px; font-weight: 700; fill: #374151; }
+</style>
+<defs>
+  <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+  <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+  <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+  <marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/></marker>
+  <marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/></marker>
+</defs>
+<rect width="1280" height="860" fill="#ffffff"/>
+<text x="40" y="38" class="title">核心数据关系图</text>
+<rect x="40" y="80" width="365" height="310" rx="14" fill="#faf5ff" fill-opacity="0.45" stroke="#ddd6fe" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="56" y="104" class="container-title">IAM</text>
+<rect x="70" y="130" width="130" height="70" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="135.0" y="157.0" text-anchor="middle" class="label">users</text>
+<text x="135.0" y="176.0" text-anchor="middle" class="small">user_id PK</text>
+<rect x="240" y="130" width="130" height="70" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="305.0" y="157.0" text-anchor="middle" class="label">groups</text>
+<text x="305.0" y="176.0" text-anchor="middle" class="small">owner_id -&gt;</text>
+<text x="305.0" y="190.0" text-anchor="middle" class="small">users</text>
+<rect x="155" y="255" width="160" height="70" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="235.0" y="274.0" text-anchor="middle" class="label">group_membe</text>
+<text x="235.0" y="291.0" text-anchor="middle" class="label">rs</text>
+<text x="235.0" y="310.0" text-anchor="middle" class="small">group_id +</text>
+<text x="235.0" y="324.0" text-anchor="middle" class="small">user_id</text>
+<rect x="70" y="325" width="130" height="50" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="135.0" y="342.0" text-anchor="middle" class="label">roles</text>
+<text x="135.0" y="361.0" text-anchor="middle" class="small">role_id</text>
+<rect x="240" y="325" width="130" height="50" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="305.0" y="334.0" text-anchor="middle" class="label">permissio</text>
+<text x="305.0" y="351.0" text-anchor="middle" class="label">ns</text>
+<text x="305.0" y="370.0" text-anchor="middle" class="small">permission_</text>
+<text x="305.0" y="384.0" text-anchor="middle" class="small">code</text>
+<rect x="450" y="80" width="360" height="310" rx="14" fill="#eff6ff" fill-opacity="0.45" stroke="#bfdbfe" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="466" y="104" class="container-title">Market</text>
+<rect x="485" y="130" width="170" height="70" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="570.0" y="157.0" text-anchor="middle" class="label">apps</text>
+<text x="570.0" y="176.0" text-anchor="middle" class="small">developer_id -&gt;</text>
+<text x="570.0" y="190.0" text-anchor="middle" class="small">users metadata</text>
+<rect x="600" y="255" width="170" height="70" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="685.0" y="274.0" text-anchor="middle" class="label">app_download</text>
+<text x="685.0" y="291.0" text-anchor="middle" class="label">_metrics</text>
+<text x="685.0" y="310.0" text-anchor="middle" class="small">app_id +</text>
+<text x="685.0" y="324.0" text-anchor="middle" class="small">metric_date</text>
+<rect x="485" y="325" width="170" height="50" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="570.0" y="342.0" text-anchor="middle" class="label">audit_events</text>
+<text x="570.0" y="361.0" text-anchor="middle" class="small">trace/event/res</text>
+<text x="570.0" y="375.0" text-anchor="middle" class="small">ource</text>
+<rect x="855" y="80" width="360" height="310" rx="14" fill="#f0fdfa" fill-opacity="0.45" stroke="#99f6e4" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="871" y="104" class="container-title">补偿/文件</text>
+<rect x="900" y="130" width="230" height="70" rx="10" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="1015.0" y="157.0" text-anchor="middle" class="label">MinIO objects</text>
+<text x="1015.0" y="176.0" text-anchor="middle" class="small">avatars/* apps/*</text>
+<rect x="900" y="255" width="230" height="70" rx="10" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<text x="1015.0" y="274.0" text-anchor="middle" class="label">minio_delete_ret</text>
+<text x="1015.0" y="291.0" text-anchor="middle" class="label">ries</text>
+<text x="1015.0" y="310.0" text-anchor="middle" class="small">object_name/status/n</text>
+<text x="1015.0" y="324.0" text-anchor="middle" class="small">ext_run_at</text>
+<rect x="40" y="440" width="560" height="310" rx="14" fill="#f0fdf4" fill-opacity="0.45" stroke="#bbf7d0" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="56" y="464" class="container-title">Wallet / Entitlement</text>
+<rect x="80" y="500" width="170" height="70" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="165.0" y="527.0" text-anchor="middle" class="label">wallets</text>
+<text x="165.0" y="546.0" text-anchor="middle" class="small">owner_id</text>
+<text x="165.0" y="560.0" text-anchor="middle" class="small">owner_type</text>
+<rect x="320" y="500" width="190" height="70" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="415.0" y="519.0" text-anchor="middle" class="label">wallet_transa</text>
+<text x="415.0" y="536.0" text-anchor="middle" class="label">ctions</text>
+<text x="415.0" y="555.0" text-anchor="middle" class="small">wallet_id amount</text>
+<text x="415.0" y="569.0" text-anchor="middle" class="small">balance_after</text>
+<rect x="80" y="630" width="170" height="70" rx="10" fill="#fefce8" stroke="#fde68a" stroke-width="1.5"/>
+<text x="165.0" y="649.0" text-anchor="middle" class="label">coupon_templ</text>
+<text x="165.0" y="666.0" text-anchor="middle" class="label">ates</text>
+<text x="165.0" y="685.0" text-anchor="middle" class="small">target_app_id</text>
+<rect x="320" y="630" width="190" height="70" rx="10" fill="#fefce8" stroke="#fde68a" stroke-width="1.5"/>
+<text x="415.0" y="657.0" text-anchor="middle" class="label">coupons</text>
+<text x="415.0" y="676.0" text-anchor="middle" class="small">owner +</text>
+<text x="415.0" y="690.0" text-anchor="middle" class="small">used_tx_id</text>
+<rect x="660" y="440" width="555" height="310" rx="14" fill="#fff7ed" fill-opacity="0.45" stroke="#fed7aa" stroke-width="1.5" stroke-dasharray="8 5"/>
+<text x="676" y="464" class="container-title">Project / Subscription</text>
+<rect x="700" y="500" width="160" height="70" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="780.0" y="527.0" text-anchor="middle" class="label">projects</text>
+<text x="780.0" y="546.0" text-anchor="middle" class="small">owner_id -&gt;</text>
+<text x="780.0" y="560.0" text-anchor="middle" class="small">users</text>
+<rect x="920" y="500" width="180" height="70" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="1010.0" y="519.0" text-anchor="middle" class="label">project_work</text>
+<text x="1010.0" y="536.0" text-anchor="middle" class="label">flows</text>
+<text x="1010.0" y="555.0" text-anchor="middle" class="small">definition JSONB</text>
+<rect x="700" y="630" width="160" height="70" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="780.0" y="649.0" text-anchor="middle" class="label">project_ass</text>
+<text x="780.0" y="666.0" text-anchor="middle" class="label">ets</text>
+<text x="780.0" y="685.0" text-anchor="middle" class="small">storage_url/ch</text>
+<text x="780.0" y="699.0" text-anchor="middle" class="small">ecksum</text>
+<rect x="920" y="630" width="180" height="70" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+<text x="1010.0" y="649.0" text-anchor="middle" class="label">subscription</text>
+<text x="1010.0" y="666.0" text-anchor="middle" class="label">s</text>
+<text x="1010.0" y="685.0" text-anchor="middle" class="small">app_id + user_id</text>
+<text x="1010.0" y="699.0" text-anchor="middle" class="small">partition</text>
+<path d="M 200 165 L 240 165" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 240 200 L 235 255" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 200 350 L 240 350" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 200 165 L 485 165" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 655 165 L 900 165" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 655 165 L 685 255 L 685 255" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 655 165 L 1010 255" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 250 535 L 320 535" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 250 665 L 320 665" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 165 200 L 165 500" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 165 200 L 700 535" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 655 165 L 165 665" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 655 165 L 1010 665" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 860 535 L 920 535" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<path d="M 860 665 L 920 535" fill="none" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<rect x="930" y="775" width="250" height="90" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+<text x="944" y="795" class="small" font-weight="700">图例</text>
+<line x1="944" y1="813" x2="974" y2="813" stroke="#6b7280" stroke-width="1.8" marker-end="url(#arrow-gray)"/>
+<text x="984" y="817" class="tiny">外键/逻辑关联</text>
+<line x1="944" y1="835" x2="974" y2="835" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow-green)"/>
+<text x="984" y="839" class="tiny">资金与流水</text>
+<line x1="944" y1="857" x2="974" y2="857" stroke="#9333ea" stroke-width="1.8" marker-end="url(#arrow-purple)"/>
+<text x="984" y="861" class="tiny">权限/审计</text>
+</svg>

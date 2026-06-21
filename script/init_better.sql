@@ -182,9 +182,12 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     user_id UUID REFERENCES users(user_id),
     plan_type VARCHAR(20),
     expired_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    source_order_id UUID,
     status VARCHAR(10) DEFAULT 'active',
     PRIMARY KEY (sub_id, expired_at)
 ) PARTITION BY RANGE (expired_at);
+
+ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS source_order_id UUID;
 
 -- 默认分区兜底，避免越界插入失败
 CREATE TABLE IF NOT EXISTS subscriptions_default PARTITION OF subscriptions DEFAULT;
@@ -227,6 +230,28 @@ CREATE TABLE IF NOT EXISTS wallet_transactions (
     description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+/* =========================================================
+   订单表：应用购买/订阅前置订单，支付后关联钱包流水
+   ========================================================= */
+CREATE TABLE IF NOT EXISTS orders (
+    order_id UUID PRIMARY KEY DEFAULT gen_uuid(),
+    user_id UUID NOT NULL REFERENCES users(user_id),
+    app_id UUID NOT NULL REFERENCES apps(app_id),
+    wallet_id UUID NOT NULL REFERENCES wallets(wallet_id),
+    amount DECIMAL(18, 4) NOT NULL CHECK (amount > 0),
+    currency_code VARCHAR(10) NOT NULL DEFAULT 'COIN',
+    status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'cancelled')),
+    tx_id UUID REFERENCES wallet_transactions(tx_id),
+    subscription_id UUID,
+    idempotency_key TEXT,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    paid_at TIMESTAMP WITH TIME ZONE,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS subscription_id UUID;
 
 /* =========================================================
    优惠券定义表：记录优惠券的模板规则
@@ -328,6 +353,14 @@ CREATE INDEX IF NOT EXISTS idx_wallet_owner ON wallets(owner_type, owner_id);
 CREATE INDEX IF NOT EXISTS idx_wallet_status ON wallets(status);
 CREATE INDEX IF NOT EXISTS idx_wallet_tx_wallet_time ON wallet_transactions(wallet_id, created_at DESC);
 
+-- Orders
+CREATE INDEX IF NOT EXISTS idx_orders_user_time ON orders(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_orders_app_status ON orders(app_id, status);
+CREATE INDEX IF NOT EXISTS idx_orders_status_time ON orders(status, created_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_orders_idempotency_key
+  ON orders(idempotency_key)
+  WHERE COALESCE(idempotency_key, '') <> '';
+
 -- Coupons
 CREATE INDEX IF NOT EXISTS idx_coupons_owner_status ON coupons(owner_type, owner_id, status);
 CREATE INDEX IF NOT EXISTS idx_coupons_template ON coupons(template_id);
@@ -339,6 +372,7 @@ CREATE INDEX IF NOT EXISTS idx_group_entitlements_group ON group_entitlements(gr
 CREATE INDEX IF NOT EXISTS idx_subscriptions_user_app ON subscriptions(user_id, app_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON subscriptions(status);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_subid ON subscriptions(sub_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_source_order ON subscriptions(source_order_id);
 
 -- =========================================================
 -- Timestamp update triggers
@@ -380,6 +414,11 @@ FOR EACH ROW EXECUTE FUNCTION set_update_at();
 -- wallets.updated_at
 DROP TRIGGER IF EXISTS trg_wallets_updated ON wallets;
 CREATE TRIGGER trg_wallets_updated BEFORE UPDATE ON wallets
+FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- orders.updated_at
+DROP TRIGGER IF EXISTS trg_orders_updated ON orders;
+CREATE TRIGGER trg_orders_updated BEFORE UPDATE ON orders
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- minio_delete_retries.updated_at

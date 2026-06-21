@@ -1,12 +1,14 @@
 # RPA Market API 文档
 
-本文档面向前端开发，覆盖当前后端已注册的 IAM 与 Market API。
+本文档面向前端开发，覆盖当前后端已注册的 IAM、Market、Wallet 与 Order API。
 
 ## 通用约定
 
 - 服务地址：按环境配置，例如 `http://localhost:12660`
 - IAM 基础路径：`/api/v1/iam`
 - Market 基础路径：`/api/v1/market`
+- Wallet 基础路径：`/api/v1/wallets`
+- Order 基础路径：`/api/v1/orders`
 - JSON 请求头：`Content-Type: application/json`
 - 文件上传请求头：`multipart/form-data`
 - 建议所有请求携带 `X-Trace-ID`，未携带时后端会自动生成并回写响应头。错误响应中的 `request_id` 与该值一致。
@@ -24,6 +26,43 @@
   "request_id": "trace-id"
 }
 ```
+
+## 接口总览
+
+公开接口：
+
+- `POST /api/v1/iam/register`：注册
+- `POST /api/v1/iam/login`：登录
+- `GET /api/v1/market/apps`：应用列表
+- `GET /api/v1/market/apps/:app_id`：应用详情
+- `GET /api/v1/market/apps/:app_id/download`：下载应用，返回 `307`
+- `GET /api/v1/market/rankings`：下载热榜
+
+登录接口：
+
+- `GET /api/v1/iam/profile`：当前用户资料
+- `PUT /api/v1/iam/profile`：更新资料
+- `POST /api/v1/iam/profile/avatar`：上传头像
+- `PUT /api/v1/iam/profile/password`：修改密码
+- `GET /api/v1/wallets/me`：当前用户钱包
+- `GET /api/v1/wallets/:wallet_id/transactions`：钱包流水
+- `POST /api/v1/wallets/:wallet_id/credit`：充值钱包
+- `POST /api/v1/wallets/:wallet_id/debit`：扣款钱包
+- `POST /api/v1/wallets/transfer`：钱包转账
+- `POST /api/v1/orders/purchase`：一步购买应用
+- `POST /api/v1/orders`：创建订单
+- `GET /api/v1/orders`：订单列表
+- `GET /api/v1/orders/:order_id`：订单详情
+- `POST /api/v1/orders/:order_id/pay`：支付订单
+- `POST /api/v1/orders/:order_id/cancel`：取消订单
+
+管理/开发者接口：
+
+- `POST /api/v1/market/apps`：发布应用
+- `PUT /api/v1/market/apps/:app_id`：更新应用
+- `PUT /api/v1/market/apps/:app_id/offshelf`：下架应用
+- `DELETE /api/v1/market/apps/:app_id`：删除应用
+- `GET /api/v1/iam/roles`、`GET /api/v1/iam/permissions`、`PUT /api/v1/iam/roles/:role_id/permissions`：RBAC 管理
 
 ## 认证与会话
 
@@ -694,6 +733,276 @@
 
 说明：热榜实时查询数据来自 Redis ZSET，下载接口会更新 daily、weekly、total 三个榜单，并按日持久化到 `app_download_metrics`。
 
+## Wallet 钱包
+
+以下接口均需要登录。金额字段使用字符串传输，精度为 4 位小数，例如 `10.0000`。
+
+领域约束：
+
+- 钱包所有权当前只支持用户钱包，接口会校验 `owner_type=user` 且 `owner_id=当前用户`。
+- 写操作支持 `idempotency_key`，同一个键重复提交会返回同一笔业务结果或返回 `409 IDEMPOTENCY_CONFLICT`。
+- 扣款、转账、订单支付都在数据库事务内锁钱包行，避免并发超卖。
+- 余额不足返回 `409 INSUFFICIENT_BALANCE`，不会写入 `wallet_transactions`。
+
+### 获取当前用户钱包
+
+`GET /api/v1/wallets/me?currency_code=COIN`
+
+成功响应：
+
+```json
+{
+  "wallet_id": "uuid",
+  "owner_id": "uuid",
+  "owner_type": "user",
+  "balance": "100.0000",
+  "currency_code": "COIN",
+  "status": "active",
+  "updated_at": "2026-06-21T00:00:00Z"
+}
+```
+
+### 查询钱包流水
+
+`GET /api/v1/wallets/:wallet_id/transactions?page=1&page_size=20`
+
+成功响应：
+
+```json
+{
+  "items": [
+    {
+      "tx_id": "uuid",
+      "wallet_id": "uuid",
+      "tx_type": "consume",
+      "amount": "-10.0000",
+      "balance_after": "90.0000",
+      "reference_id": "order-id",
+      "idempotency_key": "order:order-id:pay:key",
+      "description": "order payment",
+      "created_at": "2026-06-21T00:00:00Z"
+    }
+  ],
+  "page": 1,
+  "page_size": 20
+}
+```
+
+### 充值钱包
+
+`POST /api/v1/wallets/:wallet_id/credit`
+
+请求体：
+
+```json
+{
+  "amount": "100.0000",
+  "reference_id": "uuid，可选",
+  "description": "manual topup",
+  "idempotency_key": "topup-unique-key"
+}
+```
+
+成功响应：
+
+```json
+{
+  "wallet": {
+    "wallet_id": "uuid",
+    "owner_id": "uuid",
+    "owner_type": "user",
+    "balance": "100.0000",
+    "currency_code": "COIN",
+    "status": "active",
+    "updated_at": "2026-06-21T00:00:00Z"
+  },
+  "transaction": {
+    "tx_id": "uuid",
+    "wallet_id": "uuid",
+    "tx_type": "recharge",
+    "amount": "100.0000",
+    "balance_after": "100.0000",
+    "reference_id": "",
+    "idempotency_key": "topup-unique-key",
+    "description": "manual topup",
+    "created_at": "2026-06-21T00:00:00Z"
+  }
+}
+```
+
+### 扣款钱包
+
+`POST /api/v1/wallets/:wallet_id/debit`
+
+请求体同充值。余额不足返回 `409 INSUFFICIENT_BALANCE`，且不会写流水。
+
+### 钱包转账
+
+`POST /api/v1/wallets/transfer`
+
+请求体：
+
+```json
+{
+  "from_wallet_id": "uuid",
+  "to_wallet_id": "uuid",
+  "amount": "10.0000",
+  "reference_id": "uuid，可选",
+  "description": "transfer",
+  "idempotency_key": "transfer-unique-key"
+}
+```
+
+成功响应：
+
+```json
+{
+  "out": {
+    "tx_type": "transfer_out",
+    "amount": "-10.0000"
+  },
+  "in": {
+    "tx_type": "transfer_in",
+    "amount": "10.0000"
+  }
+}
+```
+
+## Order 订单与购买
+
+以下接口均需要登录。当前购买发放目标为用户订阅 `subscriptions`。
+
+领域约束：
+
+- 当前订单金额由前端传 `amount`，后续应迁移为后端从 `app.metadata.price` 或 SKU/Price 表派生。
+- `idempotency_key` 用于防止重复创建订单或重复支付。
+- 一步购买接口适合前端直接调用；拆分式创建/支付接口适合需要先确认订单再支付的流程。
+- 支付成功会发放用户订阅，当前默认有效期为 1 年，`subscriptions.plan_type=purchase`。
+- 订单状态：`pending`、`paid`、`cancelled`。
+
+### 一步购买应用
+
+`POST /api/v1/orders/purchase`
+
+说明：该接口会一次完成创建订单、支付扣款、写钱包流水、发放订阅。支付成功后返回的订单中会带 `tx_id` 与 `subscription_id`。
+
+请求体：
+
+```json
+{
+  "app_id": "uuid",
+  "amount": "10.0000",
+  "currency_code": "COIN",
+  "idempotency_key": "purchase-unique-key",
+  "description": "buy app"
+}
+```
+
+成功响应：`200`
+
+```json
+{
+  "order_id": "uuid",
+  "user_id": "uuid",
+  "app_id": "uuid",
+  "wallet_id": "uuid",
+  "amount": "10.0000",
+  "currency_code": "COIN",
+  "status": "paid",
+  "tx_id": "wallet-transaction-id",
+  "subscription_id": "subscription-id",
+  "idempotency_key": "purchase-unique-key",
+  "description": "buy app",
+  "created_at": "2026-06-21T00:00:00Z",
+  "paid_at": "2026-06-21T00:00:00Z",
+  "updated_at": "2026-06-21T00:00:00Z"
+}
+```
+
+落库关联：
+
+- `orders.status = paid`
+- `orders.tx_id = wallet_transactions.tx_id`
+- `orders.subscription_id = subscriptions.sub_id`
+- `wallet_transactions.reference_id = orders.order_id`
+- `subscriptions.source_order_id = orders.order_id`
+
+### 创建订单
+
+`POST /api/v1/orders`
+
+请求体同“一步购买应用”。成功响应：`201`，订单状态为 `pending`，`tx_id` 和 `subscription_id` 为空。
+
+成功响应示例：
+
+```json
+{
+  "order_id": "uuid",
+  "user_id": "uuid",
+  "app_id": "uuid",
+  "wallet_id": "uuid",
+  "amount": "10.0000",
+  "currency_code": "COIN",
+  "status": "pending",
+  "tx_id": "",
+  "subscription_id": "",
+  "idempotency_key": "create-order-key",
+  "description": "buy app",
+  "created_at": "2026-06-21T00:00:00Z",
+  "paid_at": "",
+  "updated_at": "2026-06-21T00:00:00Z"
+}
+```
+
+### 查询订单列表
+
+`GET /api/v1/orders?page=1&page_size=20`
+
+成功响应：
+
+```json
+{
+  "items": [],
+  "page": 1,
+  "page_size": 20
+}
+```
+
+### 查询订单详情
+
+`GET /api/v1/orders/:order_id`
+
+成功响应：订单对象。
+
+### 支付订单
+
+`POST /api/v1/orders/:order_id/pay`
+
+请求体：
+
+```json
+{
+  "idempotency_key": "pay-unique-key"
+}
+```
+
+说明：支付会在 DB transaction 内锁订单行，扣钱包并发放订阅。重复支付已支付订单会直接返回已支付订单。
+
+### 取消订单
+
+`POST /api/v1/orders/:order_id/cancel`
+
+说明：仅 `pending` 订单可取消。
+
+### 常见业务错误
+
+- `APP_NOT_FOUND`：应用不存在或不是 `published` 状态。
+- `INVALID_ORDER_AMOUNT`：订单金额小于等于 0 或格式非法。
+- `INSUFFICIENT_BALANCE`：钱包余额不足，订单仍为 `pending`，不会发放订阅。
+- `ORDER_NOT_PAYABLE`：订单不是 `pending` 状态，不能支付。
+- `ORDER_NOT_CANCELLABLE`：订单不是 `pending` 状态，不能取消。
+- `IDEMPOTENCY_CONFLICT`：幂等键已用于其他参数不同的请求。
+
 ## 状态码参考
 
 - `200`：成功
@@ -703,7 +1012,7 @@
 - `401`：未登录、Token 无效、Session 失效
 - `403`：权限不足
 - `404`：资源不存在
-- `409`：注册用户名或邮箱冲突、上传幂等并发冲突
+- `409`：注册用户名或邮箱冲突、上传幂等并发冲突、余额不足、订单状态冲突、幂等键冲突
 - `429`：限流
 - `500`：服务内部错误
 - `503`：服务过载快速失败或依赖不可用，例如请求池已满、Redis Session 写入失败
