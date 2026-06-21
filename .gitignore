@@ -1,0 +1,34 @@
+# Go build artifacts
+/RPA-market
+/main
+/script/main
+*.exe
+*.test
+*.out
+
+# Build output
+/bin/
+/build/
+/dist/
+/tmp/
+
+# Logs and local environment
+*.log
+*.local
+.env
+.env.*
+!.env.example
+
+# Frontend dependencies and build output
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.tsbuildinfo
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.sw?
