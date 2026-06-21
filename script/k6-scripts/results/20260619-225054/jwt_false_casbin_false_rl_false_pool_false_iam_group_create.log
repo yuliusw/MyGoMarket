@@ -1,0 +1,452 @@
+ Container rmqnamesrv Running 
+ Container RPA-pgdb Running 
+ Container RPA-redis Running 
+ Container RPA-cadvisor Running 
+ Container RPA-minio Running 
+ Container rmqbroker Running 
+ Container RPA-prometheus Running 
+ Container RPA-app Running 
+ Container script-k6-run-f4004ca68d73 Creating 
+ Container script-k6-run-f4004ca68d73 Created 
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: /scripts/apis/iam_group_create.js
+        output: Prometheus remote write (http://prometheus:9090/api/v1/write)
+
+     scenarios: (100.00%) 1 scenario, 200 max VUs, 1m30s max duration (incl. graceful stop):
+              * single_api: 300.00 iterations/s for 1m0s (maxVUs: 150-200, exec: singleApi, gracefulStop: 30s)
+
+time="2026-06-19T14:58:51Z" level=warning msg="Insufficient VUs, reached 200 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=single_api
+
+running (0m01.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [   2% ] 200/200 VUs  0m01.0s/1m0s  300.00 iters/s
+
+running (0m02.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [   3% ] 200/200 VUs  0m02.0s/1m0s  300.00 iters/s
+
+running (0m03.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [   5% ] 200/200 VUs  0m03.0s/1m0s  300.00 iters/s
+
+running (0m04.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [   7% ] 200/200 VUs  0m04.0s/1m0s  300.00 iters/s
+
+running (0m05.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [   8% ] 200/200 VUs  0m05.0s/1m0s  300.00 iters/s
+
+running (0m06.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  10% ] 200/200 VUs  0m06.0s/1m0s  300.00 iters/s
+
+running (0m07.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  12% ] 200/200 VUs  0m07.0s/1m0s  300.00 iters/s
+
+running (0m08.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  13% ] 200/200 VUs  0m08.0s/1m0s  300.00 iters/s
+
+running (0m09.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  15% ] 200/200 VUs  0m09.0s/1m0s  300.00 iters/s
+
+running (0m10.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  17% ] 200/200 VUs  0m10.0s/1m0s  300.00 iters/s
+
+running (0m11.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  18% ] 200/200 VUs  0m11.0s/1m0s  300.00 iters/s
+
+running (0m12.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  20% ] 200/200 VUs  0m12.0s/1m0s  300.00 iters/s
+
+running (0m13.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  22% ] 200/200 VUs  0m13.0s/1m0s  300.00 iters/s
+
+running (0m14.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  23% ] 200/200 VUs  0m14.0s/1m0s  300.00 iters/s
+
+running (0m15.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  25% ] 200/200 VUs  0m15.0s/1m0s  300.00 iters/s
+
+running (0m16.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  27% ] 200/200 VUs  0m16.0s/1m0s  300.00 iters/s
+
+running (0m17.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  28% ] 200/200 VUs  0m17.0s/1m0s  300.00 iters/s
+
+running (0m18.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  30% ] 200/200 VUs  0m18.0s/1m0s  300.00 iters/s
+
+running (0m19.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  32% ] 200/200 VUs  0m19.0s/1m0s  300.00 iters/s
+
+running (0m20.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  33% ] 200/200 VUs  0m20.0s/1m0s  300.00 iters/s
+
+running (0m21.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  35% ] 200/200 VUs  0m21.0s/1m0s  300.00 iters/s
+
+running (0m22.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  37% ] 200/200 VUs  0m22.0s/1m0s  300.00 iters/s
+
+running (0m23.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  38% ] 200/200 VUs  0m23.0s/1m0s  300.00 iters/s
+
+running (0m24.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  40% ] 200/200 VUs  0m24.0s/1m0s  300.00 iters/s
+
+running (0m25.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  42% ] 200/200 VUs  0m25.0s/1m0s  300.00 iters/s
+
+running (0m26.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  43% ] 200/200 VUs  0m26.0s/1m0s  300.00 iters/s
+
+running (0m27.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  45% ] 200/200 VUs  0m27.0s/1m0s  300.00 iters/s
+
+running (0m28.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  47% ] 200/200 VUs  0m28.0s/1m0s  300.00 iters/s
+
+running (0m29.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  48% ] 200/200 VUs  0m29.0s/1m0s  300.00 iters/s
+
+running (0m30.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  50% ] 200/200 VUs  0m30.0s/1m0s  300.00 iters/s
+
+running (0m31.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  52% ] 200/200 VUs  0m31.0s/1m0s  300.00 iters/s
+
+running (0m32.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  53% ] 200/200 VUs  0m32.0s/1m0s  300.00 iters/s
+
+running (0m33.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  55% ] 200/200 VUs  0m33.0s/1m0s  300.00 iters/s
+
+running (0m34.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  57% ] 200/200 VUs  0m34.0s/1m0s  300.00 iters/s
+
+running (0m35.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  58% ] 200/200 VUs  0m35.0s/1m0s  300.00 iters/s
+
+running (0m36.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  60% ] 200/200 VUs  0m36.0s/1m0s  300.00 iters/s
+
+running (0m37.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  62% ] 200/200 VUs  0m37.0s/1m0s  300.00 iters/s
+
+running (0m38.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  63% ] 200/200 VUs  0m38.0s/1m0s  300.00 iters/s
+
+running (0m39.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  65% ] 200/200 VUs  0m39.0s/1m0s  300.00 iters/s
+
+running (0m40.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  67% ] 200/200 VUs  0m40.0s/1m0s  300.00 iters/s
+
+running (0m41.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  68% ] 200/200 VUs  0m41.0s/1m0s  300.00 iters/s
+
+running (0m42.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  70% ] 200/200 VUs  0m42.0s/1m0s  300.00 iters/s
+
+running (0m43.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  72% ] 200/200 VUs  0m43.0s/1m0s  300.00 iters/s
+
+running (0m44.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  73% ] 200/200 VUs  0m44.0s/1m0s  300.00 iters/s
+
+running (0m45.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  75% ] 200/200 VUs  0m45.0s/1m0s  300.00 iters/s
+
+running (0m46.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  77% ] 200/200 VUs  0m46.0s/1m0s  300.00 iters/s
+
+running (0m47.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  78% ] 200/200 VUs  0m47.0s/1m0s  300.00 iters/s
+
+running (0m48.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  80% ] 200/200 VUs  0m48.0s/1m0s  300.00 iters/s
+
+running (0m49.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  82% ] 200/200 VUs  0m49.0s/1m0s  300.00 iters/s
+
+running (0m50.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  83% ] 200/200 VUs  0m50.0s/1m0s  300.00 iters/s
+
+running (0m51.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  85% ] 200/200 VUs  0m51.0s/1m0s  300.00 iters/s
+
+running (0m52.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  87% ] 200/200 VUs  0m52.0s/1m0s  300.00 iters/s
+
+running (0m53.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  88% ] 200/200 VUs  0m53.0s/1m0s  300.00 iters/s
+
+running (0m54.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  90% ] 200/200 VUs  0m54.0s/1m0s  300.00 iters/s
+
+running (0m55.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  92% ] 200/200 VUs  0m55.0s/1m0s  300.00 iters/s
+
+running (0m56.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  93% ] 200/200 VUs  0m56.0s/1m0s  300.00 iters/s
+
+running (0m57.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  95% ] 200/200 VUs  0m57.0s/1m0s  300.00 iters/s
+
+running (0m58.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  97% ] 200/200 VUs  0m58.0s/1m0s  300.00 iters/s
+
+running (0m59.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [  98% ] 200/200 VUs  0m59.0s/1m0s  300.00 iters/s
+
+running (1m00.0s), 200/200 VUs, 0 complete and 0 interrupted iterations
+single_api   [ 100% ] 200/200 VUs  1m00.0s/1m0s  300.00 iters/s
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+time="2026-06-19T14:59:51Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/groups\": request timeout"
+
+
+  █ THRESHOLDS 
+
+    checks
+    ✗ 'rate>0.95' rate=0.00%
+
+    http_req_duration
+    ✗ 'p(95)<1500' p(95)=1m0s
+
+    http_req_failed
+    ✗ 'rate<0.05' rate=100.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 200     3.287664/s
+    checks_succeeded...: 0.00%   0 out of 200
+    checks_failed......: 100.00% 200 out of 200
+
+    ✗ iam_group_create status
+      ↳  0% — ✓ 0 / ✗ 200
+
+    HTTP
+    http_req_duration....: avg=1m0s min=59.98s med=1m0s max=1m0s p(90)=1m0s p(95)=1m0s
+    http_req_failed......: 100.00% 200 out of 200
+    http_reqs............: 200     3.287664/s
+
+    EXECUTION
+    dropped_iterations...: 17801   292.618498/s
+    iteration_duration...: avg=1m0s min=1m0s   med=1m0s max=1m0s p(90)=1m0s p(95)=1m0s
+    iterations...........: 200     3.287664/s
+    vus..................: 200     min=200        max=200
+    vus_max..............: 200     min=200        max=200
+
+    NETWORK
+    data_received........: 0 B     0 B/s
+    data_sent............: 48 kB   782 B/s
+
+
+
+
+running (1m00.8s), 000/200 VUs, 200 complete and 0 interrupted iterations
+single_api ✓ [ 100% ] 000/200 VUs  1m0s  300.00 iters/s
+time="2026-06-19T14:59:53Z" level=error msg="thresholds on metrics 'checks, http_req_duration, http_req_failed' have been crossed"
+

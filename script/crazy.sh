@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+echo ">>> 开始单接口顺序压力测试（每个接口单独 k6 run） <<<"
+
+# 默认压测配置：每个脚本只压一个接口，按顺序执行，避免多接口并行抢占连接。
+export DEFAULT_RATE=300
+export DEFAULT_DURATION=1m
+export DEFAULT_VUS=150
+export DEFAULT_MAX_VUS=200
+
+# 个别接口按成本单独覆盖，变量名等于脚本名大写 + _RATE/_VUS/_MAX_VUS/_DURATION。
+export MARKET_APPS_LIST_RATE=600
+export MARKET_APPS_SEARCH_RATE=400
+export MARKET_RANK_DAILY_RATE=600
+export MARKET_RANK_WEEKLY_RATE=600
+export MARKET_RANK_TOTAL_RATE=600
+export IAM_LOGIN_RATE=200
+export IAM_REGISTER_RATE=200
+export MARKET_APP_PUBLISH_RATE=50
+export MARKET_APP_UPDATE_RATE=80
+export MARKET_APP_DOWNLOAD_RATE=200
+
+# 写接口和上传接口预分配 VU 不要过大，降低单机连接与文件上传资源耗尽风险。
+export IAM_PROFILE_AVATAR_VUS=50
+export MARKET_APP_PUBLISH_VUS=50
+export MARKET_APP_PUBLISH_MAX_VUS=100
+export MARKET_APP_UPDATE_VUS=80
+export MARKET_APP_UPDATE_MAX_VUS=160
+
+# MQ 独立脚本，不和 HTTP 接口混跑。
+export MQ_ROLE_PURGE_BROADCAST_RATE=20
+export MQ_GROUP_INVALIDATE_BROADCAST_RATE=20
+export MQ_ROLE_PURGE_BROADCAST_DURATION=2m
+export MQ_GROUP_INVALIDATE_BROADCAST_DURATION=2m
+
+# 单个参数控制单个 feature；需要组合测试时只改对应开关。
+export FEATURE_JWT_AUTH=false
+export FEATURE_CASBIN_AUTHZ=false
+export FEATURE_RATE_LIMIT_ENABLED=false
+export FEATURE_REQUEST_POOL_ENABLED=false
+
+# feature 打开时仍把限流和请求池容量抬高，避免变成限流/排队测试。
+export FEATURES_RATE_LIMIT_RATE=100000
+export FEATURES_RATE_LIMIT_CAPACITY=100000
+export FEATURES_RATE_LIMIT_LIMIT=100000
+export FEATURES_REQUEST_POOL_CAPACITY=10000
+
+# 执行范围开关。
+export RUN_HTTP_APIS=true
+export RUN_MQ=false
+
+./run-load-tests.sh

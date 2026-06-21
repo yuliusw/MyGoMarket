@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+option go_package = "github.com/yuliusw/RPA-market/gen/go/wallet/v1;walletv1";
+
+service WalletService {
+  rpc GetWallet(GetWalletRequest) returns (Wallet) {}
+  rpc GetOrCreateWallet(GetOrCreateWalletRequest) returns (Wallet) {}
+}
+
+message GetWalletRequest {
+  string owner_id = 1;
+  string owner_type = 2;
+  string currency_code = 3;
+}
+
+message GetOrCreateWalletRequest {
+  string owner_id = 1;
+  string owner_type = 2;
+  string currency_code = 3;
+}
+
+message Wallet {
+  string wallet_id = 1;
+  string owner_id = 2;
+  string owner_type = 3;
+  string balance = 4;
+  string currency_code = 5;
+  string status = 6;
+  string updated_at = 7;
+}

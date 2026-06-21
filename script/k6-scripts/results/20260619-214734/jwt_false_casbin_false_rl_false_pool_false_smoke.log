@@ -1,0 +1,69 @@
+ Container RPA-cadvisor Running 
+ Container RPA-pgdb Running 
+ Container RPA-minio Running 
+ Container RPA-redis Running 
+ Container RPA-prometheus Running 
+ Container rmqnamesrv Running 
+ Container rmqbroker Running 
+ Container RPA-app Recreate 
+ Container RPA-app Recreated 
+ Container RPA-app Starting 
+ Container RPA-app Started 
+ Container script-k6-run-2e183d8cf9c4 Creating 
+ Container script-k6-run-2e183d8cf9c4 Created 
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: /scripts/smoke.js
+        output: Prometheus remote write (http://prometheus:9090/api/v1/write)
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 1m30s max duration (incl. graceful stop):
+              * smoke: 1 iterations shared among 1 VUs (maxDuration: 1m0s, exec: smoke, gracefulStop: 30s)
+
+
+
+  █ THRESHOLDS 
+
+    checks
+    ✓ 'rate>0.90' rate=100.00%
+
+    http_req_failed
+    ✓ 'rate<0.10' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 4       52.072096/s
+    checks_succeeded...: 100.00% 4 out of 4
+    checks_failed......: 0.00%   0 out of 4
+
+    ✓ smoke_iam_register status
+    ✓ smoke_iam_login status
+    ✓ smoke_market_apps_list status
+    ✓ smoke_market_rank_daily status
+
+    HTTP
+    http_req_duration..............: avg=18.68ms min=1.36ms  med=17.58ms max=38.19ms p(90)=36.37ms p(95)=37.28ms
+      { expected_response:true }...: avg=18.68ms min=1.36ms  med=17.58ms max=38.19ms p(90)=36.37ms p(95)=37.28ms
+    http_req_failed................: 0.00%  0 out of 4
+    http_reqs......................: 4      52.072096/s
+
+    EXECUTION
+    iteration_duration.............: avg=76.66ms min=76.66ms med=76.66ms max=76.66ms p(90)=76.66ms p(95)=76.66ms
+    iterations.....................: 1      13.018024/s
+
+    NETWORK
+    data_received..................: 3.1 kB 40 kB/s
+    data_sent......................: 1.5 kB 19 kB/s
+
+
+
+
+running (0m00.1s), 0/1 VUs, 1 complete and 0 interrupted iterations
+smoke ✓ [ 100% ] 1 VUs  0m00.1s/1m0s  1/1 shared iters

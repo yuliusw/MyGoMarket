@@ -1,0 +1,156 @@
+{
+    "metrics": {
+        "iterations": {
+            "count": 18001,
+            "rate": 299.92275509852715
+        },
+        "iteration_duration": {
+            "min": 0.26041,
+            "med": 0.779398,
+            "max": 16.922643,
+            "p(90)": 0.965182,
+            "p(95)": 1.013617,
+            "avg": 0.7342679718904527
+        },
+        "http_req_duration": {
+            "min": 0.204751,
+            "med": 0.625875,
+            "max": 14.56772,
+            "p(90)": 0.7862812,
+            "p(95)": 0.8260011,
+            "avg": 0.5858404566159319,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_req_duration{expected_response:true}": {
+            "min": 0.204751,
+            "med": 0.625875,
+            "max": 14.56772,
+            "p(90)": 0.7862812,
+            "p(95)": 0.8260011,
+            "avg": 0.5858404566159319
+        },
+        "http_req_sending": {
+            "min": 0.003825,
+            "med": 0.0138525,
+            "max": 0.686458,
+            "p(90)": 0.019876799999999997,
+            "p(95)": 0.021813750000000003,
+            "avg": 0.014816670481057625
+        },
+        "vus": {
+            "value": 0,
+            "min": 0,
+            "max": 1
+        },
+        "data_sent": {
+            "count": 3247910,
+            "rate": 54114.88892350743
+        },
+        "http_req_blocked": {
+            "avg": 0.009046983612931901,
+            "min": 0.001284,
+            "med": 0.004366500000000001,
+            "max": 15.032171,
+            "p(90)": 0.005938,
+            "p(95)": 0.006693900000000002
+        },
+        "vus_max": {
+            "value": 150,
+            "min": 150,
+            "max": 150
+        },
+        "http_req_receiving": {
+            "min": 0.009347,
+            "med": 0.0468035,
+            "max": 0.433507,
+            "p(90)": 0.060628800000000004,
+            "p(95)": 0.0655735,
+            "avg": 0.04484983135207215
+        },
+        "http_reqs": {
+            "count": 18002,
+            "rate": 299.9394165481743
+        },
+        "http_req_tls_handshaking": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0
+        },
+        "http_req_connecting": {
+            "med": 0,
+            "max": 14.993364,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.004100645761582046,
+            "min": 0
+        },
+        "checks": {
+            "passes": 18002,
+            "fails": 0,
+            "thresholds": {
+                "rate>0.95": false
+            },
+            "value": 1
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 18002,
+            "thresholds": {
+                "rate<0.05": false
+            },
+            "value": 0
+        },
+        "http_req_waiting": {
+            "p(95)": 0.7517015,
+            "avg": 0.526173954782802,
+            "min": 0.186489,
+            "med": 0.5607215000000001,
+            "max": 14.436803,
+            "p(90)": 0.712911
+        },
+        "data_received": {
+            "count": 16567750,
+            "rate": 276042.7323917351
+        }
+    },
+    "setup_data": {
+        "appID": "3bd87aea-11eb-4754-8c0a-ee10d6025fb8",
+        "cookies": {}
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "market_app_create_seed status": {
+                            "name": "market_app_create_seed status",
+                            "path": "::setup::market_app_create_seed status",
+                            "id": "d85950b5e57cb8ab2f0fbb39bea73cd7",
+                            "passes": 1,
+                            "fails": 0
+                        }
+                    }
+            }
+        },
+        "checks": {
+            "market_app_detail status": {
+                "name": "market_app_detail status",
+                "path": "::market_app_detail status",
+                "id": "e3ad017eecd88a461abcb4e0dd34c313",
+                "passes": 18001,
+                "fails": 0
+            }
+        }
+    }
+}

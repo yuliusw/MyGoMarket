@@ -1,0 +1,65 @@
+# config.yaml
+server:
+  port: 12660
+  shutdown_timeout_seconds: 15
+
+database:
+  host: "db"
+  port: 5432
+  user: "rpa_app"
+  password: "change-me-db-password"
+  dbname: "RPA"
+  max_idle_conns: 10
+  max_open_conns: 100
+  conn_max_lifetime_seconds: 3600
+  conn_max_idle_time_seconds: 600
+  log_level: "warn" # silent/error/warn/info
+
+redis:
+  host: "redis"
+  port: 6379
+  password: ""
+  db: 0
+  pool_size: 100
+  min_idle_conns: 10
+  dial_timeout_seconds: 5
+  read_timeout_seconds: 3
+  write_timeout_seconds: 3
+  pool_timeout_seconds: 4
+
+casbin:
+  model_path: "RBAC.model"
+  cache_ttl_seconds: 600
+
+grpc:
+  enabled: true
+  port: 12661
+
+minio:
+  endpoint: "minio:9000"
+  accesskey: "rpa_minio_access_key"
+  secretkey: "change-me-minio-secret-key"
+  bucketName: "rpa-bucket"
+  useSSL: false
+
+rocketmq:
+  addrs:
+    - "172.18.0.1:9876"
+
+features:
+  jwt_auth: true
+  auth_bypass_user_id: "00000000-0000-0000-0000-000000000001"
+  casbin_authz: true
+  cors: true
+  rate_limit:
+    enabled: true
+    backend: "memory" # memory 或 redis
+    rate: 5
+    capacity: 10
+    cleanup_seconds: 300
+    ttl_seconds: 600
+    window_seconds: 1
+    limit: 100
+  request_pool:
+    enabled: true
+    capacity: 1000

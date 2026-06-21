@@ -1,0 +1,144 @@
+{
+    "metrics": {
+        "checks": {
+            "passes": 4,
+            "fails": 0,
+            "thresholds": {
+                "rate>0.90": false
+            },
+            "value": 1
+        },
+        "http_reqs": {
+            "count": 4,
+            "rate": 48.977688703687924
+        },
+        "data_sent": {
+            "count": 1476,
+            "rate": 18072.767131660843
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 4,
+            "thresholds": {
+                "rate<0.10": false
+            },
+            "value": 0
+        },
+        "http_req_tls_handshaking": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0
+        },
+        "iteration_duration": {
+            "p(90)": 81.526992,
+            "p(95)": 81.526992,
+            "avg": 81.526992,
+            "min": 81.526992,
+            "med": 81.526992,
+            "max": 81.526992
+        },
+        "iterations": {
+            "count": 1,
+            "rate": 12.244422175921981
+        },
+        "http_req_blocked": {
+            "min": 0.00377,
+            "med": 0.0045655,
+            "max": 0.914214,
+            "p(90)": 0.6415542000000002,
+            "p(95)": 0.7778840999999996,
+            "avg": 0.23177875
+        },
+        "http_req_duration": {
+            "p(90)": 39.125633400000005,
+            "p(95)": 40.4963427,
+            "avg": 19.89016625,
+            "min": 1.346584,
+            "med": 18.173514500000003,
+            "max": 41.867052
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 19.89016625,
+            "min": 1.346584,
+            "med": 18.173514500000003,
+            "max": 41.867052,
+            "p(90)": 39.125633400000005,
+            "p(95)": 40.4963427
+        },
+        "http_req_waiting": {
+            "avg": 19.74501825,
+            "min": 1.266817,
+            "med": 18.027787500000002,
+            "max": 41.657681,
+            "p(90)": 38.9436617,
+            "p(95)": 40.300671349999995
+        },
+        "data_received": {
+            "count": 3075,
+            "rate": 37651.598190960096
+        },
+        "http_req_sending": {
+            "avg": 0.044309,
+            "min": 0.012275,
+            "med": 0.021373,
+            "max": 0.122215,
+            "p(90)": 0.09235750000000002,
+            "p(95)": 0.10728624999999997
+        },
+        "http_req_receiving": {
+            "med": 0.091253,
+            "max": 0.161139,
+            "p(90)": 0.1414023,
+            "p(95)": 0.15127064999999998,
+            "avg": 0.100839,
+            "min": 0.059711
+        },
+        "http_req_connecting": {
+            "avg": 0.0483765,
+            "min": 0,
+            "med": 0,
+            "max": 0.193506,
+            "p(90)": 0.13545420000000005,
+            "p(95)": 0.16448009999999993
+        }
+    },
+    "root_group": {
+        "groups": {},
+        "checks": {
+                "smoke_iam_register status": {
+                    "name": "smoke_iam_register status",
+                    "path": "::smoke_iam_register status",
+                    "id": "4ca2bdb5e62ceba77c9cb500cb2fc7cf",
+                    "passes": 1,
+                    "fails": 0
+                },
+                "smoke_iam_login status": {
+                    "name": "smoke_iam_login status",
+                    "path": "::smoke_iam_login status",
+                    "id": "1a44a84470909fa07a48590a6f772534",
+                    "passes": 1,
+                    "fails": 0
+                },
+                "smoke_market_apps_list status": {
+                    "path": "::smoke_market_apps_list status",
+                    "id": "99e09a1045f9e0e071826d6b090a3a31",
+                    "passes": 1,
+                    "fails": 0,
+                    "name": "smoke_market_apps_list status"
+                },
+                "smoke_market_rank_daily status": {
+                    "name": "smoke_market_rank_daily status",
+                    "path": "::smoke_market_rank_daily status",
+                    "id": "bd24a43470f365ba8012fe8882f4f27c",
+                    "passes": 1,
+                    "fails": 0
+                }
+            },
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e"
+    }
+}

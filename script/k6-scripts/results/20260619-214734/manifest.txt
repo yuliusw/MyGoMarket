@@ -1,0 +1,9 @@
+timestamp=2026-06-19T21:47:34+08:00
+results_dir=./k6-scripts/results/20260619-214734
+base_url=http://app:12660
+feature_jwt_auth=false
+feature_casbin_authz=false
+feature_rate_limit_enabled=false
+feature_request_pool_enabled=false
+git_available=
+docker_compose_version=5.1.4

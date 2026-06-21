@@ -1,0 +1,895 @@
+ Container RPA-minio Running 
+ Container RPA-cadvisor Running 
+ Container RPA-redis Running 
+ Container rmqnamesrv Running 
+ Container RPA-pgdb Running 
+ Container RPA-prometheus Running 
+ Container rmqbroker Running 
+ Container RPA-app Starting 
+ Container RPA-app Started 
+ Container script-k6-run-a7276bdf93d1 Creating 
+ Container script-k6-run-a7276bdf93d1 Created 
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: /scripts/apis/iam_login.js
+        output: Prometheus remote write (http://prometheus:9090/api/v1/write)
+
+     scenarios: (100.00%) 1 scenario, 200 max VUs, 1m30s max duration (incl. graceful stop):
+              * single_api: 200.00 iterations/s for 1m0s (maxVUs: 150-200, exec: singleApi, gracefulStop: 30s)
+
+
+running (0m01.0s), 165/165 VUs, 17 complete and 0 interrupted iterations
+single_api   [   2% ] 165/165 VUs  0m01.0s/1m0s  200.00 iters/s
+time="2026-06-19T14:52:05Z" level=warning msg="Insufficient VUs, reached 200 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=single_api
+
+running (0m02.0s), 200/200 VUs, 35 complete and 0 interrupted iterations
+single_api   [   3% ] 200/200 VUs  0m02.0s/1m0s  200.00 iters/s
+
+running (0m03.0s), 200/200 VUs, 66 complete and 0 interrupted iterations
+single_api   [   5% ] 200/200 VUs  0m03.0s/1m0s  200.00 iters/s
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:44164->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:44116->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:43778->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:43416->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:43550->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:43358->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:43048->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:43026->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:42870->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:42696->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:42608->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:42600->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:44412->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:42620->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": read tcp 172.18.0.14:42888->172.18.0.11:12660: read: connection reset by peer"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": EOF"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+time="2026-06-19T14:52:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: connection refused"
+
+running (0m04.0s), 064/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [   7% ] 064/200 VUs  0m04.0s/1m0s  200.00 iters/s
+
+running (0m05.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [   8% ] 200/200 VUs  0m05.0s/1m0s  200.00 iters/s
+
+running (0m06.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  10% ] 200/200 VUs  0m06.0s/1m0s  200.00 iters/s
+
+running (0m07.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  12% ] 200/200 VUs  0m07.0s/1m0s  200.00 iters/s
+
+running (0m08.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  13% ] 200/200 VUs  0m08.0s/1m0s  200.00 iters/s
+
+running (0m09.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  15% ] 200/200 VUs  0m09.0s/1m0s  200.00 iters/s
+
+running (0m10.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  17% ] 200/200 VUs  0m10.0s/1m0s  200.00 iters/s
+
+running (0m11.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  18% ] 200/200 VUs  0m11.0s/1m0s  200.00 iters/s
+
+running (0m12.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  20% ] 200/200 VUs  0m12.0s/1m0s  200.00 iters/s
+
+running (0m13.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  22% ] 200/200 VUs  0m13.0s/1m0s  200.00 iters/s
+
+running (0m14.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  23% ] 200/200 VUs  0m14.0s/1m0s  200.00 iters/s
+
+running (0m15.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  25% ] 200/200 VUs  0m15.0s/1m0s  200.00 iters/s
+
+running (0m16.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  27% ] 200/200 VUs  0m16.0s/1m0s  200.00 iters/s
+
+running (0m17.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  28% ] 200/200 VUs  0m17.0s/1m0s  200.00 iters/s
+
+running (0m18.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  30% ] 200/200 VUs  0m18.0s/1m0s  200.00 iters/s
+
+running (0m19.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  32% ] 200/200 VUs  0m19.0s/1m0s  200.00 iters/s
+
+running (0m20.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  33% ] 200/200 VUs  0m20.0s/1m0s  200.00 iters/s
+
+running (0m21.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  35% ] 200/200 VUs  0m21.0s/1m0s  200.00 iters/s
+
+running (0m22.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  37% ] 200/200 VUs  0m22.0s/1m0s  200.00 iters/s
+
+running (0m23.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  38% ] 200/200 VUs  0m23.0s/1m0s  200.00 iters/s
+
+running (0m24.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  40% ] 200/200 VUs  0m24.0s/1m0s  200.00 iters/s
+
+running (0m25.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  42% ] 200/200 VUs  0m25.0s/1m0s  200.00 iters/s
+
+running (0m26.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  43% ] 200/200 VUs  0m26.0s/1m0s  200.00 iters/s
+
+running (0m27.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  45% ] 200/200 VUs  0m27.0s/1m0s  200.00 iters/s
+
+running (0m28.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  47% ] 200/200 VUs  0m28.0s/1m0s  200.00 iters/s
+
+running (0m29.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  48% ] 200/200 VUs  0m29.0s/1m0s  200.00 iters/s
+
+running (0m30.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  50% ] 200/200 VUs  0m30.0s/1m0s  200.00 iters/s
+
+running (0m31.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  52% ] 200/200 VUs  0m31.0s/1m0s  200.00 iters/s
+
+running (0m32.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  53% ] 200/200 VUs  0m32.0s/1m0s  200.00 iters/s
+
+running (0m33.0s), 200/200 VUs, 301 complete and 0 interrupted iterations
+single_api   [  55% ] 200/200 VUs  0m33.0s/1m0s  200.00 iters/s
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:37Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+
+running (0m34.0s), 200/200 VUs, 365 complete and 0 interrupted iterations
+single_api   [  57% ] 200/200 VUs  0m34.0s/1m0s  200.00 iters/s
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:52:38Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+
+running (0m35.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  58% ] 200/200 VUs  0m35.0s/1m0s  200.00 iters/s
+
+running (0m36.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  60% ] 200/200 VUs  0m36.0s/1m0s  200.00 iters/s
+
+running (0m37.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  62% ] 200/200 VUs  0m37.0s/1m0s  200.00 iters/s
+
+running (0m38.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  63% ] 200/200 VUs  0m38.0s/1m0s  200.00 iters/s
+
+running (0m39.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  65% ] 200/200 VUs  0m39.0s/1m0s  200.00 iters/s
+
+running (0m40.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  67% ] 200/200 VUs  0m40.0s/1m0s  200.00 iters/s
+
+running (0m41.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  68% ] 200/200 VUs  0m41.0s/1m0s  200.00 iters/s
+
+running (0m42.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  70% ] 200/200 VUs  0m42.0s/1m0s  200.00 iters/s
+
+running (0m43.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  72% ] 200/200 VUs  0m43.0s/1m0s  200.00 iters/s
+
+running (0m44.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  73% ] 200/200 VUs  0m44.0s/1m0s  200.00 iters/s
+
+running (0m45.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  75% ] 200/200 VUs  0m45.0s/1m0s  200.00 iters/s
+
+running (0m46.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  77% ] 200/200 VUs  0m46.0s/1m0s  200.00 iters/s
+
+running (0m47.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  78% ] 200/200 VUs  0m47.0s/1m0s  200.00 iters/s
+
+running (0m48.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  80% ] 200/200 VUs  0m48.0s/1m0s  200.00 iters/s
+
+running (0m49.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  82% ] 200/200 VUs  0m49.0s/1m0s  200.00 iters/s
+
+running (0m50.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  83% ] 200/200 VUs  0m50.0s/1m0s  200.00 iters/s
+
+running (0m51.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  85% ] 200/200 VUs  0m51.0s/1m0s  200.00 iters/s
+
+running (0m52.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  87% ] 200/200 VUs  0m52.0s/1m0s  200.00 iters/s
+
+running (0m53.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  88% ] 200/200 VUs  0m53.0s/1m0s  200.00 iters/s
+
+running (0m54.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  90% ] 200/200 VUs  0m54.0s/1m0s  200.00 iters/s
+
+running (0m55.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  92% ] 200/200 VUs  0m55.0s/1m0s  200.00 iters/s
+
+running (0m56.0s), 200/200 VUs, 501 complete and 0 interrupted iterations
+single_api   [  93% ] 200/200 VUs  0m56.0s/1m0s  200.00 iters/s
+time="2026-06-19T14:53:00Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:00Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:00Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:00Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+
+running (0m57.0s), 200/200 VUs, 505 complete and 0 interrupted iterations
+single_api   [  95% ] 200/200 VUs  0m57.0s/1m0s  200.00 iters/s
+
+running (0m58.0s), 200/200 VUs, 505 complete and 0 interrupted iterations
+single_api   [  97% ] 200/200 VUs  0m58.0s/1m0s  200.00 iters/s
+
+running (0m59.0s), 200/200 VUs, 505 complete and 0 interrupted iterations
+single_api   [  98% ] 200/200 VUs  0m59.0s/1m0s  200.00 iters/s
+time="2026-06-19T14:53:03Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:03Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:03Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:03Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+
+running (1m00.0s), 200/200 VUs, 509 complete and 0 interrupted iterations
+single_api   [ 100% ] 200/200 VUs  1m00.0s/1m0s  200.00 iters/s
+
+running (1m01.0s), 200/200 VUs, 509 complete and 0 interrupted iterations
+single_api ↓ [ 100% ] 200/200 VUs  1m0s  200.00 iters/s
+
+running (1m02.0s), 200/200 VUs, 509 complete and 0 interrupted iterations
+single_api ↓ [ 100% ] 200/200 VUs  1m0s  200.00 iters/s
+time="2026-06-19T14:53:06Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:06Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:06Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+time="2026-06-19T14:53:06Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial tcp 172.18.0.11:12660: connect: no route to host"
+
+running (1m03.0s), 196/200 VUs, 513 complete and 0 interrupted iterations
+single_api ↓ [ 100% ] 200/200 VUs  1m0s  200.00 iters/s
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:07Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+
+running (1m04.0s), 137/200 VUs, 572 complete and 0 interrupted iterations
+single_api ↓ [ 100% ] 200/200 VUs  1m0s  200.00 iters/s
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+time="2026-06-19T14:53:08Z" level=warning msg="Request Failed" error="Post \"http://app:12660/api/v1/iam/login\": dial: i/o timeout"
+
+
+  █ THRESHOLDS 
+
+    checks
+    ✗ 'rate>0.95' rate=11.28%
+
+    http_req_duration
+    ✗ 'p(95)<1500' p(95)=3.09s
+
+    http_req_failed
+    ✗ 'rate<0.05' rate=88.71%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 709    10.963898/s
+    checks_succeeded...: 11.28% 80 out of 709
+    checks_failed......: 88.71% 629 out of 709
+
+    ✗ iam_login status
+      ↳  11% — ✓ 80 / ✗ 629
+
+    HTTP
+    http_req_duration..............: avg=839.2ms min=0s       med=0s    max=3.5s  p(90)=2.89s p(95)=3.09s
+      { expected_response:true }...: avg=1.63s   min=116.66ms med=1.66s max=3.18s p(90)=2.65s p(95)=2.9s 
+    http_req_failed................: 88.71% 629 out of 709
+    http_reqs......................: 709    10.963898/s
+
+    EXECUTION
+    dropped_iterations.............: 11292  174.618242/s
+    iteration_duration.............: avg=17.75s  min=205.24µs med=30s   max=30s   p(90)=30s   p(95)=30s  
+    iterations.....................: 709    10.963898/s
+    vus............................: 137    min=64         max=200
+    vus_max........................: 200    min=165        max=200
+
+    NETWORK
+    data_received..................: 69 kB  1.1 kB/s
+    data_sent......................: 67 kB  1.0 kB/s
+
+
+
+
+running (1m04.7s), 000/200 VUs, 709 complete and 0 interrupted iterations
+single_api ✓ [ 100% ] 000/200 VUs  1m0s  200.00 iters/s
+time="2026-06-19T14:53:10Z" level=error msg="thresholds on metrics 'checks, http_req_duration, http_req_failed' have been crossed"
+

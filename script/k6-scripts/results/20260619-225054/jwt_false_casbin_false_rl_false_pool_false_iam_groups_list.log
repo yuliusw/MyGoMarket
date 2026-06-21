@@ -1,0 +1,137 @@
+ Container rmqnamesrv Running 
+ Container RPA-cadvisor Running 
+ Container rmqbroker Running 
+ Container RPA-redis Running 
+ Container RPA-prometheus Running 
+ Container RPA-pgdb Running 
+ Container RPA-minio Running 
+ Container RPA-app Running 
+ Container script-k6-run-5dec07ad0c2d Creating 
+ Container script-k6-run-5dec07ad0c2d Created 
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: /scripts/apis/iam_groups_list.js
+        output: Prometheus remote write (http://prometheus:9090/api/v1/write)
+
+     scenarios: (100.00%) 1 scenario, 200 max VUs, 1m30s max duration (incl. graceful stop):
+              * single_api: 300.00 iterations/s for 1m0s (maxVUs: 150-200, exec: singleApi, gracefulStop: 30s)
+
+time="2026-06-19T14:56:19Z" level=warning msg="Insufficient VUs, reached 200 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=single_api
+
+running (0m01.0s), 200/200 VUs, 11 complete and 0 interrupted iterations
+single_api   [   2% ] 200/200 VUs  0m01.0s/1m0s  300.00 iters/s
+
+running (0m02.0s), 200/200 VUs, 16 complete and 0 interrupted iterations
+single_api   [   3% ] 200/200 VUs  0m02.0s/1m0s  300.00 iters/s
+
+running (0m03.0s), 200/200 VUs, 22 complete and 0 interrupted iterations
+single_api   [   5% ] 200/200 VUs  0m03.0s/1m0s  300.00 iters/s
+
+running (0m04.0s), 200/200 VUs, 38 complete and 0 interrupted iterations
+single_api   [   7% ] 200/200 VUs  0m04.0s/1m0s  300.00 iters/s
+
+running (0m05.0s), 200/200 VUs, 52 complete and 0 interrupted iterations
+single_api   [   8% ] 200/200 VUs  0m05.0s/1m0s  300.00 iters/s
+
+running (0m06.0s), 200/200 VUs, 56 complete and 0 interrupted iterations
+single_api   [  10% ] 200/200 VUs  0m06.0s/1m0s  300.00 iters/s
+
+running (0m07.0s), 199/200 VUs, 95 complete and 0 interrupted iterations
+single_api   [  12% ] 199/200 VUs  0m07.0s/1m0s  300.00 iters/s
+
+running (0m08.0s), 200/200 VUs, 161 complete and 0 interrupted iterations
+single_api   [  13% ] 200/200 VUs  0m08.0s/1m0s  300.00 iters/s
+
+running (0m09.0s), 200/200 VUs, 247 complete and 0 interrupted iterations
+single_api   [  15% ] 200/200 VUs  0m09.0s/1m0s  300.00 iters/s
+
+running (0m10.0s), 200/200 VUs, 247 complete and 0 interrupted iterations
+single_api   [  17% ] 200/200 VUs  0m10.0s/1m0s  300.00 iters/s
+
+running (0m11.0s), 200/200 VUs, 294 complete and 0 interrupted iterations
+single_api   [  18% ] 200/200 VUs  0m11.0s/1m0s  300.00 iters/s
+
+running (0m12.0s), 200/200 VUs, 306 complete and 0 interrupted iterations
+single_api   [  20% ] 200/200 VUs  0m12.0s/1m0s  300.00 iters/s
+
+running (0m13.0s), 200/200 VUs, 336 complete and 0 interrupted iterations
+single_api   [  22% ] 200/200 VUs  0m13.0s/1m0s  300.00 iters/s
+
+running (0m14.0s), 200/200 VUs, 382 complete and 0 interrupted iterations
+single_api   [  23% ] 200/200 VUs  0m14.0s/1m0s  300.00 iters/s
+
+running (0m15.1s), 200/200 VUs, 404 complete and 0 interrupted iterations
+single_api   [  27% ] 200/200 VUs  0m16.1s/1m0s  300.00 iters/s
+
+running (0m37.9s), 200/200 VUs, 404 complete and 0 interrupted iterations
+single_api   [  82% ] 200/200 VUs  0m49.4s/1m0s  300.00 iters/s
+
+running (2m03.3s), 200/200 VUs, 404 complete and 0 interrupted iterations
+single_api ✓ [ 100% ] 200/200 VUs  1m0s  300.00 iters/s
+
+running (2m28.1s), 117/200 VUs, 404 complete and 83 interrupted iterations
+single_api ✓ [ 100% ] 200/200 VUs  1m0s  300.00 iters/s
+time="2026-06-19T14:58:46Z" level=warning msg="Request Failed" error="Get \"http://app:12660/api/v1/iam/groups\": request timeout"
+
+running (2m28.2s), 000/200 VUs, 404 complete and 200 interrupted iterations
+single_api ✓ [ 100% ] 200/200 VUs  1m0s  300.00 iters/s
+
+running (2m28.2s), 000/200 VUs, 404 complete and 200 interrupted iterations
+single_api ✓ [ 100% ] 200/200 VUs  1m0s  300.00 iters/s
+
+running (2m28.2s), 000/200 VUs, 404 complete and 200 interrupted iterations
+single_api ✓ [ 100% ] 200/200 VUs  1m0s  300.00 iters/s
+time="2026-06-19T14:58:49Z" level=warning msg="Successful flushed time series to remote write endpoint but it took 2m16.338445681s while flush period is 5s. Some samples may be dropped." nts=65 output="Prometheus remote write"
+
+
+  █ THRESHOLDS 
+
+    checks
+    ✓ 'rate>0.95' rate=100.00%
+
+    http_req_duration
+    ✗ 'p(95)<1500' p(95)=10.16s
+
+    http_req_failed
+    ✓ 'rate<0.05' rate=2.41%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 404     2.726651/s
+    checks_succeeded...: 100.00% 404 out of 404
+    checks_failed......: 0.00%   0 out of 404
+
+    ✓ iam_groups_list status
+
+    HTTP
+    http_req_duration..............: avg=8s    min=132.67ms med=5.44s max=2m3s  p(90)=7.82s p(95)=10.16s
+      { expected_response:true }...: avg=5.25s min=132.67ms med=5.34s max=11.3s p(90)=7.74s p(95)=8.03s 
+    http_req_failed................: 2.41%  10 out of 414
+    http_reqs......................: 414    2.794143/s
+
+    EXECUTION
+    dropped_iterations.............: 5276   35.608444/s
+    iteration_duration.............: avg=5.26s min=133.06ms med=5.34s max=11.3s p(90)=7.74s p(95)=8.04s 
+    iterations.....................: 404    2.726651/s
+    vus............................: 1      min=1         max=200
+    vus_max........................: 200    min=200       max=200
+
+    NETWORK
+    data_received..................: 1.6 GB 11 MB/s
+    data_sent......................: 84 kB  568 B/s
+
+
+
+
+running (2m28.2s), 000/200 VUs, 404 complete and 200 interrupted iterations
+single_api ✓ [ 100% ] 200/200 VUs  1m0s  300.00 iters/s
+time="2026-06-19T14:58:49Z" level=error msg="thresholds on metrics 'http_req_duration' have been crossed"
+

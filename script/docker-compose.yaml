@@ -1,0 +1,249 @@
+services:
+  # --- 数据库与缓存 ---
+  db:
+    image: postgres:18-alpine3.22 
+    container_name: RPA-pgdb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rpa_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-db-password}
+      POSTGRES_DB: ${POSTGRES_DB:-RPA}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init_better.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:8.4.0-alpine
+    container_name: RPA-redis
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - redisdata:/data
+    ports:
+      - "6379:6379"
+    privileged: true
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # --- 对象存储 MinIO (S3 兼容) ---
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: RPA-minio
+    ports:
+      - "9000:9000"    # API 端口
+      - "9001:9001"    # 控制台 UI 端口
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-rpa_minio_access_key}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-change-me-minio-secret-key}
+    volumes:
+      - miniodata:/data
+    command: server /data --console-address ":9001"
+    restart: no
+
+  minio-setup:
+    image: minio/mc:latest
+    container_name: RPA-minio-setup
+    depends_on:
+      - minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-rpa_minio_access_key}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-change-me-minio-secret-key}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        until /usr/bin/mc alias set myminio http://minio:9000 "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}"; do echo "Waiting for MinIO..."; sleep 2; done;
+        /usr/bin/mc mb myminio/loki-bucket --ignore-existing;
+        echo "MinIO bucket setup completed.";
+
+  # --- RocketMQ 5.3.4 ---
+  rmqnamesrv:
+    image: apache/rocketmq:5.3.4
+    container_name: rmqnamesrv
+    restart: no
+    ports:
+      - "9876:9876"
+    entrypoint: sh mqnamesrv
+
+  rmqbroker:
+    image: apache/rocketmq:5.3.4
+    container_name: rmqbroker
+    restart: no
+    ports:
+      - "10909:10909"
+      - "10911:10911"
+      - "10912:10912"
+      - "8081:8081" 
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+    volumes:
+      - ./rmq/broker.conf:/home/rocketmq/rocketmq-5.3.4/conf/broker.conf
+    entrypoint: sh mqbroker -c /home/rocketmq/rocketmq-5.3.4/conf/broker.conf --enable-proxy
+    depends_on:
+      - rmqnamesrv
+
+  rmqdashboard:
+    image: apacherocketmq/rocketmq-dashboard:2.0.0
+    container_name: rmqdashboard
+    ports:
+      - "8080:8080"
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+    depends_on:
+      - rmqnamesrv
+
+  # --- 应用服务 ---
+  app:
+    image: rpa-app:v1.0
+    container_name: RPA-app
+    environment:
+      # 压测隔离：跳过鉴权依赖，避免 JWT/Casbin/RocketMQ 同步影响业务接口压测。
+      - FEATURES_JWT_AUTH=${FEATURES_JWT_AUTH:-false}
+      - FEATURES_CASBIN_AUTHZ=${FEATURES_CASBIN_AUTHZ:-false}
+      - FEATURES_AUTH_BYPASS_USER_ID=${FEATURES_AUTH_BYPASS_USER_ID:-00000000-0000-0000-0000-000000000001}
+      - FEATURES_RATE_LIMIT_ENABLED=${FEATURES_RATE_LIMIT_ENABLED:-true}
+      - FEATURES_RATE_LIMIT_RATE=${FEATURES_RATE_LIMIT_RATE:-5}
+      - FEATURES_RATE_LIMIT_CAPACITY=${FEATURES_RATE_LIMIT_CAPACITY:-10}
+      - FEATURES_RATE_LIMIT_LIMIT=${FEATURES_RATE_LIMIT_LIMIT:-100}
+      - FEATURES_REQUEST_POOL_ENABLED=${FEATURES_REQUEST_POOL_ENABLED:-true}
+      - FEATURES_REQUEST_POOL_CAPACITY=${FEATURES_REQUEST_POOL_CAPACITY:-1000}
+      - DATABASE_USER=${POSTGRES_USER:-rpa_app}
+      - DATABASE_PASSWORD=${POSTGRES_PASSWORD:-change-me-db-password}
+      - DATABASE_DBNAME=${POSTGRES_DB:-RPA}
+      - MINIO_ACCESSKEY=${MINIO_ROOT_USER:-rpa_minio_access_key}
+      - MINIO_SECRETKEY=${MINIO_ROOT_PASSWORD:-change-me-minio-secret-key}
+    ports:
+      - "12660:12660"
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'      # 硬限制：最高允许使用 1 个 CPU 核心 (例如 '0.5' 代表半核，'2.0' 代表双核)
+          memory: 2G     # 硬限制：最高允许使用 512MB 内存 (支持单位 M, G)
+        reservations:
+          cpus: '2.0'     # 软限制/预留：宿主机至少为其保证 0.25 个核心的计算能力
+          memory: 2.0G     # 软限制/预留：宿主机至少为其保证 256MB 内存
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      rmqbroker:
+        condition: service_started
+
+  # --- 监控与日志 (PLG Stack + cAdvisor) ---
+  prometheus:
+    image: prom/prometheus:v3.8.1
+    container_name: RPA-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheusdata:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-remote-write-receiver'
+    depends_on:
+      - cadvisor
+# --- 性能测试 K6 ---
+  k6:
+    image: grafana/k6:latest
+    container_name: RPA-k6
+    profiles:
+      - manual  # 设置为 manual，平时 up -d 不会自动启动它
+    volumes:
+      - ./k6-scripts:/scripts  # 挂载宿主机的脚本目录到容器内
+    environment:
+      # 直接利用你已经开启的 Prometheus Remote Write 功能
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
+      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=false
+      - K6_PROMETHEUS_RW_TREND_STATS=p(90),p(95),p(99),min,max,avg,med
+    depends_on:
+      - app
+      - prometheus
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.55.1
+    container_name: RPA-cadvisor
+    ports:
+      - "8082:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+
+  loki:
+    image: grafana/loki:3.7.1
+    container_name: RPA-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml:ro
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-rpa_minio_access_key}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-change-me-minio-secret-key}
+    command: -config.file=/etc/loki/local-config.yaml -config.expand-env=true
+    depends_on:
+      minio-setup:
+        condition: service_completed_successfully 
+
+  grafana:
+    image: grafana/grafana-oss:12.1.1
+    container_name: RPA-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER:-rpa_admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:-change-me-grafana-admin-password}
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+      - loki
+
+  alloy:
+    image: grafana/alloy:v1.16.1
+    container_name: RPA-alloy
+    ports:
+      - "12345:12345" 
+    volumes:
+      - ./alloy-config.alloy:/etc/alloy/config.alloy:ro 
+      - /var/run/docker.sock:/var/run/docker.sock:ro   
+      - /var/log:/var/log:ro                           
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro 
+      - alloydata:/var/lib/alloy/data
+    command: [
+      "run",
+      "/etc/alloy/config.alloy",
+      "--server.http.listen-addr=0.0.0.0:12345",
+      "--storage.path=/var/lib/alloy/data"
+    ]
+    depends_on:
+      - loki
+    user: root 
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:
+  prometheusdata: 
+  grafanadata:
+  alloydata:

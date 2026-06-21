@@ -1,0 +1,79 @@
+// ============================================================================
+// 1. 日志采集与清洗流（Docker 容器日志 -> Loki）
+// ============================================================================
+
+// 步骤 A：自动发现本地的所有 Docker 容器
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+// 步骤 B：在服务发现阶段清洗并重写标签 (Relabeling)
+discovery.relabel "docker_logs" {
+  targets = discovery.docker.containers.targets
+
+  // 1. 获取容器名，并去掉开头的斜杠（如 /nginx 变成 nginx）
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+    action        = "replace"
+  }
+
+  // 2. 提取镜像名称
+  rule {
+    source_labels = ["__meta_docker_container_image"]
+    target_label  = "image"
+    action        = "replace"
+  }
+
+  // 3. 如果是 Compose 容器，优先使用服务名覆盖 container 标签
+  // 这里的正则 "(.+)" 确保只有当 compose_service 存在且非空时，才会执行替换
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    regex         = "(.+)"
+    target_label  = "container"
+    action        = "replace"
+  }
+
+  // 4. 固定打上 job=local_docker 标签
+  rule {
+    target_label = "job"
+    replacement  = "local_docker"
+    action       = "replace"
+  }
+
+  // 5. 兼容常见 Loki dashboard 的标签名。当前环境是 Docker Compose，
+  //    不是 Kubernetes，因此没有 namespace/pod/workload 这类标签。
+  rule {
+    target_label = "namespace"
+    replacement  = "docker"
+    action       = "replace"
+  }
+
+  rule {
+    source_labels = ["container"]
+    target_label  = "app"
+    action        = "replace"
+  }
+
+  rule {
+    source_labels = ["container"]
+    target_label  = "instance"
+    action        = "replace"
+  }
+}
+
+// 步骤 C：采集 Docker 日志
+loki.source.docker "log_collect" {
+  host       = "unix:///var/run/docker.sock"
+  // 注意：这里使用的是清洗后的 targets，而不是直接用 discovery.docker 的输出
+  targets    = discovery.relabel.docker_logs.output
+  forward_to = [loki.write.local_loki.receiver] 
+}
+
+// 步骤 D：定义发送到 Loki 的后端地址
+loki.write "local_loki" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
