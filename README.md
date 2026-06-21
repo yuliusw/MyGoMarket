@@ -1,3 +1,141 @@
-# MyGoMarket
-# MyGoMarket
-# MyGoMarket
+# 项目结构
+
+本项目是一个面向 **RPA 应用市场** 的 Go + Vue 单体仓库，后端按业务域拆分成多个服务模块，前端是独立的 Vue 应用。
+
+## 1. 根目录
+
+- `main.go`：后端统一启动入口，负责初始化配置、数据库、Redis、MinIO、RocketMQ、Casbin，并注册业务路由。
+- `app.go`：应用级辅助入口/聚合文件。
+- `go.mod` / `go.sum`：Go 依赖管理。
+- `config/`：项目配置目录。
+- `api/`：接口定义目录，主要存放 proto 文件。
+- `common/`：公共基础设施与通用工具。
+- `services/`：按业务域拆分的服务模块。
+- `frontend/`：前端项目。
+- `deployments/`：部署相关资源。
+- `script/`：本地开发、容器化、监控和压测脚本。
+- `gateway/`：网关相关预留目录。
+- `改进需求.md`：需求/改进记录。
+- `API格式.md`：接口格式说明。
+
+## 2. 配置与接口定义
+
+### `config/`
+- `config.yaml`：后端运行配置。
+- `casbin/RBAC.conf`：Casbin RBAC 权限模型配置。
+
+### `api/proto/`
+按业务域划分的 protobuf 接口定义：
+- `dev/`
+- `engine/`
+- `iam/`
+- `market/`
+
+## 3. 公共基础设施 `common/`
+
+### `common/config/`
+- `config.go`：配置加载与管理。
+
+### `common/database/`
+- `gorm.go`：数据库初始化。
+- `redis.go`：Redis 初始化。
+- `minio.go`：MinIO 初始化。
+
+### `common/middleware/`
+- `auth.go`：认证相关中间件。
+- `authz.go`：授权相关中间件。
+- `broker.go`：消息/代理相关中间件。
+- `CORS.go`：跨域处理。
+- `rate_limit.go`：限流中间件。
+- `redis_sliding_window.go`：基于 Redis 的滑动窗口限流实现。
+- `trace.go`：链路追踪。
+
+### `common/queue/`
+- `kafka/kafka.go`：Kafka 封装。
+- `rocketmq/rocketmq.go`：RocketMQ 封装。
+- `rocketmq/casbin.go`：Casbin 同步相关消息处理。
+
+### `common/utils/`
+- `jwt.go` / `jwt_test.go`：JWT 生成与校验。
+- `hash.go` / `hash_test.go`：哈希工具。
+- `casbin_adapter.go`：Casbin 适配器。
+- `casbin_manager.go`：Casbin 管理器。
+- `constants.go`：常量定义。
+- `fileIO.go`：文件读写工具。
+- `token_bucket.go`：令牌桶限流实现。
+- `lock/`：锁相关工具。
+- `pool/gopool.go`：协程池工具。
+
+## 4. 业务服务 `services/`
+
+### `services/iam/`：身份认证、组织与权限管理
+- `router.go`：IAM 路由注册。
+- `cmd/main.go`：IAM 服务入口。
+- `app/`：应用层，编排登录、注册、群组、个人中心等用例。
+- `domain/`：领域层，定义用户、群组、RBAC 等核心模型。
+- `repository/`：仓储层，封装用户、群组、角色的数据访问。
+
+### `services/market/`：应用市场
+- `router.go`：Market 路由注册。
+- `app/`：市场应用逻辑。
+- `domain/`：应用领域模型。
+- `respository/`：应用仓储实现（目录名当前为 `respository`，疑似拼写保留）。
+
+### 其他服务预留/扩展模块
+- `services/engine/`：执行引擎相关模块。
+- `services/ai/`：AI 相关模块。
+- `services/entitlement/`：权益/优惠/订阅相关模块。
+- `services/wallet/`：钱包/账户/交易相关模块。
+- `services/file/`：文件服务预留。
+- `services/fileManager.go`：文件管理相关入口或工具。
+
+## 5. 前端 `frontend/RPA-market/`
+
+前端是独立的 Vue 3 应用，使用 TypeScript + Vite + Vue Router。
+
+### 关键文件
+- `src/main.ts`：前端入口。
+- `src/App.vue`：根组件，仅渲染路由视图。
+- `src/router/index.ts`：路由配置，支持动态扫描组件自动生成页面路由。
+- `src/layout/MainLayout.vue`：主布局。
+- `src/utils/request.ts`：网络请求封装。
+
+### 页面/组件
+- `src/components/Home.vue`
+- `src/components/Login.vue`
+- `src/components/Group.vue`
+- `src/components/UserProfile.vue`
+- `src/components/AppMarket.vue`
+
+### 说明
+当前前端页面以 `src/components/*.vue` 为路由来源，页面组织比较轻量，适合快速扩展管理后台或演示页面。
+
+## 6. 部署与脚本 `deployments/`、`script/`
+
+### `deployments/`
+- `istio/`：Istio 相关部署资源。
+- `k8s/`：Kubernetes 资源。
+
+### `script/`
+- `docker-compose.yaml`：本地联调容器编排。
+- `Dockerfile`：镜像构建文件。
+- `config.yaml`：脚本/环境配置。
+- `init.sql` / `init_better.sql`：数据库初始化脚本。
+- `prometheus.yml`：Prometheus 配置。
+- `loki-config.yaml`：Loki 配置。
+- `alloy-config.alloy`：Alloy 采集配置。
+- `RBAC.model`：Casbin RBAC 模型文件。
+- `.env.example`：本地部署环境变量示例，真实 `.env` 不提交。
+- `deploy-reset.sh`：全量重建容器和数据卷并执行部署验证。
+- `k6-scripts/test.js`：压测脚本。
+- `rmq/broker.conf`：RocketMQ Broker 配置。
+- `redis.conf`：Redis 配置文件。
+- `stop.sh`：停止脚本。
+
+## 7. 模块关系简述
+
+- `main.go` 负责统一启动后端，并挂载 `services/iam`、`services/market`。
+- `common/` 提供数据库、缓存、存储、鉴权、限流、消息队列等基础能力。
+- `services/iam` 负责登录、注册、群组与权限控制。
+- `services/market` 负责应用发布、查询、下载、下架等市场能力。
+- `frontend/RPA-market` 负责将这些能力呈现给用户。
