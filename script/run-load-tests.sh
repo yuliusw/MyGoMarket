@@ -10,6 +10,12 @@ LOAD_PASSWORD="${LOAD_PASSWORD:-password}"
 DB_USER="${DB_USER:-${POSTGRES_USER:-rpa_app}}"
 DB_NAME="${DB_NAME:-${POSTGRES_DB:-RPA}}"
 
+# Accept both historical FEATURE_* names and docker-compose FEATURES_* names.
+FEATURE_JWT_AUTH="${FEATURE_JWT_AUTH:-${FEATURES_JWT_AUTH:-false}}"
+FEATURE_CASBIN_AUTHZ="${FEATURE_CASBIN_AUTHZ:-${FEATURES_CASBIN_AUTHZ:-false}}"
+FEATURE_RATE_LIMIT_ENABLED="${FEATURE_RATE_LIMIT_ENABLED:-${FEATURES_RATE_LIMIT_ENABLED:-false}}"
+FEATURE_REQUEST_POOL_ENABLED="${FEATURE_REQUEST_POOL_ENABLED:-${FEATURES_REQUEST_POOL_ENABLED:-false}}"
+
 mkdir -p "${RESULTS_DIR}"
 mkdir -p ./k6-scripts/fixtures
 chmod 0777 "${RESULTS_DIR}"
@@ -33,9 +39,21 @@ write_manifest() {
     printf 'feature_casbin_authz=%s\n' "${FEATURE_CASBIN_AUTHZ:-false}"
     printf 'feature_rate_limit_enabled=%s\n' "${FEATURE_RATE_LIMIT_ENABLED:-false}"
     printf 'feature_request_pool_enabled=%s\n' "${FEATURE_REQUEST_POOL_ENABLED:-false}"
+    printf 'executor=%s\n' "${EXECUTOR:-constant-arrival-rate}"
+    printf 'default_rate=%s\n' "${DEFAULT_RATE:-100}"
+    printf 'default_duration=%s\n' "${DEFAULT_DURATION:-1m}"
+    printf 'default_vus=%s\n' "${DEFAULT_VUS:-100}"
+    printf 'default_max_vus=%s\n' "${DEFAULT_MAX_VUS:-200}"
     printf 'git_available=%s\n' "$(git rev-parse --is-inside-work-tree 2>/dev/null || true)"
     printf 'docker_compose_version=%s\n' "$(docker compose version --short 2>/dev/null || true)"
   } > "${RESULTS_DIR}/manifest.txt"
+}
+
+append_app_env_manifest() {
+  {
+    printf '\n[app_container_env]\n'
+    docker compose exec -T app /bin/sh -c 'env | sort | grep "^FEATURES_"' || true
+  } >> "${RESULTS_DIR}/manifest.txt"
 }
 
 sample_stats() {
@@ -94,6 +112,7 @@ run_api() {
     -e EMAIL="${LOAD_EMAIL}" \
     -e PASSWORD="${LOAD_PASSWORD}" \
     -e AUTH_MODE="${auth_mode}" \
+    -e EXECUTOR="${EXECUTOR:-constant-arrival-rate}" \
     -e RATE="${!rate_var:-${DEFAULT_RATE:-100}}" \
     -e DURATION="${!duration_var:-${DEFAULT_DURATION:-1m}}" \
     -e VUS="${!vus_var:-${DEFAULT_VUS:-100}}" \
@@ -211,6 +230,7 @@ if [ "${RUN_HTTP_APIS:-true}" = "true" ]; then
     "${FEATURE_CASBIN_AUTHZ:-false}" \
     "${FEATURE_RATE_LIMIT_ENABLED:-false}" \
     "${FEATURE_REQUEST_POOL_ENABLED:-false}"
+  append_app_env_manifest
   ensure_load_user
   run_smoke "${FEATURE_PREFIX}" "${AUTH_MODE_FOR_TEST}"
   run_http_api_suite "${FEATURE_PREFIX}" "${AUTH_MODE_FOR_TEST}"
@@ -223,6 +243,7 @@ if [ "${RUN_MQ:-false}" = "true" ]; then
     "${FEATURE_CASBIN_AUTHZ:-false}" \
     "${FEATURE_RATE_LIMIT_ENABLED:-false}" \
     "${FEATURE_REQUEST_POOL_ENABLED:-false}"
+  append_app_env_manifest
   ensure_load_user
   run_smoke "${FEATURE_PREFIX}_mq" "${AUTH_MODE_FOR_TEST}"
   run_api_suite "${FEATURE_PREFIX}_mq" "${AUTH_MODE_FOR_TEST}" \

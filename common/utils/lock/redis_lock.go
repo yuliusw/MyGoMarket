@@ -34,6 +34,9 @@ func NewRedisLock(key string, expiration time.Duration) *RedisLock {
 
 // Lock 尝试加锁（非阻塞）
 func (l *RedisLock) Lock(ctx context.Context) (bool, error) {
+	if l == nil || l.client == nil {
+		return true, nil
+	}
 	// 使用 SET key value NX PX expiration
 	success, err := l.client.SetNX(ctx, l.key, l.value, l.expiration).Result()
 	if err != nil {
@@ -44,6 +47,9 @@ func (l *RedisLock) Lock(ctx context.Context) (bool, error) {
 
 // Unlock 释放锁（使用 Lua 脚本保证原子性）
 func (l *RedisLock) Unlock(ctx context.Context) error {
+	if l == nil || l.client == nil {
+		return nil
+	}
 	// Lua 脚本：判断 value 是否一致，一致则删除
 	luaScript := `
 		if redis.call("get", KEYS[1]) == ARGV[1] then

@@ -5,10 +5,12 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -26,6 +28,7 @@ import (
 
 	"github.com/yuliusw/RPA-market/common/database"
 	"github.com/yuliusw/RPA-market/services/market/domain"
+	"golang.org/x/sync/singleflight"
 	"gorm.io/gorm"
 )
 
@@ -33,7 +36,10 @@ var (
 	appRepo     domain.AppRepository
 	minioClient *database.MinioClient
 	redisClient *redis.Client
+	appDetailSF singleflight.Group
 )
+
+const appDetailNegativeMarker = "__nil__"
 
 var allowedAppFileTypes = map[string]string{
 	".zip": "application/zip",
@@ -251,6 +257,7 @@ func PublishApp(c *gin.Context) {
 		return
 	}
 	logMarketAudit("publish_succeeded", traceID, developerID, appID, objectName, nil)
+	invalidateAppDetailCache(context.Background(), appID)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "App published successfully",
@@ -306,6 +313,7 @@ func UpdateApp(c *gin.Context) {
 		errorJSON(c, http.StatusInternalServerError, "APP_UPDATE_FAILED", "Failed to update app")
 		return
 	}
+	invalidateAppDetailCache(context.Background(), appID)
 
 	c.JSON(http.StatusOK, gin.H{"message": "App updated successfully", "data": app})
 }
@@ -337,6 +345,7 @@ func OffShelfApp(c *gin.Context) {
 		errorJSON(c, http.StatusInternalServerError, "APP_OFFSHELF_FAILED", "Failed to off-shelf app")
 		return
 	}
+	invalidateAppDetailCache(context.Background(), appID)
 
 	c.JSON(http.StatusOK, gin.H{"message": "App is now off the shelf"})
 }
@@ -379,7 +388,7 @@ func GetAppDetail(c *gin.Context) {
 		return
 	}
 
-	app, err := appRepo.GetByID(c.Request.Context(), appID)
+	app, err := getAppDetailCached(c.Request.Context(), appID)
 	if err != nil {
 		errorJSON(c, http.StatusNotFound, "APP_NOT_FOUND", "App not found")
 		return
@@ -451,6 +460,11 @@ func GetRankings(c *gin.Context) {
 		errorJSON(c, http.StatusServiceUnavailable, "RANKING_UNAVAILABLE", "Ranking service unavailable")
 		return
 	}
+	cacheKey := rankingCacheKey(rankingType, limit)
+	if cached, ok := getRankingCache(c.Request.Context(), cacheKey); ok {
+		c.JSON(http.StatusOK, cached)
+		return
+	}
 
 	items, err := redisClient.ZRevRangeWithScores(c.Request.Context(), key, 0, int64(limit-1)).Result()
 	if err != nil {
@@ -494,11 +508,46 @@ func GetRankings(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	responseBody := gin.H{
 		"type":  rankingType,
 		"limit": limit,
 		"data":  rankings,
-	})
+	}
+	setRankingCache(context.Background(), cacheKey, responseBody)
+	c.JSON(http.StatusOK, responseBody)
+}
+
+func rankingCacheKey(rankingType string, limit int) string {
+	return fmt.Sprintf("market:rank:cache:%s:%d", rankingType, limit)
+}
+
+func getRankingCache(ctx context.Context, key string) (gin.H, bool) {
+	if redisClient == nil {
+		return nil, false
+	}
+	value, err := redisClient.Get(ctx, key).Result()
+	if err != nil {
+		return nil, false
+	}
+	var cached gin.H
+	if err := json.Unmarshal([]byte(value), &cached); err != nil {
+		_ = redisClient.Del(context.Background(), key).Err()
+		return nil, false
+	}
+	return cached, true
+}
+
+func setRankingCache(ctx context.Context, key string, value gin.H) {
+	if redisClient == nil {
+		return
+	}
+	payload, err := json.Marshal(value)
+	if err != nil {
+		return
+	}
+	if err := redisClient.Set(ctx, key, payload, 10*time.Second).Err(); err != nil {
+		log.Printf("failed to write ranking cache key=%s: %v", key, err)
+	}
 }
 
 func recordDownloadRank(ctx context.Context, appID string) {
@@ -527,6 +576,7 @@ func recordDownloadRank(ctx context.Context, appID string) {
 	if _, err := pipe.Exec(ctx); err != nil {
 		log.Printf("failed to record download ranking for app %s: %v", appID, err)
 	}
+	_ = redisClient.Del(ctx, "market:rank:cache:daily:20", "market:rank:cache:weekly:20", "market:rank:cache:total:20").Err()
 }
 
 func rankingKey(rankingType string, now time.Time) (string, bool) {
@@ -578,6 +628,7 @@ func DeleteApp(c *gin.Context) {
 		errorJSON(c, http.StatusInternalServerError, "APP_DELETE_FAILED", "Failed to delete app record")
 		return
 	}
+	invalidateAppDetailCache(context.Background(), appID)
 	if objectName != "" {
 		if err := minioClient.RemoveFile(ctx, objectName); err != nil {
 			logMarketAudit("delete_minio_remove_failed", getTraceID(c), developerID, appID, objectName, err)
@@ -586,6 +637,62 @@ func DeleteApp(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "App and files deleted successfully"})
+}
+
+func getAppDetailCached(ctx context.Context, appID uuid.UUID) (*domain.App, error) {
+	if redisClient == nil {
+		return appRepo.GetByID(ctx, appID)
+	}
+	key := appDetailCacheKey(appID)
+	cached, err := redisClient.Get(ctx, key).Result()
+	if err == nil {
+		if cached == appDetailNegativeMarker {
+			return nil, gorm.ErrRecordNotFound
+		}
+		var app domain.App
+		if unmarshalErr := json.Unmarshal([]byte(cached), &app); unmarshalErr == nil {
+			return &app, nil
+		}
+		_ = redisClient.Del(context.Background(), key).Err()
+	} else if err != redis.Nil {
+		log.Printf("failed to read app detail cache app_id=%s: %v", appID, err)
+	}
+
+	value, err, _ := appDetailSF.Do(key, func() (interface{}, error) {
+		app, loadErr := appRepo.GetByID(ctx, appID)
+		if loadErr != nil {
+			if errors.Is(loadErr, gorm.ErrRecordNotFound) {
+				_ = redisClient.Set(context.Background(), key, appDetailNegativeMarker, 30*time.Second).Err()
+			}
+			return nil, loadErr
+		}
+		payload, marshalErr := json.Marshal(app)
+		if marshalErr == nil {
+			_ = redisClient.Set(context.Background(), key, payload, appDetailCacheTTL()).Err()
+		}
+		return app, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return value.(*domain.App), nil
+}
+
+func appDetailCacheKey(appID uuid.UUID) string {
+	return fmt.Sprintf("market:app:detail:%s", appID.String())
+}
+
+func appDetailCacheTTL() time.Duration {
+	return 5*time.Minute + time.Duration(rand.Int63n(int64(time.Minute)))
+}
+
+func invalidateAppDetailCache(ctx context.Context, appID uuid.UUID) {
+	if redisClient == nil {
+		return
+	}
+	if err := redisClient.Del(ctx, appDetailCacheKey(appID)).Err(); err != nil {
+		log.Printf("failed to invalidate app detail cache app_id=%s: %v", appID, err)
+	}
 }
 
 func validateUploadedFilename(filename string) error {

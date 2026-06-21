@@ -254,6 +254,22 @@ CREATE TABLE IF NOT EXISTS orders (
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS subscription_id UUID;
 
 /* =========================================================
+   权益发放 Outbox：支付事务提交后由后台消费者异步发放订阅权益
+   ========================================================= */
+CREATE TABLE IF NOT EXISTS entitlement_outbox (
+    event_id UUID PRIMARY KEY DEFAULT gen_uuid(),
+    order_id UUID NOT NULL REFERENCES orders(order_id),
+    status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'done', 'failed')),
+    retry_count INTEGER NOT NULL DEFAULT 0,
+    next_run_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_error TEXT,
+    locked_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (order_id)
+);
+
+/* =========================================================
    优惠券定义表：记录优惠券的模板规则
    ========================================================= */
 CREATE TABLE IF NOT EXISTS coupon_templates (
@@ -361,6 +377,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_orders_idempotency_key
   ON orders(idempotency_key)
   WHERE COALESCE(idempotency_key, '') <> '';
 
+-- Entitlement outbox
+CREATE INDEX IF NOT EXISTS idx_entitlement_outbox_status_next ON entitlement_outbox(status, next_run_at);
+
 -- Coupons
 CREATE INDEX IF NOT EXISTS idx_coupons_owner_status ON coupons(owner_type, owner_id, status);
 CREATE INDEX IF NOT EXISTS idx_coupons_template ON coupons(template_id);
@@ -373,6 +392,11 @@ CREATE INDEX IF NOT EXISTS idx_subscriptions_user_app ON subscriptions(user_id, 
 CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON subscriptions(status);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_subid ON subscriptions(sub_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_source_order ON subscriptions(source_order_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_subscriptions_default_order_once ON subscriptions_default(user_id, app_id, source_order_id) WHERE source_order_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_subscriptions_2025_order_once ON subscriptions_2025(user_id, app_id, source_order_id) WHERE source_order_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_subscriptions_2026_order_once ON subscriptions_2026(user_id, app_id, source_order_id) WHERE source_order_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_subscriptions_2027_order_once ON subscriptions_2027(user_id, app_id, source_order_id) WHERE source_order_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_subscriptions_2028_order_once ON subscriptions_2028(user_id, app_id, source_order_id) WHERE source_order_id IS NOT NULL;
 
 -- =========================================================
 -- Timestamp update triggers
@@ -419,6 +443,11 @@ FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 -- orders.updated_at
 DROP TRIGGER IF EXISTS trg_orders_updated ON orders;
 CREATE TRIGGER trg_orders_updated BEFORE UPDATE ON orders
+FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- entitlement_outbox.updated_at
+DROP TRIGGER IF EXISTS trg_entitlement_outbox_updated ON entitlement_outbox;
+CREATE TRIGGER trg_entitlement_outbox_updated BEFORE UPDATE ON entitlement_outbox
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- minio_delete_retries.updated_at

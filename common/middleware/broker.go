@@ -7,7 +7,24 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/yuliusw/RPA-market/common/config"
+	"github.com/yuliusw/RPA-market/common/response"
 )
+
+func ConfiguredCircuitBreaker() gin.HandlerFunc {
+	if config.AppConfig == nil || !config.AppConfig.Features.CircuitBreaker.Enabled {
+		return func(c *gin.Context) { c.Next() }
+	}
+	maxFailures := config.AppConfig.Features.CircuitBreaker.MaxFailures
+	if maxFailures <= 0 {
+		maxFailures = 50
+	}
+	timeout := time.Duration(config.AppConfig.Features.CircuitBreaker.TimeoutSeconds) * time.Second
+	if timeout <= 0 {
+		timeout = 30 * time.Second
+	}
+	return CircuitBreakerMiddleware(maxFailures, timeout)
+}
 
 type State int
 
@@ -89,11 +106,7 @@ func CircuitBreakerMiddleware(maxFailures int, timeout time.Duration) gin.Handle
 
 	return func(c *gin.Context) {
 		if !cb.Allow() {
-			c.JSON(http.StatusServiceUnavailable, gin.H{
-				"code": 503,
-				"msg":  "服务繁忙，已触发熔断保护，请稍后重试",
-			})
-			c.Abort()
+			response.Abort(c, http.StatusServiceUnavailable, "CIRCUIT_OPEN", "服务繁忙，已触发熔断保护，请稍后重试")
 			return
 		}
 

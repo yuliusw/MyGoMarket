@@ -12,10 +12,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/yuliusw/RPA-market/common/audit"
 	"github.com/yuliusw/RPA-market/common/config"
 	"github.com/yuliusw/RPA-market/common/database"
 	"github.com/yuliusw/RPA-market/common/grpcserver"
+	"github.com/yuliusw/RPA-market/common/metrics"
 	"github.com/yuliusw/RPA-market/common/middleware"
 	"github.com/yuliusw/RPA-market/common/queue/rocketmq"
 	"github.com/yuliusw/RPA-market/common/utils"
@@ -25,6 +27,7 @@ import (
 	"github.com/yuliusw/RPA-market/services/iam"
 	"github.com/yuliusw/RPA-market/services/market"
 	"github.com/yuliusw/RPA-market/services/order"
+	orderrepo "github.com/yuliusw/RPA-market/services/order/repository"
 	"github.com/yuliusw/RPA-market/services/wallet"
 	"google.golang.org/grpc"
 )
@@ -52,7 +55,11 @@ func main() {
 	// 3. 初始化 Gin 引擎
 	r := gin.Default()
 	r.Use(middleware.GinLogger())
+	r.Use(metrics.HTTPMiddleware())
 	r.Use(middleware.ConfiguredRequestPoolFastFail())
+	r.Use(middleware.ConfiguredCircuitBreaker())
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	metrics.StartGORMCollector(database.DB, 10*time.Second)
 
 	// 4. 注册所有路由 (将 Gin 引擎实例传递给 IAM 服务)
 	log.Println("Registering routes...")
@@ -148,6 +155,8 @@ func gracefulShutdown(server *http.Server, grpcServer *grpc.Server) {
 	}
 	stopGRPCServer(ctx, grpcServer)
 	audit.StopMinioDeleteRetryWorker()
+	orderrepo.StopEntitlementOutboxWorker()
+	orderrepo.StopPendingOrderCancelWorker()
 	audit.Shutdown(ctx)
 
 	pool.CloseAllWithTimeout(timeout)

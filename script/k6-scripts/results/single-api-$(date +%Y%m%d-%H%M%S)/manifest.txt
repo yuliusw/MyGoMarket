@@ -1,0 +1,9 @@
+timestamp=2026-06-21T15:38:42+08:00
+results_dir=./k6-scripts/results/single-api-$(date +%Y%m%d-%H%M%S)
+base_url=http://app:12660
+feature_jwt_auth=false
+feature_casbin_authz=false
+feature_rate_limit_enabled=false
+feature_request_pool_enabled=false
+git_available=true
+docker_compose_version=5.1.4

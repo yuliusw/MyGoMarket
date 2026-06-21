@@ -1,0 +1,156 @@
+{
+    "metrics": {
+        "checks": {
+            "passes": 302,
+            "fails": 0,
+            "thresholds": {
+                "rate>0.95": false
+            },
+            "value": 1
+        },
+        "http_req_duration": {
+            "p(95)": 3.45973815,
+            "avg": 2.948736930463577,
+            "min": 2.352468,
+            "med": 2.888658,
+            "max": 6.859701,
+            "p(90)": 3.2743511,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "vus": {
+            "value": 0,
+            "min": 0,
+            "max": 0
+        },
+        "http_req_tls_handshaking": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0
+        },
+        "http_reqs": {
+            "count": 302,
+            "rate": 20.119277704140057
+        },
+        "http_req_sending": {
+            "med": 0.020992,
+            "max": 0.110555,
+            "p(90)": 0.04232950000000002,
+            "p(95)": 0.05498009999999999,
+            "avg": 0.023655079470198667,
+            "min": 0.012608
+        },
+        "http_req_blocked": {
+            "avg": 0.03274409271523179,
+            "min": 0.0033,
+            "med": 0.005058,
+            "max": 0.70361,
+            "p(90)": 0.1545671,
+            "p(95)": 0.20955379999999996
+        },
+        "iterations": {
+            "count": 301,
+            "rate": 20.05265757929191
+        },
+        "data_received": {
+            "count": 62673,
+            "rate": 4175.283084607847
+        },
+        "iteration_duration": {
+            "avg": 3.155495820598009,
+            "min": 2.530137,
+            "med": 3.106393,
+            "max": 7.097147,
+            "p(90)": 3.521096,
+            "p(95)": 3.728151
+        },
+        "http_req_waiting": {
+            "p(95)": 3.3583307,
+            "avg": 2.8815266324503344,
+            "min": 2.311955,
+            "med": 2.816771,
+            "max": 6.792542,
+            "p(90)": 3.2004892
+        },
+        "http_req_receiving": {
+            "p(95)": 0.05904705,
+            "avg": 0.04355521854304636,
+            "min": 0.025125,
+            "med": 0.042487,
+            "max": 0.197543,
+            "p(90)": 0.05465140000000001
+        },
+        "http_req_connecting": {
+            "med": 0,
+            "max": 0.297922,
+            "p(90)": 0.11384890000000016,
+            "p(95)": 0.16621734999999999,
+            "avg": 0.02125446357615894,
+            "min": 0
+        },
+        "http_req_duration{expected_response:true}": {
+            "min": 2.352468,
+            "med": 2.888658,
+            "max": 6.859701,
+            "p(90)": 3.2743511,
+            "p(95)": 3.45973815,
+            "avg": 2.948736930463577
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 302,
+            "thresholds": {
+                "rate<0.05": false
+            },
+            "value": 0
+        },
+        "data_sent": {
+            "count": 84713,
+            "rate": 5643.590636260982
+        },
+        "vus_max": {
+            "value": 40,
+            "min": 40,
+            "max": 40
+        }
+    },
+    "setup_data": {
+        "cookies": {},
+        "groupID": "019ee920-48c9-7e1a-8327-10ef07e1dacb"
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "groups": {},
+                "checks": {
+                        "iam_group_create_seed status": {
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "iam_group_create_seed status",
+                            "path": "::setup::iam_group_create_seed status",
+                            "id": "3bb63f3cf774d33ab14eab88aa1ffeb3"
+                        }
+                    },
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a"
+            }
+        },
+        "checks": {
+            "iam_group_update status": {
+                "name": "iam_group_update status",
+                "path": "::iam_group_update status",
+                "id": "bfb2ab5269587aea485b7d5fbe66e70a",
+                "passes": 301,
+                "fails": 0
+            }
+        }
+    }
+}

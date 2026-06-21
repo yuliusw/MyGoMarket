@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"io"
 	"log"
 	"net/url"
 	"time"
@@ -74,6 +75,12 @@ func (m *MinioClient) UploadFileInfo(ctx context.Context, objectName, filePath, 
 	}
 	log.Printf("文件上传成功: %s, Size: %d", objectName, info.Size)
 	return info, nil
+}
+
+func (m *MinioClient) UploadReader(ctx context.Context, objectName string, reader io.Reader, contentType string) (minio.UploadInfo, error) {
+	return m.Client.PutObject(ctx, m.BucketName, objectName, reader, -1, minio.PutObjectOptions{
+		ContentType: contentType,
+	})
 }
 
 // GetFileUrl 获取文件的临时访问链接（预签名 URL）

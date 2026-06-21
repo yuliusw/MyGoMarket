@@ -9,9 +9,14 @@ export const APP_ID = __ENV.APP_ID || '';
 export const APP_FILE = __ENV.APP_FILE || '/scripts/fixtures/app.gz';
 export const AVATAR_FILE = __ENV.AVATAR_FILE || '/scripts/fixtures/avatar.png';
 
-export const options = {
-  scenarios: {
-    single_api: {
+const singleApiScenario = __ENV.EXECUTOR === 'constant-vus'
+  ? {
+      executor: 'constant-vus',
+      vus: Number(__ENV.VUS || 100),
+      duration: __ENV.DURATION || '1m',
+      exec: 'singleApi',
+    }
+  : {
       executor: 'constant-arrival-rate',
       rate: Number(__ENV.RATE || 50),
       timeUnit: __ENV.TIME_UNIT || '1s',
@@ -19,7 +24,11 @@ export const options = {
       preAllocatedVUs: Number(__ENV.VUS || 100),
       maxVUs: Number(__ENV.MAX_VUS || 200),
       exec: 'singleApi',
-    },
+    };
+
+export const options = {
+  scenarios: {
+    single_api: singleApiScenario,
   },
   thresholds: {
     http_req_failed: [__ENV.FAIL_THRESHOLD || 'rate<0.05'],

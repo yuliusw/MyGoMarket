@@ -63,3 +63,10 @@ features:
   request_pool:
     enabled: true
     capacity: 1000
+  circuit_breaker:
+    enabled: true
+    max_failures: 50
+    timeout_seconds: 30
+  order:
+    pending_timeout_seconds: 1800
+    cancel_scan_seconds: 60

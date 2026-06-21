@@ -5,10 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
+	redislock "github.com/yuliusw/RPA-market/common/utils/lock"
 	orderdomain "github.com/yuliusw/RPA-market/services/order/domain"
 	walletdomain "github.com/yuliusw/RPA-market/services/wallet/domain"
 	walletrepo "github.com/yuliusw/RPA-market/services/wallet/repository"
@@ -53,6 +55,25 @@ type subscriptionModel struct {
 	SourceOrderID *uuid.UUID `gorm:"column:source_order_id;type:uuid"`
 }
 
+type entitlementOutboxModel struct {
+	EventID    uuid.UUID  `gorm:"column:event_id;type:uuid;primaryKey"`
+	OrderID    uuid.UUID  `gorm:"column:order_id;type:uuid"`
+	Status     string     `gorm:"column:status"`
+	RetryCount int        `gorm:"column:retry_count"`
+	NextRunAt  time.Time  `gorm:"column:next_run_at"`
+	LastError  string     `gorm:"column:last_error"`
+	CreatedAt  time.Time  `gorm:"column:created_at"`
+	UpdatedAt  time.Time  `gorm:"column:updated_at"`
+	LockedAt   *time.Time `gorm:"column:locked_at"`
+}
+
+var (
+	outboxWorkerCancel context.CancelFunc
+	outboxWorkerOnce   sync.Once
+	pendingCancelStop  context.CancelFunc
+	pendingCancelOnce  sync.Once
+)
+
 func (orderModel) TableName() string {
 	return "orders"
 }
@@ -63,6 +84,10 @@ func (appModel) TableName() string {
 
 func (subscriptionModel) TableName() string {
 	return "subscriptions"
+}
+
+func (entitlementOutboxModel) TableName() string {
+	return "entitlement_outbox"
 }
 
 func NewOrderRepository(db *gorm.DB, wallet *walletrepo.WalletRepository) *OrderRepository {
@@ -146,12 +171,7 @@ func (r *OrderRepository) Pay(ctx context.Context, orderID, userID uuid.UUID, id
 		}
 		if locked.Status == orderdomain.OrderStatusPaid {
 			if locked.SubscriptionID == nil {
-				subID, err := r.grantSubscription(ctx, tx, locked)
-				if err != nil {
-					return err
-				}
-				locked.MarkSubscription(subID)
-				if err := updateOrder(ctx, tx, locked); err != nil {
+				if err := r.enqueueEntitlement(ctx, tx, locked.OrderID); err != nil {
 					return err
 				}
 			}
@@ -168,11 +188,10 @@ func (r *OrderRepository) Pay(ctx context.Context, orderID, userID uuid.UUID, id
 		if err != nil {
 			return err
 		}
-		subID, err := r.grantSubscription(ctx, tx, locked)
-		if err != nil {
+		if err := locked.MarkPaidAwaitingEntitlement(walletTx.TxID); err != nil {
 			return err
 		}
-		if err := locked.MarkPaid(walletTx.TxID, subID); err != nil {
+		if err := r.enqueueEntitlement(ctx, tx, locked.OrderID); err != nil {
 			return err
 		}
 		if err := updateOrder(ctx, tx, locked); err != nil {
@@ -265,6 +284,176 @@ func (r *OrderRepository) grantSubscription(ctx context.Context, tx *gorm.DB, or
 		return uuid.Nil, err
 	}
 	return sub.SubID, nil
+}
+
+func (r *OrderRepository) enqueueEntitlement(ctx context.Context, tx *gorm.DB, orderID uuid.UUID) error {
+	now := time.Now()
+	return tx.WithContext(ctx).Exec(`
+		INSERT INTO entitlement_outbox (event_id, order_id, status, retry_count, next_run_at, created_at, updated_at)
+		VALUES (?, ?, 'pending', 0, ?, ?, ?)
+		ON CONFLICT (order_id) DO NOTHING
+	`, uuid.New(), orderID, now, now, now).Error
+}
+
+func StartEntitlementOutboxWorker(db *gorm.DB) {
+	if db == nil {
+		return
+	}
+	outboxWorkerOnce.Do(func() {
+		ctx, cancel := context.WithCancel(context.Background())
+		outboxWorkerCancel = cancel
+		worker := NewOrderRepository(db, walletrepo.NewWalletRepository(db))
+		go worker.runEntitlementOutboxWorker(ctx)
+	})
+}
+
+func StopEntitlementOutboxWorker() {
+	if outboxWorkerCancel != nil {
+		outboxWorkerCancel()
+	}
+}
+
+func StartPendingOrderCancelWorker(db *gorm.DB, timeout, scanInterval time.Duration) {
+	if db == nil || timeout <= 0 {
+		return
+	}
+	if scanInterval <= 0 {
+		scanInterval = time.Minute
+	}
+	pendingCancelOnce.Do(func() {
+		ctx, cancel := context.WithCancel(context.Background())
+		pendingCancelStop = cancel
+		worker := NewOrderRepository(db, walletrepo.NewWalletRepository(db))
+		go worker.runPendingOrderCancelWorker(ctx, timeout, scanInterval)
+	})
+}
+
+func StopPendingOrderCancelWorker() {
+	if pendingCancelStop != nil {
+		pendingCancelStop()
+	}
+}
+
+func (r *OrderRepository) runPendingOrderCancelWorker(ctx context.Context, timeout, scanInterval time.Duration) {
+	ticker := time.NewTicker(scanInterval)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			_ = r.cancelExpiredPendingOrders(ctx, timeout, 100)
+		}
+	}
+}
+
+func (r *OrderRepository) cancelExpiredPendingOrders(ctx context.Context, timeout time.Duration, limit int) error {
+	cutoff := time.Now().Add(-timeout)
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		var rows []orderModel
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE", Options: "SKIP LOCKED"}).
+			Where("status = ? AND created_at < ?", string(orderdomain.OrderStatusPending), cutoff).
+			Order("created_at ASC").Limit(limit).Find(&rows).Error; err != nil {
+			return err
+		}
+		for _, row := range rows {
+			order := row.toDomain()
+			if err := order.Cancel(); err != nil {
+				continue
+			}
+			if err := updateOrder(ctx, tx, order); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+func (r *OrderRepository) runEntitlementOutboxWorker(ctx context.Context) {
+	ticker := time.NewTicker(2 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			_ = r.processEntitlementOutboxBatch(ctx, 20)
+		}
+	}
+}
+
+func (r *OrderRepository) processEntitlementOutboxBatch(ctx context.Context, limit int) error {
+	var events []entitlementOutboxModel
+	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE", Options: "SKIP LOCKED"}).
+			Where("status IN ? AND next_run_at <= ?", []string{"pending", "failed"}, time.Now()).
+			Order("next_run_at ASC").Limit(limit).Find(&events).Error; err != nil {
+			return err
+		}
+		now := time.Now()
+		for _, event := range events {
+			if err := tx.Model(&entitlementOutboxModel{}).Where("event_id = ?", event.EventID).Updates(map[string]any{"status": "processing", "locked_at": now, "updated_at": now}).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	for _, event := range events {
+		if err := r.processEntitlementEvent(ctx, event); err != nil {
+			_ = r.markEntitlementEventFailed(context.Background(), event, err)
+		}
+	}
+	return nil
+}
+
+func (r *OrderRepository) processEntitlementEvent(ctx context.Context, event entitlementOutboxModel) error {
+	lock := redislock.NewRedisLock("entitlement:order:"+event.OrderID.String(), 30*time.Second)
+	if lock != nil {
+		locked, err := lock.Lock(ctx)
+		if err != nil {
+			return err
+		}
+		if !locked {
+			return fmt.Errorf("entitlement event already locked: %s", event.OrderID)
+		}
+		defer lock.Unlock(context.Background())
+	}
+
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		order, err := r.lockOrder(ctx, tx, event.OrderID)
+		if err != nil {
+			return err
+		}
+		if order.Status != orderdomain.OrderStatusPaid {
+			return fmt.Errorf("order is not paid: %s", event.OrderID)
+		}
+		subID, err := r.grantSubscription(ctx, tx, order)
+		if err != nil {
+			return err
+		}
+		order.MarkSubscription(subID)
+		if err := updateOrder(ctx, tx, order); err != nil {
+			return err
+		}
+		now := time.Now()
+		return tx.Model(&entitlementOutboxModel{}).Where("event_id = ?", event.EventID).Updates(map[string]any{"status": "done", "last_error": "", "updated_at": now}).Error
+	})
+}
+
+func (r *OrderRepository) markEntitlementEventFailed(ctx context.Context, event entitlementOutboxModel, err error) error {
+	retryCount := event.RetryCount + 1
+	nextRunAt := time.Now().Add(time.Duration(retryCount*retryCount) * time.Second)
+	return r.db.WithContext(ctx).Model(&entitlementOutboxModel{}).Where("event_id = ?", event.EventID).Updates(map[string]any{
+		"status":      "failed",
+		"retry_count": retryCount,
+		"next_run_at": nextRunAt,
+		"last_error":  err.Error(),
+		"updated_at":  time.Now(),
+		"locked_at":   nil,
+	}).Error
 }
 
 func (r *OrderRepository) findSubscriptionByOrder(ctx context.Context, tx *gorm.DB, orderID uuid.UUID) (*subscriptionModel, error) {

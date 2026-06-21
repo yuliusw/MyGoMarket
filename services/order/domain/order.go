@@ -79,6 +79,21 @@ func (o *Order) MarkPaid(txID, subscriptionID uuid.UUID) error {
 	return nil
 }
 
+func (o *Order) MarkPaidAwaitingEntitlement(txID uuid.UUID) error {
+	if o.Status == OrderStatusPaid {
+		return ErrOrderAlreadyPaid
+	}
+	if o.Status != OrderStatusPending {
+		return ErrOrderNotPayable
+	}
+	now := time.Now()
+	o.Status = OrderStatusPaid
+	o.TxID = &txID
+	o.PaidAt = &now
+	o.UpdatedAt = now
+	return nil
+}
+
 func (o *Order) MarkSubscription(subscriptionID uuid.UUID) {
 	o.SubscriptionID = &subscriptionID
 	o.UpdatedAt = time.Now()

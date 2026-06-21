@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/yuliusw/RPA-market/common/response"
@@ -18,11 +19,10 @@ func CasbinRequire(requirePermission string) gin.HandlerFunc {
 			return
 		}
 
-		groupID := c.Param("id")
+		groupID := resourceDomain(c)
 		// 如果路由不含具体域，自动归属到你的系统初始化全局域 UUID
 		if groupID == "" {
 			groupID = "11111111-1111-1111-1111-111111111111"
-		} else {
 		}
 
 		// 从 LRU 池获取 Enforcer，免去全局锁，相互之间互不影响
@@ -49,4 +49,13 @@ func CasbinRequire(requirePermission string) gin.HandlerFunc {
 
 		c.Next()
 	}
+}
+
+func resourceDomain(c *gin.Context) string {
+	for _, name := range []string{"id", "app_id", "group_id"} {
+		if value := strings.TrimSpace(c.Param(name)); value != "" {
+			return value
+		}
+	}
+	return ""
 }

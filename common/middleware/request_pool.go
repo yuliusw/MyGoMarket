@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/panjf2000/ants/v2"
 	"github.com/yuliusw/RPA-market/common/config"
+	"github.com/yuliusw/RPA-market/common/metrics"
 	"github.com/yuliusw/RPA-market/common/response"
 	"github.com/yuliusw/RPA-market/common/utils/pool"
 )
@@ -45,6 +46,7 @@ func RequestPoolFastFail(requestPool *ants.Pool) gin.HandlerFunc {
 		})
 		if err != nil {
 			if errors.Is(err, ants.ErrPoolOverload) {
+				metrics.IncRequestPoolRejected()
 				response.Abort(c, http.StatusServiceUnavailable, "SERVER_BUSY", "server is busy, please retry later")
 				return
 			}

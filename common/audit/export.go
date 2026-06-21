@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -14,6 +15,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/yuliusw/RPA-market/common/database"
 	"github.com/yuliusw/RPA-market/common/response"
 	"gorm.io/gorm"
 )
@@ -109,15 +111,36 @@ func ExportCSVHandler(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		pr, pw := io.Pipe()
+		filename := "audit_events_" + time.Now().UTC().Format("20060102T150405Z") + ".csv"
+		httpReader, httpWriter := io.Pipe()
+		minioReader, minioWriter := io.Pipe()
+		objectName := "audit-exports/" + filename
+
+		writer := io.Writer(httpWriter)
+		if database.GlobalMinio != nil {
+			writer = io.MultiWriter(httpWriter, minioWriter)
+			go func() {
+				_, uploadErr := database.GlobalMinio.UploadReader(context.Background(), objectName, minioReader, "text/csv; charset=utf-8")
+				if uploadErr != nil {
+					log.Printf("failed to upload audit export object=%s: %v", objectName, uploadErr)
+				}
+			}()
+		} else {
+			_ = minioReader.Close()
+			_ = minioWriter.Close()
+		}
+
 		go func() {
-			err := ExportCSV(c.Request.Context(), db, pw, filter)
-			_ = pw.CloseWithError(err)
+			err := ExportCSV(c.Request.Context(), db, writer, filter)
+			_ = httpWriter.CloseWithError(err)
+			if database.GlobalMinio != nil {
+				_ = minioWriter.CloseWithError(err)
+			}
 		}()
 
-		filename := "audit_events_" + time.Now().UTC().Format("20060102T150405Z") + ".csv"
-		c.DataFromReader(http.StatusOK, -1, "text/csv; charset=utf-8", pr, map[string]string{
+		c.DataFromReader(http.StatusOK, -1, "text/csv; charset=utf-8", httpReader, map[string]string{
 			"Content-Disposition": `attachment; filename="` + filename + `"`,
+			"X-MinIO-Object":      objectName,
 		})
 	}
 }

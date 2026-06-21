@@ -1,0 +1,156 @@
+{
+    "metrics": {
+        "vus_max": {
+            "value": 40,
+            "min": 40,
+            "max": 40
+        },
+        "http_req_failed": {
+            "fails": 301,
+            "passes": 0,
+            "thresholds": {
+                "rate<0.05": false
+            },
+            "value": 0
+        },
+        "http_reqs": {
+            "count": 301,
+            "rate": 20.039947432810425
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 0.7836107973421926,
+            "min": 0.462932,
+            "med": 0.735017,
+            "max": 17.4021,
+            "p(90)": 0.854995,
+            "p(95)": 0.927005
+        },
+        "data_received": {
+            "count": 275919,
+            "rate": 18370.107161839267
+        },
+        "http_req_blocked": {
+            "avg": 0.03708867774086375,
+            "min": 0.003461,
+            "med": 0.005006,
+            "max": 0.901549,
+            "p(90)": 0.200693,
+            "p(95)": 0.241596
+        },
+        "iterations": {
+            "count": 300,
+            "rate": 19.97336953436255
+        },
+        "vus": {
+            "value": 0,
+            "min": 0,
+            "max": 0
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_waiting": {
+            "avg": 0.718900621262458,
+            "min": 0.388871,
+            "med": 0.670009,
+            "max": 17.239687,
+            "p(90)": 0.78854,
+            "p(95)": 0.84303
+        },
+        "http_req_receiving": {
+            "avg": 0.04489086710963453,
+            "min": 0.02226,
+            "med": 0.044312,
+            "max": 0.11774,
+            "p(90)": 0.05765,
+            "p(95)": 0.062464
+        },
+        "http_req_sending": {
+            "p(90)": 0.041978,
+            "p(95)": 0.05301,
+            "avg": 0.019819308970099668,
+            "min": 0.009561,
+            "med": 0.016712,
+            "max": 0.087708
+        },
+        "iteration_duration": {
+            "avg": 0.9309256900000002,
+            "min": 0.610066,
+            "med": 0.9295035,
+            "max": 1.408208,
+            "p(90)": 1.1472011,
+            "p(95)": 1.2304035500000001
+        },
+        "checks": {
+            "passes": 301,
+            "fails": 0,
+            "thresholds": {
+                "rate>0.95": false
+            },
+            "value": 1
+        },
+        "http_req_duration": {
+            "min": 0.462932,
+            "med": 0.735017,
+            "max": 17.4021,
+            "p(90)": 0.854995,
+            "p(95)": 0.927005,
+            "avg": 0.7836107973421926,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_req_connecting": {
+            "p(90)": 0.151196,
+            "p(95)": 0.186463,
+            "avg": 0.02336889368770764,
+            "min": 0,
+            "med": 0,
+            "max": 0.239985
+        },
+        "data_sent": {
+            "count": 54819,
+            "rate": 3649.733815014069
+        }
+    },
+    "setup_data": {
+        "appID": "ba990dcc-94d4-44c0-b3b9-0a67d13a1544",
+        "cookies": {}
+    },
+    "root_group": {
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "market_app_create_seed status": {
+                            "name": "market_app_create_seed status",
+                            "path": "::setup::market_app_create_seed status",
+                            "id": "d85950b5e57cb8ab2f0fbb39bea73cd7",
+                            "passes": 1,
+                            "fails": 0
+                        }
+                    }
+            }
+        },
+        "checks": {
+            "market_app_detail status": {
+                "path": "::market_app_detail status",
+                "id": "e3ad017eecd88a461abcb4e0dd34c313",
+                "passes": 300,
+                "fails": 0,
+                "name": "market_app_detail status"
+            }
+        },
+        "name": "",
+        "path": ""
+    }
+}

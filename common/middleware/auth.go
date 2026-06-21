@@ -33,7 +33,7 @@ func InitJWTAuth(repo domain.UserRepository) {
 //  3. Session 不存在 / 不一致 → 视为登出或顶号，返回 401
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString := extractJWT(c)
+		tokenString, fromAuthorizationHeader := extractJWT(c)
 		if tokenString == "" {
 			abortWithJSON(c, "Authorization token is required")
 			return
@@ -44,8 +44,8 @@ func JWTAuth() gin.HandlerFunc {
 		// 1. 严格校验 JWT（含过期）
 		claims, err := utils.ParseToken(tokenString)
 		if err == nil && claims.UserID != "" {
-			// JWT 仍有效，做 Session 一致性校验（顶号判定）
-			if !checkSession(c, claims.UserID, sessionCookie) {
+			// Cookie 登录保持 Session 顶号校验；纯 Bearer API 客户端允许只携带有效 JWT。
+			if !fromAuthorizationHeader && !checkSession(c, claims.UserID, sessionCookie) {
 				abortWithJSON(c, "Account logged in from another device")
 				return
 			}
@@ -89,18 +89,18 @@ func JWTAuth() gin.HandlerFunc {
 }
 
 // extractJWT 从 Authorization: Bearer 或 auth_token cookie 取 JWT
-func extractJWT(c *gin.Context) string {
+func extractJWT(c *gin.Context) (string, bool) {
 	authHeader := c.GetHeader("Authorization")
 	if authHeader != "" {
 		parts := strings.SplitN(authHeader, " ", 2)
 		if len(parts) == 2 && parts[0] == "Bearer" {
-			return parts[1]
+			return parts[1], true
 		}
 	}
 	if cookieToken, err := c.Cookie("auth_token"); err == nil && cookieToken != "" {
-		return cookieToken
+		return cookieToken, false
 	}
-	return ""
+	return "", false
 }
 
 // checkSession 校验 Redis 中的 session 与 cookie 携带的 session_id 是否一致（顶号判定）

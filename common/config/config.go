@@ -77,17 +77,30 @@ type GRPCConfig struct {
 }
 
 type FeatureConfig struct {
-	JWTAuth          bool              `mapstructure:"jwt_auth"`
-	AuthBypassUserID string            `mapstructure:"auth_bypass_user_id"`
-	CasbinAuthz      bool              `mapstructure:"casbin_authz"`
-	CORS             bool              `mapstructure:"cors"`
-	RateLimit        RateLimitConfig   `mapstructure:"rate_limit"`
-	RequestPool      RequestPoolConfig `mapstructure:"request_pool"`
+	JWTAuth          bool                 `mapstructure:"jwt_auth"`
+	AuthBypassUserID string               `mapstructure:"auth_bypass_user_id"`
+	CasbinAuthz      bool                 `mapstructure:"casbin_authz"`
+	CORS             bool                 `mapstructure:"cors"`
+	RateLimit        RateLimitConfig      `mapstructure:"rate_limit"`
+	RequestPool      RequestPoolConfig    `mapstructure:"request_pool"`
+	CircuitBreaker   CircuitBreakerConfig `mapstructure:"circuit_breaker"`
+	Order            OrderFeatureConfig   `mapstructure:"order"`
 }
 
 type RequestPoolConfig struct {
 	Enabled  bool `mapstructure:"enabled"`
 	Capacity int  `mapstructure:"capacity"`
+}
+
+type CircuitBreakerConfig struct {
+	Enabled        bool `mapstructure:"enabled"`
+	MaxFailures    int  `mapstructure:"max_failures"`
+	TimeoutSeconds int  `mapstructure:"timeout_seconds"`
+}
+
+type OrderFeatureConfig struct {
+	PendingTimeoutSeconds int `mapstructure:"pending_timeout_seconds"`
+	CancelScanSeconds     int `mapstructure:"cancel_scan_seconds"`
 }
 
 type RateLimitConfig struct {
@@ -170,6 +183,11 @@ func bindEnvKeys() {
 		"features.rate_limit.limit",
 		"features.request_pool.enabled",
 		"features.request_pool.capacity",
+		"features.circuit_breaker.enabled",
+		"features.circuit_breaker.max_failures",
+		"features.circuit_breaker.timeout_seconds",
+		"features.order.pending_timeout_seconds",
+		"features.order.cancel_scan_seconds",
 	}
 
 	for _, key := range keys {
@@ -211,4 +229,9 @@ func setDefaults() {
 	viper.SetDefault("features.rate_limit.limit", 100)
 	viper.SetDefault("features.request_pool.enabled", true)
 	viper.SetDefault("features.request_pool.capacity", 1000)
+	viper.SetDefault("features.circuit_breaker.enabled", true)
+	viper.SetDefault("features.circuit_breaker.max_failures", 50)
+	viper.SetDefault("features.circuit_breaker.timeout_seconds", 30)
+	viper.SetDefault("features.order.pending_timeout_seconds", 1800)
+	viper.SetDefault("features.order.cancel_scan_seconds", 60)
 }

@@ -1,6 +1,6 @@
 # RPA Market API 文档
 
-本文档面向前端开发，覆盖当前后端已注册的 IAM、Market、Wallet 与 Order API。
+本文档面向前端开发，覆盖当前后端已注册的 IAM、Market、Wallet、Order、Admin 与治理 API。
 
 ## 通用约定
 
@@ -9,13 +9,16 @@
 - Market 基础路径：`/api/v1/market`
 - Wallet 基础路径：`/api/v1/wallets`
 - Order 基础路径：`/api/v1/orders`
+- Admin 基础路径：`/api/v1/admin`
+- 指标端点：`/metrics`
 - JSON 请求头：`Content-Type: application/json`
 - 文件上传请求头：`multipart/form-data`
 - 建议所有请求携带 `X-Trace-ID`，未携带时后端会自动生成并回写响应头。错误响应中的 `request_id` 与该值一致。
 - 登录成功后后端会返回 `token`，并写入 HttpOnly Cookie：`auth_token`、`session_id`
-- 私有接口需要登录态。浏览器端建议使用 Cookie；非浏览器客户端当前仍需要同时携带 `session_id` Cookie
+- 私有接口需要登录态。浏览器端建议使用 Cookie；非浏览器客户端可只携带 `Authorization: Bearer <token>`，不再强制要求 `session_id` Cookie
 - 常见错误响应：`{"code":"错误码","message":"错误信息","request_id":"trace-id"}`
 - 当前 HTTP 服务已接入请求池快速失败：服务过载时会直接返回 `503`，不会无限堆积请求。
+- 当前 HTTP 服务已接入熔断器：连续服务端失败达到阈值后会短暂返回 `503 CIRCUIT_OPEN`。
 
 统一错误响应示例：
 
@@ -55,6 +58,7 @@
 - `GET /api/v1/orders/:order_id`：订单详情
 - `POST /api/v1/orders/:order_id/pay`：支付订单
 - `POST /api/v1/orders/:order_id/cancel`：取消订单
+- `GET /metrics`：Prometheus 指标抓取端点
 
 管理/开发者接口：
 
@@ -63,6 +67,11 @@
 - `PUT /api/v1/market/apps/:app_id/offshelf`：下架应用
 - `DELETE /api/v1/market/apps/:app_id`：删除应用
 - `GET /api/v1/iam/roles`、`GET /api/v1/iam/permissions`、`PUT /api/v1/iam/roles/:role_id/permissions`：RBAC 管理
+- `GET /api/v1/admin/virtual-orders`：管理员查询虚拟账户/钱包
+- `GET /api/v1/admin/wallet-transactions`：管理员查询钱包流水
+- `GET /api/v1/admin/orders`：管理员查询全局订单
+- `GET /api/v1/admin/change-logs`：管理员查询变更日志
+- `GET /api/v1/admin/change-logs/export`：管理员导出审计 CSV，并双写 MinIO
 
 ## 认证与会话
 
@@ -112,7 +121,7 @@
 }
 ```
 
-说明：登录成功后会写 Cookie：`auth_token` 有效期约 30 分钟，`session_id` 有效期约 7 天。
+说明：登录成功后会写 Cookie：`auth_token` 有效期约 30 分钟，`session_id` 有效期约 7 天。浏览器 Cookie 模式会继续校验 Redis Session 防顶号；纯 API Bearer 模式只要 JWT 未过期且签名有效即可访问私有接口。JWT 过期后的自动续签仍要求 Cookie 中存在有效 `session_id`。
 
 ## 用户资料
 
@@ -538,6 +547,8 @@
 
 公开接口，已挂限流。
 
+缓存说明：后端使用 Redis Cache-Aside，Key 为 `market:app:detail:{app_id}`；Cache Miss 会通过 `singleflight` 合并并发回源；正常 TTL 为 `5m + rand(0~60s)`；查无实体会缓存 30 秒空值标记。发布、更新、下架、删除应用后会主动失效详情缓存。
+
 成功响应：
 
 ```json
@@ -662,6 +673,8 @@
 
 说明：后端按字段更新，未传字段不会覆盖旧值。非应用开发者本人会返回 `403`。
 
+权限说明：Casbin 中间件会从 `:app_id` 解析应用资源域做权限校验，业务 Handler 仍会按 `developer_id` 做应用所有者兜底校验。
+
 ### 下架应用
 
 `PUT /api/v1/market/apps/:app_id/offshelf`
@@ -731,7 +744,7 @@
 }
 ```
 
-说明：热榜实时查询数据来自 Redis ZSET，下载接口会更新 daily、weekly、total 三个榜单，并按日持久化到 `app_download_metrics`。
+说明：热榜基础数据来自 Redis ZSET，接口响应会写入短 TTL 结构体缓存 `market:rank:cache:{type}:{limit}`，默认 10 秒。下载接口会更新 daily、weekly、total 三个榜单，并按日持久化到 `app_download_metrics`。
 
 ## Wallet 钱包
 
@@ -877,14 +890,15 @@
 - 当前订单金额由前端传 `amount`，后续应迁移为后端从 `app.metadata.price` 或 SKU/Price 表派生。
 - `idempotency_key` 用于防止重复创建订单或重复支付。
 - 一步购买接口适合前端直接调用；拆分式创建/支付接口适合需要先确认订单再支付的流程。
-- 支付成功会发放用户订阅，当前默认有效期为 1 年，`subscriptions.plan_type=purchase`。
+- 支付成功后会异步发放用户订阅，当前默认有效期为 1 年，`subscriptions.plan_type=purchase`。
 - 订单状态：`pending`、`paid`、`cancelled`。
+- `pending` 订单会被后台 Worker 按配置自动超时取消，默认超时时间为 1800 秒，扫描间隔为 60 秒。
 
 ### 一步购买应用
 
 `POST /api/v1/orders/purchase`
 
-说明：该接口会一次完成创建订单、支付扣款、写钱包流水、发放订阅。支付成功后返回的订单中会带 `tx_id` 与 `subscription_id`。
+说明：该接口会一次完成创建订单、支付扣款、写钱包流水并写入权益发放 Outbox。支付成功响应中订单状态为 `paid`，会立即带 `tx_id`；`subscription_id` 由后台 Worker 异步发放订阅后回填，刚支付完成的响应中可能暂时为空。
 
 请求体：
 
@@ -910,7 +924,7 @@
   "currency_code": "COIN",
   "status": "paid",
   "tx_id": "wallet-transaction-id",
-  "subscription_id": "subscription-id",
+  "subscription_id": "subscription-id 或空字符串（异步发放未完成时）",
   "idempotency_key": "purchase-unique-key",
   "description": "buy app",
   "created_at": "2026-06-21T00:00:00Z",
@@ -923,9 +937,10 @@
 
 - `orders.status = paid`
 - `orders.tx_id = wallet_transactions.tx_id`
-- `orders.subscription_id = subscriptions.sub_id`
+- `orders.subscription_id = subscriptions.sub_id`，异步发放完成后回填
 - `wallet_transactions.reference_id = orders.order_id`
 - `subscriptions.source_order_id = orders.order_id`
+- `entitlement_outbox.order_id = orders.order_id`
 
 ### 创建订单
 
@@ -986,13 +1001,15 @@
 }
 ```
 
-说明：支付会在 DB transaction 内锁订单行，扣钱包并发放订阅。重复支付已支付订单会直接返回已支付订单。
+说明：支付会在 DB transaction 内锁订单行、扣钱包、写钱包流水、订单置为 `paid` 并写入 `entitlement_outbox`。订阅权益由后台 Worker 异步发放；重复支付已支付订单会直接返回已支付订单，并在缺少订阅时确保 Outbox 已入队。
 
 ### 取消订单
 
 `POST /api/v1/orders/:order_id/cancel`
 
 说明：仅 `pending` 订单可取消。
+
+超时取消：后台 Worker 会自动取消超过 `features.order.pending_timeout_seconds` 仍未支付的 `pending` 订单。
 
 ## Admin 管理查询
 
@@ -1116,6 +1133,35 @@
 }
 ```
 
+### 导出变更日志 CSV
+
+`GET /api/v1/admin/change-logs/export?event_type=role_permissions_updated&from=2026-06-21&to=2026-06-22&limit=100000&cursor=`
+
+说明：导出来源于 `audit_events`，使用 Keyset 游标分页，游标组合键为 `created_at,event_id`，单批 500 条。HTTP 响应为流式 CSV，同时后端会将同一份 CSV 上传到 MinIO `audit-exports/` 前缀。响应头 `X-MinIO-Object` 会返回上传对象名。
+
+查询参数：
+
+- `event_type`：按事件类型过滤，可选
+- `from`：开始时间，支持 RFC3339Nano 或 `YYYY-MM-DD`，可选
+- `to`：结束时间，支持 RFC3339Nano 或 `YYYY-MM-DD`，可选
+- `limit`：最多导出条数，范围 1-100000，可选
+- `cursor`：上一轮导出返回的游标，可选
+
+响应：`200 text/csv; charset=utf-8`
+
+CSV 表头：
+
+```text
+event_id,event_type,trace_id,actor_id,resource,metadata,error,created_at,next_cursor
+```
+
+响应头示例：
+
+```text
+Content-Disposition: attachment; filename="audit_events_20260621T120000Z.csv"
+X-MinIO-Object: audit-exports/audit_events_20260621T120000Z.csv
+```
+
 ## gRPC 接口
 
 gRPC 默认与 HTTP 同进程启动，端口由 `grpc.port` 配置，默认 `12661`。proto 文件位于 `proto/*/v1`，生成代码位于 `gen/go`。
@@ -1148,6 +1194,27 @@ gRPC 默认与 HTTP 同进程启动，端口由 `grpc.port` 配置，默认 `126
 - `ORDER_NOT_CANCELLABLE`：订单不是 `pending` 状态，不能取消。
 - `IDEMPOTENCY_CONFLICT`：幂等键已用于其他参数不同的请求。
 
+## Metrics 指标端点
+
+### Prometheus 指标
+
+`GET /metrics`
+
+公开给 Prometheus 抓取的指标端点，返回 Prometheus text exposition 格式。生产环境建议在网关或网络策略层限制访问来源。
+
+当前业务自定义指标：
+
+- `rpa_http_requests_total`：HTTP 请求总数，标签为 `method`、`path`、`status`
+- `rpa_http_request_duration_seconds`：HTTP 响应耗时 Histogram，标签为 `method`、`path`、`status`
+- `rpa_gorm_db_open_connections`：当前 PostgreSQL 打开连接数
+- `rpa_gorm_db_in_use_connections`：当前 PostgreSQL 使用中连接数
+- `rpa_gorm_db_idle_connections`：当前 PostgreSQL 空闲连接数
+- `rpa_gorm_db_wait_count`：等待数据库连接累计次数
+- `rpa_gorm_db_wait_duration_seconds`：等待数据库连接累计耗时
+- `rpa_request_pool_rejected_total`：请求池满载快速拒绝累计次数
+
+Prometheus Go runtime 默认指标也会暴露，例如 goroutine、GC、内存等运行时指标。
+
 ## 状态码参考
 
 - `200`：成功
@@ -1160,16 +1227,20 @@ gRPC 默认与 HTTP 同进程启动，端口由 `grpc.port` 配置，默认 `126
 - `409`：注册用户名或邮箱冲突、上传幂等并发冲突、余额不足、订单状态冲突、幂等键冲突
 - `429`：限流
 - `500`：服务内部错误
-- `503`：服务过载快速失败或依赖不可用，例如请求池已满、Redis Session 写入失败
+- `503`：服务过载快速失败、熔断开启或依赖不可用，例如请求池已满、`CIRCUIT_OPEN`、Redis Session 写入失败
 
 ## 运行与治理说明
 
 - HTTP 服务支持优雅退出：收到 `SIGINT` / `SIGTERM` 后停止接收新请求，并在配置的超时时间内等待正在处理的请求结束。
-- 退出时会关闭请求池、RocketMQ producer/consumer、Redis 连接和 PostgreSQL 连接。
+- 退出时会关闭请求池、MinIO 删除重试 Worker、订单异步 Worker、RocketMQ producer/consumer、Redis 连接和 PostgreSQL 连接。
 - 请求池配置位于 `features.request_pool`，默认启用，容量为 `1000`。
+- 熔断器配置位于 `features.circuit_breaker`，默认启用，默认连续失败阈值为 `50`，冷却时间为 `30` 秒。
+- 订单超时取消配置位于 `features.order`，默认 `pending_timeout_seconds=1800`，`cancel_scan_seconds=60`。
 - 优雅退出超时配置位于 `server.shutdown_timeout_seconds`，默认 `15` 秒。
 - 当前 Market 发布、补偿、删除等关键事件已接入异步审计批量落库，表为 `audit_events`。
 - MinIO 删除失败会写入 `minio_delete_retries` 补偿队列表，后台 worker 会按 `next_run_at` 重试，最多 5 次。
+- 审计导出接口会把 CSV 同时流式返回给 HTTP 客户端并转存至 MinIO `audit-exports/` 前缀。
+- 标准压测报告模板位于 `docs/benchmark_v1.md`。
 - Market 压测脚本位于 `script/k6-scripts/market.js`，支持公开列表/热榜、发布、下载场景；发布场景需通过 `APP_FILE` 指定本地 zip/gz/tgz 测试文件。
 
 ## 权限码参考
