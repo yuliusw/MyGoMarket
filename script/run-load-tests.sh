@@ -74,6 +74,7 @@ run_k6() {
   local sampler_pid=$!
   set +e
   docker compose run --rm "$@" k6 run \
+    -e K6_SUMMARY_TREND_STATS="${K6_SUMMARY_TREND_STATS:-avg,min,med,p(90),p(95),p(99),max}" \
     -o experimental-prometheus-rw \
     --tag "testid=${name}" \
     --summary-export "/scripts/results/$(basename "${RESULTS_DIR}")/${name}.summary.json" \

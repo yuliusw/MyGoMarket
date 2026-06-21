@@ -58,7 +58,7 @@ export function setupAuth() {
     return { cookies: {} };
   }
   const res = jsonPost('/api/v1/iam/login', { email: EMAIL, password: PASSWORD }, [200], 'setup_login');
-  return { cookies: res.cookies || {} };
+  return { cookies: res.cookies || {}, cookieHeader: cookieHeader(res), token: safeJSON(res, 'token') };
 }
 
 export function registerUser(prefix = 'k6') {
@@ -99,6 +99,12 @@ export function jsonPost(path, body, statuses, name) {
 
 export function authed(data, name, extraHeaders = {}) {
   const params = tagged(name, extraHeaders);
+  if (AUTH_MODE !== 'bypass' && data && data.token) {
+    params.headers.Authorization = `Bearer ${data.token}`;
+  }
+  if (AUTH_MODE !== 'bypass' && data && data.cookieHeader) {
+    params.headers.Cookie = data.cookieHeader;
+  }
   if (AUTH_MODE !== 'bypass' && data && data.cookies) {
     params.cookies = data.cookies;
   }
@@ -123,6 +129,16 @@ export function safeJSON(res, selector) {
   } catch (_) {
     return undefined;
   }
+}
+
+function cookieHeader(res) {
+  const pairs = [];
+  for (const [name, values] of Object.entries(res.cookies || {})) {
+    if (values && values.length > 0 && values[0].value) {
+      pairs.push(`${name}=${values[0].value}`);
+    }
+  }
+  return pairs.join('; ');
 }
 
 export function uniqueID(prefix) {

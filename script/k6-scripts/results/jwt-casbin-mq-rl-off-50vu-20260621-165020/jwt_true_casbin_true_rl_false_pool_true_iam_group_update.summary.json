@@ -1,0 +1,190 @@
+{
+    "metrics": {
+        "http_req_duration{expected_response:true}": {
+            "max": 23.4626,
+            "p(90)": 21.883211699999997,
+            "p(95)": 22.672905849999996,
+            "avg": 15.5656585,
+            "min": 7.668717,
+            "med": 15.565658499999998
+        },
+        "data_received": {
+            "count": 263801153,
+            "rate": 4394127.642798861
+        },
+        "http_req_connecting": {
+            "med": 0,
+            "max": 0.329695,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.000006664964515212326,
+            "min": 0
+        },
+        "vus": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_duration": {
+            "p(95)": 7.5850317999999985,
+            "avg": 3.621494013949823,
+            "min": 0.11353,
+            "med": 3.204273,
+            "max": 23.4626,
+            "p(90)": 6.392426200000001,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_req_failed": {
+            "passes": 798791,
+            "fails": 2,
+            "thresholds": {
+                "rate<0.05": true
+            },
+            "value": 0.9999974962224256
+        },
+        "http_req_waiting": {
+            "max": 23.338328,
+            "p(90)": 6.3445180000000025,
+            "p(95)": 7.532712199999996,
+            "avg": 3.580390123482661,
+            "min": 0.102525,
+            "med": 3.163742
+        },
+        "iterations": {
+            "count": 798791,
+            "rate": 13305.436970243054
+        },
+        "http_req_blocked": {
+            "med": 0.002433,
+            "max": 4.845644,
+            "p(90)": 0.00419,
+            "p(95)": 0.004885,
+            "avg": 0.002806332459097587,
+            "min": 0.000438
+        },
+        "http_req_tls_handshaking": {
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0
+        },
+        "http_req_sending": {
+            "avg": 0.011689621089568818,
+            "min": 0.002133,
+            "med": 0.010224,
+            "max": 5.360531,
+            "p(90)": 0.016953,
+            "p(95)": 0.019956
+        },
+        "http_req_receiving": {
+            "p(95)": 0.052416,
+            "avg": 0.029414269377674683,
+            "min": 0.003867,
+            "med": 0.025074,
+            "max": 7.220514,
+            "p(90)": 0.044942
+        },
+        "iteration_duration": {
+            "avg": 3.7464926816325983,
+            "min": 0.170435,
+            "med": 3.328256,
+            "max": 20.899042,
+            "p(90)": 6.534287,
+            "p(95)": 7.736847
+        },
+        "data_sent": {
+            "count": 710325419,
+            "rate": 11831868.524890726
+        },
+        "checks": {
+            "passes": 2,
+            "fails": 798791,
+            "thresholds": {
+                "rate>0.95": true
+            },
+            "value": 0.000002503777574415399
+        },
+        "http_reqs": {
+            "count": 798793,
+            "rate": 13305.470284181169
+        },
+        "vus_max": {
+            "min": 50,
+            "max": 50,
+            "value": 50
+        }
+    },
+    "setup_data": {
+        "cookieHeader": "auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQxMzAsImlhdCI6MTc4MjAzMjMzMH0.1Sp13XzeQXxbiV3XzTuUQ87jg-jPRXYdoC3BqZXuOrg; session_id=ae8e6752-5af7-48eb-9f2b-a138083b573f",
+        "cookies": {
+            "auth_token": [
+                {
+                    "Expires": -6795364578871,
+                    "Name": "auth_token",
+                    "Value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQxMzAsImlhdCI6MTc4MjAzMjMzMH0.1Sp13XzeQXxbiV3XzTuUQ87jg-jPRXYdoC3BqZXuOrg",
+                    "Domain": "",
+                    "Path": "/",
+                    "HTTPOnly": true,
+                    "Secure": false,
+                    "MaxAge": 1800
+                }
+            ],
+            "session_id": [
+                {
+                    "Secure": false,
+                    "MaxAge": 604800,
+                    "Expires": -6795364578871,
+                    "Name": "session_id",
+                    "Value": "ae8e6752-5af7-48eb-9f2b-a138083b573f",
+                    "Domain": "",
+                    "Path": "/",
+                    "HTTPOnly": true
+                }
+            ]
+        },
+        "groupID": "019ee967-6e57-7453-86df-34779780469d",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQxMzAsImlhdCI6MTc4MjAzMjMzMH0.1Sp13XzeQXxbiV3XzTuUQ87jg-jPRXYdoC3BqZXuOrg"
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "checks": {
+                    "setup_login status": {
+                        "path": "::setup::setup_login status",
+                        "id": "ec2704440794f5598d37961555e6c1a7",
+                        "passes": 1,
+                        "fails": 0,
+                        "name": "setup_login status"
+                    },
+                    "iam_group_create_seed status": {
+                        "passes": 1,
+                        "fails": 0,
+                        "name": "iam_group_create_seed status",
+                        "path": "::setup::iam_group_create_seed status",
+                        "id": "3bb63f3cf774d33ab14eab88aa1ffeb3"
+                    }
+                },
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {}
+            }
+        },
+        "checks": {
+            "iam_group_update status": {
+                "name": "iam_group_update status",
+                "path": "::iam_group_update status",
+                "id": "bfb2ab5269587aea485b7d5fbe66e70a",
+                "passes": 0,
+                "fails": 798791
+            }
+        }
+    }
+}

@@ -1,0 +1,190 @@
+{
+    "root_group": {
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "setup_login status": {
+                            "fails": 0,
+                            "name": "setup_login status",
+                            "path": "::setup::setup_login status",
+                            "id": "ec2704440794f5598d37961555e6c1a7",
+                            "passes": 1
+                        },
+                        "market_app_create_seed status": {
+                            "path": "::setup::market_app_create_seed status",
+                            "id": "d85950b5e57cb8ab2f0fbb39bea73cd7",
+                            "passes": 0,
+                            "fails": 1,
+                            "name": "market_app_create_seed status"
+                        }
+                    },
+                "name": "setup",
+                "path": "::setup"
+            }
+        },
+        "checks": {
+            "market_app_update status": {
+                "name": "market_app_update status",
+                "path": "::market_app_update status",
+                "id": "eba7a8cb5fe042077f2d55bc249ffa7e",
+                "passes": 0,
+                "fails": 806349
+            }
+        },
+        "name": ""
+    },
+    "metrics": {
+        "http_req_sending": {
+            "avg": 0.011657719604738381,
+            "min": 0.002155,
+            "med": 0.010126,
+            "max": 5.8228,
+            "p(90)": 0.016873,
+            "p(95)": 0.01991
+        },
+        "vus": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_duration": {
+            "max": 29.500812,
+            "p(90)": 6.363598,
+            "p(95)": 7.588625,
+            "avg": 3.5834873219341246,
+            "min": 0.110697,
+            "med": 3.146056,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 27.630901,
+            "min": 27.630901,
+            "med": 27.630901,
+            "max": 27.630901,
+            "p(90)": 27.630901,
+            "p(95)": 27.630901
+        },
+        "http_req_tls_handshaking": {
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0
+        },
+        "http_req_waiting": {
+            "min": 0.098144,
+            "med": 3.105801,
+            "max": 29.47491,
+            "p(90)": 6.314894,
+            "p(95)": 7.53821,
+            "avg": 3.542467258203835
+        },
+        "data_sent": {
+            "rate": 12199377.231663704,
+            "count": 732378304
+        },
+        "data_received": {
+            "count": 267920284,
+            "rate": 4462803.710431151
+        },
+        "checks": {
+            "passes": 1,
+            "fails": 806350,
+            "thresholds": {
+                "rate>0.95": true
+            },
+            "value": 0.0000012401547217030797
+        },
+        "http_reqs": {
+            "count": 806351,
+            "rate": 13431.555763466826
+        },
+        "http_req_blocked": {
+            "avg": 0.0028196098014388487,
+            "min": 0.000426,
+            "med": 0.002441,
+            "max": 3.70356,
+            "p(90)": 0.004249,
+            "p(95)": 0.004953
+        },
+        "iterations": {
+            "count": 806349,
+            "rate": 13431.522449052227
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_failed": {
+            "passes": 806350,
+            "fails": 1,
+            "thresholds": {
+                "rate<0.05": true
+            },
+            "value": 0.9999987598452783
+        },
+        "http_req_receiving": {
+            "avg": 0.029362344125572638,
+            "min": 0.004081,
+            "med": 0.0248,
+            "max": 7.304371,
+            "p(90)": 0.045017,
+            "p(95)": 0.052732
+        },
+        "iteration_duration": {
+            "avg": 3.711435653765173,
+            "min": 0.168453,
+            "med": 3.273499,
+            "max": 29.589858,
+            "p(90)": 6.509823400000005,
+            "p(95)": 7.743350799999998
+        },
+        "http_req_connecting": {
+            "med": 0,
+            "max": 0.310132,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.0000058808198910896135,
+            "min": 0
+        }
+    },
+    "setup_data": {
+        "appID": null,
+        "cookieHeader": "auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQ4ODQsImlhdCI6MTc4MjAzMzA4NH0.Cq3GQU8lHdtnzWqs0frZBNg7bM0mrpCh4xMNlDLqTgI; session_id=54b96710-a624-4086-b454-2d8f592aa683",
+        "cookies": {
+            "auth_token": [
+                {
+                    "HTTPOnly": true,
+                    "Secure": false,
+                    "MaxAge": 1800,
+                    "Expires": -6795364578871,
+                    "Name": "auth_token",
+                    "Value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQ4ODQsImlhdCI6MTc4MjAzMzA4NH0.Cq3GQU8lHdtnzWqs0frZBNg7bM0mrpCh4xMNlDLqTgI",
+                    "Domain": "",
+                    "Path": "/"
+                }
+            ],
+            "session_id": [
+                {
+                    "Domain": "",
+                    "Path": "/",
+                    "HTTPOnly": true,
+                    "Secure": false,
+                    "MaxAge": 604800,
+                    "Expires": -6795364578871,
+                    "Name": "session_id",
+                    "Value": "54b96710-a624-4086-b454-2d8f592aa683"
+                }
+            ]
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQ4ODQsImlhdCI6MTc4MjAzMzA4NH0.Cq3GQU8lHdtnzWqs0frZBNg7bM0mrpCh4xMNlDLqTgI"
+    }
+}

@@ -1,0 +1,190 @@
+{
+    "metrics": {
+        "iterations": {
+            "count": 2346159,
+            "rate": 39085.11139789293
+        },
+        "checks": {
+            "passes": 1,
+            "fails": 2346160,
+            "thresholds": {
+                "rate>0.95": true
+            },
+            "value": 4.262282085500526e-7
+        },
+        "http_req_waiting": {
+            "med": 0.769583,
+            "max": 49.363275,
+            "p(90)": 2.14748,
+            "p(95)": 3.126486,
+            "avg": 1.1455579897449688,
+            "min": 0.021708
+        },
+        "vus": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "data_received": {
+            "rate": 12631020.734766588,
+            "count": 758201318
+        },
+        "http_req_connecting": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.000004787347927103041,
+            "min": 0,
+            "med": 0,
+            "max": 1.346396
+        },
+        "http_req_duration": {
+            "avg": 1.1798775150950374,
+            "min": 0.03095,
+            "med": 0.801017,
+            "max": 49.393511,
+            "p(90)": 2.191374,
+            "p(95)": 3.18113,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_req_receiving": {
+            "avg": 0.026134817974980643,
+            "min": 0.003472,
+            "med": 0.019733,
+            "max": 14.099885,
+            "p(90)": 0.037655,
+            "p(95)": 0.046025
+        },
+        "http_req_failed": {
+            "passes": 2346160,
+            "fails": 1,
+            "thresholds": {
+                "rate<0.05": true
+            },
+            "value": 0.9999995737717915
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_blocked": {
+            "min": 0.000386,
+            "med": 0.002052,
+            "max": 9.457526,
+            "p(90)": 0.003721,
+            "p(95)": 0.004507,
+            "avg": 0.002553861875208266
+        },
+        "http_reqs": {
+            "count": 2346161,
+            "rate": 39085.144716275354
+        },
+        "iteration_duration": {
+            "avg": 1.2691288687450368,
+            "min": 0.056169,
+            "med": 0.883684,
+            "max": 49.473693,
+            "p(90)": 2.303874000000001,
+            "p(95)": 3.3230201000000004
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(90)": 22.618907,
+            "p(95)": 22.618907,
+            "avg": 22.618907,
+            "min": 22.618907,
+            "med": 22.618907,
+            "max": 22.618907
+        },
+        "http_req_sending": {
+            "p(95)": 0.013887,
+            "avg": 0.008184707375155038,
+            "min": 0.001277,
+            "med": 0.006578,
+            "max": 11.219697,
+            "p(90)": 0.011483
+        },
+        "data_sent": {
+            "rate": 6315538.854600268,
+            "count": 379102369
+        },
+        "http_req_tls_handshaking": {
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0
+        }
+    },
+    "setup_data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQ4MjAsImlhdCI6MTc4MjAzMzAyMH0.n0ELC6Gw8b1yV57cWtKFwqaYyuFovSTIPIwaVnvjCNA",
+        "appID": null,
+        "cookieHeader": "auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQ4MjAsImlhdCI6MTc4MjAzMzAyMH0.n0ELC6Gw8b1yV57cWtKFwqaYyuFovSTIPIwaVnvjCNA; session_id=5cb5a58d-2708-4f80-8463-080c2b03aa29",
+        "cookies": {
+            "auth_token": [
+                {
+                    "Expires": -6795364578871,
+                    "Name": "auth_token",
+                    "Value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDE5ZWU5MWUtMTkyMy03NzMzLTkxNzEtZWY4ZjZkYTgyYTRlIiwiaXNzIjoicnBhLW1hcmtldC1pYW0iLCJleHAiOjE3ODIwMzQ4MjAsImlhdCI6MTc4MjAzMzAyMH0.n0ELC6Gw8b1yV57cWtKFwqaYyuFovSTIPIwaVnvjCNA",
+                    "Domain": "",
+                    "Path": "/",
+                    "HTTPOnly": true,
+                    "Secure": false,
+                    "MaxAge": 1800
+                }
+            ],
+            "session_id": [
+                {
+                    "Secure": false,
+                    "MaxAge": 604800,
+                    "Expires": -6795364578871,
+                    "Name": "session_id",
+                    "Value": "5cb5a58d-2708-4f80-8463-080c2b03aa29",
+                    "Domain": "",
+                    "Path": "/",
+                    "HTTPOnly": true
+                }
+            ]
+        }
+    },
+    "root_group": {
+        "groups": {
+            "setup": {
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "setup_login status": {
+                            "name": "setup_login status",
+                            "path": "::setup::setup_login status",
+                            "id": "ec2704440794f5598d37961555e6c1a7",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "market_app_create_seed status": {
+                            "name": "market_app_create_seed status",
+                            "path": "::setup::market_app_create_seed status",
+                            "id": "d85950b5e57cb8ab2f0fbb39bea73cd7",
+                            "passes": 0,
+                            "fails": 1
+                        }
+                    },
+                "name": "setup"
+            }
+        },
+        "checks": {
+            "market_app_download status": {
+                "name": "market_app_download status",
+                "path": "::market_app_download status",
+                "id": "456734c134e0667f092e19c014d5b24d",
+                "passes": 0,
+                "fails": 2346159
+            }
+        },
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e"
+    }
+}
