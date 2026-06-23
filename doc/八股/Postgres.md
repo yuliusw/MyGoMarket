@@ -530,19 +530,21 @@ if strings.Compare(firstID.String(), secondID.String()) > 0 {
 1. `Transaction` 开启事务。
 2. `lockOrder` 对订单行 `FOR UPDATE`。
 3. 校验订单 owner。
-4. 如果已支付，返回已有结果；如果订阅缺失则补发。
+4. 如果已支付，返回已有支付结果。
 5. pending 订单调用 `wallet.DebitInTx`，在同一事务内扣钱包。
-6. 创建 subscription。
-7. 标记订单 paid，写 tx_id 和 subscription_id。
+6. 写入 `entitlement_outbox` 本地消息表。
+7. 标记订单 paid，写 `tx_id`；事务提交后由后台 Worker 异步创建 subscription 并回填 `subscription_id`。
 
 亮点：
 
-- 订单状态、钱包余额、钱包流水、订阅发放同一事务提交。
-- 避免扣款成功但订单没支付，或订单 paid 但没流水。
+- 订单状态、钱包余额、钱包流水和权益 outbox 同一事务提交。
+- 避免扣款成功但订单没支付，或订单 paid 但没有可重试的权益发放消息。
+- 订阅发放由 outbox Worker 异步完成，并通过 `(user_id, app_id, source_order_id)` 唯一索引防重发。
 
 雷点：
 
 - `Purchase` = `Create` + `Pay`，创建和支付不是同一个外层事务。支付失败会留下 pending 订单，这是业务设计要解释清楚。
+- 当前没有库存模型，不要把订单支付链路讲成 Redis Lua 库存预扣减。
 
 ## 8. 审计与批量写
 

@@ -141,11 +141,12 @@ func (r *userRepository) DeleteSession(ctx context.Context, userID string) error
 
 1. 从 `Authorization: Bearer` 或 `auth_token` Cookie 取 JWT。
 2. 严格校验 JWT。
-3. JWT 有效时查 Redis：`user:session:{user_id}`。
-4. Redis 中 session 必须等于 Cookie `session_id`。
-5. JWT 过期时，用 `ParseTokenIgnoreExpiry` 提取 user_id。
-6. Redis Session 仍有效且一致时重新签 JWT，并刷新 Redis TTL。
-7. Redis Session 不存在、不一致或查错，则返回 `401`。
+3. JWT 有效时，如果是浏览器 Cookie 模式，则查 Redis：`user:session:{user_id}`。
+4. Cookie 模式下 Redis 中 session 必须等于 Cookie `session_id`。
+5. JWT 有效且是纯 API Bearer 模式时，只要 token 校验通过即可放行，不再强制要求 `session_id` Cookie。
+6. JWT 过期时，用 `ParseTokenIgnoreExpiry` 提取 user_id。
+7. Redis Session 仍有效且与 Cookie 一致时重新签 JWT，并刷新 Redis TTL。
+8. Redis Session 不存在、不一致或查错，则返回 `401`。
 
 为什么这么设计：
 
@@ -165,14 +166,14 @@ Redis 命令语义：
 - 为什么 JWT 有效还要查 Redis？
 - 为了服务端可控：顶号、登出、改密强制失效。如果只用纯 JWT，签发后直到过期前无法主动失效。
 - Redis 宕机会怎样？
-- 私有接口会因为 Session 校验失败而不可用，这是安全优先。可以考虑短期降级只认 JWT，但会牺牲登出/顶号能力。
+- Cookie 会话模式会因为 Session 校验失败而不可用；纯 Bearer 模式下有效 JWT 可降低对 `session_id` Cookie 的耦合，但自动续签仍依赖 Redis Session。
 - 非浏览器客户端只带 Bearer token 行不行？
-- 当前代码还要求 `session_id` Cookie 与 Redis 一致，所以非浏览器客户端也要带 session cookie，API 文档也说明了这一点。
+- 可以。当前纯 API 客户端只携带有效 `Authorization: Bearer <token>` 即可通过；只有过期 token 自动续签需要 Redis Session 与 Cookie 一致。
 
 雷点：
 
-- Redis Session 是强依赖，读失败会导致认证失败。
-- `session_id` 是 Cookie，不在 Authorization header 中；移动端/脚本调用要额外处理 Cookie。
+- Redis Session 仍是浏览器会话、防顶号和自动续签的强依赖。
+- `session_id` 是 Cookie，不在 Authorization header 中；移动端/脚本调用如果只使用有效 Bearer token，可以不携带 `session_id`。
 - Session key 没有租户前缀，当前单系统没问题，多环境共用 Redis 时要加 namespace。
 
 ## 4. Redis 限流：滑动窗口 Lua
@@ -469,7 +470,7 @@ for time.Now().Before(deadline) {
 
 ### 9.1 缓存穿透、击穿、雪崩
 
-项目当前没有典型 read-through cache，但仍要能答。
+项目已有应用详情 Cache-Aside 缓存，仍要能把通用缓存问题和代码实现对应起来。
 
 - 穿透：查不存在 key，穿透到 DB。解决：空值缓存、布隆过滤器、参数校验。
 - 击穿：热点 key 过期瞬间大量请求打 DB。解决：互斥锁、singleflight、逻辑过期、热点不过期。
@@ -477,6 +478,10 @@ for time.Now().Before(deadline) {
 
 和项目对应：
 
+- 应用详情缓存 key 是 `market:app:detail:{app_id}`，查无实体写 30 秒空值标记，属于防穿透。
+- 应用详情 Cache Miss 用 `singleflight` 合并回源，属于防击穿。
+- 应用详情正常 TTL 是 `5m + rand(0~60s)`，属于防雪崩。
+- 热榜结构体缓存 key 是 `market:rank:cache:{type}:{limit}`，默认 TTL 10 秒。
 - Casbin 用的是本地 LRU + singleflight，不是 Redis 缓存。
 - Redis 限流失败时项目选择降级放行。
 - Session 不适合空值缓存，认证失败直接 401。
@@ -532,7 +537,8 @@ for time.Now().Before(deadline) {
 
 - Market 发布锁建议改用 `RedisLock` 工具类的 UUID value + Lua 解锁。
 - Redis key 建议统一加系统和环境前缀，例如 `rpa:{env}:user:session:{userID}`。
-- Session 查 Redis 是每个私有接口必经路径，高并发下要重点关注 Redis QPS 和连接池耗尽。
+- Cookie 会话模式下 Session 查 Redis 是私有接口关键路径，高并发要关注 Redis QPS 和连接池耗尽。
+- 应用详情缓存要关注缓存击穿、穿透和主动失效是否覆盖发布、更新、下架、删除全链路。
 - Redis 限流降级放行要配合告警，否则 Redis 故障时系统会失去保护。
 - Redis 热榜 total key 长期增长，需要定期清理删除/下架 app 的 member。
 - RedisLock SpinLock 建议加入 context 检查和 jitter，避免固定间隔惊群。
