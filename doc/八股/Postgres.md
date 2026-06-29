@@ -1,6 +1,6 @@
 # PostgreSQL / GORM 八股与项目实战
 
-本文基于当前项目真实代码和 `script/init_better.sql` 整理 PostgreSQL、GORM、事务、行级锁、索引、约束、分区、JSONB、审计和面试拷打点。
+本文基于当前项目真实代码和 `script/init_better.sql` 整理 PostgreSQL、GORM、事务、行级锁、索引、约束、分区、JSONB、Outbox、流式导出和面试拷打点。讲法按“基础概念 -> 项目表结构 -> 查询/事务链路 -> 优化追问”展开，避免只背术语。
 
 ## 1. 项目里 PostgreSQL 用在哪里
 
@@ -277,6 +277,16 @@ CREATE TABLE IF NOT EXISTS subscriptions (...) PARTITION BY RANGE (expired_at);
 
 ## 5. 索引设计与代码对应
 
+索引基础先讲清楚：
+
+- B-tree 适合等值、范围、排序和最左前缀匹配，是 PostgreSQL 默认索引类型。
+- GIN 适合数组、JSONB、全文/倒排类检索，本项目用于 `tags TEXT[]` 和 trigram 模糊搜索。
+- Partial Index 只索引满足条件的行，适合“非空幂等键”“某些状态”这类稀疏数据。
+- Expression Index 索引表达式结果，本项目用 `(metadata ->> 'idempotency_key')` 给 JSONB 内字段加唯一约束。
+- 复合索引要按查询谓词和排序设计，不能只看单列是否出现。
+
+项目库表优化的主线：读路径用复合索引贴合 `WHERE + ORDER BY`，写路径用唯一索引兜底幂等，增长型表用分区或游标分页控制长期退化。
+
 ### 5.1 App 模糊搜索
 
 代码：`services/market/respository/app_respository.go`
@@ -384,6 +394,69 @@ CREATE INDEX IF NOT EXISTS idx_orders_status_time ON orders(status, created_at D
 - 用户订单列表：`WHERE user_id = ? ORDER BY created_at DESC`。
 - 钱包流水：`WHERE wallet_id = ? ORDER BY created_at DESC`。
 - Admin 全局订单：按 user/app/wallet/status/currency/time 过滤。
+
+为什么这样建：
+
+- 用户订单列表是典型 `WHERE user_id = ? ORDER BY created_at DESC`，`idx_orders_user_time` 可以同时服务过滤和排序。
+- 钱包流水是 `WHERE wallet_id = ? ORDER BY created_at DESC`，`idx_wallet_tx_wallet_time` 避免按钱包过滤后再大范围排序。
+- pending 超时取消 worker 会按 `status + created_at` 找待取消订单，`idx_orders_status_time` 支撑扫描待处理集合。
+- Admin 全局查询条件更复杂，当前先保留通用复合索引，后续应按真实慢查询继续补，而不是盲目给每列都建索引。
+
+### 5.7 Outbox 与订阅防重索引
+
+`entitlement_outbox`：
+
+```sql
+CREATE INDEX IF NOT EXISTS idx_entitlement_outbox_status_next ON entitlement_outbox(status, next_run_at);
+```
+
+对应代码：
+
+```go
+Where("status IN ? AND next_run_at <= ?", []string{"pending", "failed"}, time.Now()).
+    Order("next_run_at ASC").
+    Limit(limit)
+```
+
+作用：
+
+- worker 能快速找到到期的 pending/failed 消息。
+- `next_run_at` 支撑按重试时间顺序扫描。
+- 处理批次时使用 `FOR UPDATE SKIP LOCKED`，多 worker 可并发抢不同 outbox 行。
+
+订阅发放防重：
+
+```sql
+CREATE UNIQUE INDEX IF NOT EXISTS idx_subscriptions_2026_order_once
+  ON subscriptions_2026(user_id, app_id, source_order_id)
+  WHERE source_order_id IS NOT NULL;
+```
+
+项目因为 `subscriptions` 是分区表，所以唯一索引分别建在各个分区上。它解决的是“同一订单重复发放订阅”的最终兜底问题，RedisLock 和 outbox 状态机失败时，DB 唯一约束仍能防重复权益。
+
+### 5.8 审计导出索引缺口
+
+当前导出 SQL 是：
+
+```go
+Order("created_at ASC, event_id ASC")
+Where("created_at > ? OR (created_at = ? AND event_id > ?)")
+```
+
+已有索引：
+
+```sql
+idx_audit_events_trace
+idx_audit_events_type_time(event_type, created_at DESC)
+```
+
+缺口：
+
+- 如果不按 `event_type` 过滤，导出大量审计数据时缺少 `(created_at, event_id)` 组合索引。
+- 这会让 keyset cursor 的优势打折，因为排序和游标推进仍可能扫描较多数据。
+- 可优化为补 `CREATE INDEX idx_audit_events_created_event ON audit_events(created_at ASC, event_id ASC);`。
+
+这不是当前已落地能力，面试中要说“现状能流式导出，但大数据量下索引还可继续补”。
 
 ## 6. GORM 使用模式
 
@@ -569,6 +642,8 @@ CSV 导出：`common/audit/export.go`
 - 每批 500 条。
 - `created_at,event_id` 作为稳定游标。
 - `io.Pipe` 流式返回 CSV。
+- 如果 MinIO 可用，使用第二个 `io.Pipe` 和 `io.MultiWriter` 同时写 HTTP 响应和 MinIO 对象，object 前缀为 `audit-exports/`。
+- 这是应用层 keyset cursor，不是 PostgreSQL 服务端游标 `DECLARE CURSOR/FETCH`。
 
 游标条件：
 
@@ -580,6 +655,26 @@ query = query.Where("created_at > ? OR (created_at = ? AND event_id > ?)", curso
 
 - 为什么不用 offset 分页导出？
 - offset 深分页会越来越慢，并且并发插入时容易重复/跳过；游标分页更稳定。
+- 为什么用 `io.Pipe`？
+- 让 CSV 生成 goroutine 边查 DB 边写，HTTP reader 边读边返回，避免把百万行结果一次性放进内存。
+- 为什么不是 PostgreSQL server-side cursor？
+- 当前实现更贴合 GORM 和 HTTP streaming，复杂度低；缺点是每批都是独立查询，极大数据量下仍依赖合适索引。若要进一步降低 DB executor 内存和事务快照控制，可评估 `DECLARE CURSOR`。
+
+流式导出链路：
+
+1. Handler 创建 `httpReader/httpWriter := io.Pipe()`。
+2. 如果 MinIO 可用，再创建 `minioReader/minioWriter := io.Pipe()`。
+3. `io.MultiWriter(httpWriter, minioWriter)` 同时写两端。
+4. goroutine 调用 `ExportCSV(c.Request.Context(), db, writer, filter)`。
+5. `ExportCSV` 每 500 条查一批，写 CSV 并 flush。
+6. Gin 通过 `DataFromReader` 把 `httpReader` 直接透传给客户端。
+7. MinIO goroutine 从 `minioReader` 读取并上传对象。
+
+雷点：
+
+- `io.MultiWriter` 任一 writer 阻塞都会拖慢整体导出，MinIO 上传慢可能反向影响 HTTP 导出。
+- 客户端断开会取消 request context，DB 查询应停止，但 MinIO 上传 goroutine 的生命周期也要靠 pipe 关闭收敛。
+- 当前只支持 `audit_events` 导出；钱包流水和订单流水还没有 CSV 导出接口。
 
 ## 9. 触发器与更新时间
 
@@ -677,6 +772,108 @@ PostgreSQL 常见：
 
 - 分区要持续维护未来分区。
 - 唯一约束通常要包含分区键。
+
+### 10.7 库表优化从哪里入手
+
+回答顺序：
+
+1. 先拿慢查询和真实接口，不凭感觉建索引。
+2. 看 `WHERE`、`JOIN`、`ORDER BY`、`LIMIT`，设计能同时过滤和排序的复合索引。
+3. 用 `EXPLAIN (ANALYZE, BUFFERS)` 验证是否命中索引、扫描行数、回表/排序成本。
+4. 对高写入表评估索引写放大，索引不是越多越好。
+5. 对长期增长表评估归档、分区、冷热数据和批处理游标。
+
+项目例子：
+
+- Market 列表：`status/category/create_at` 复合索引贴合筛选和倒序分页。
+- Wallet 流水：`wallet_id, created_at DESC` 避免钱包内流水列表深排序。
+- Order 超时取消：`status, created_at DESC` 支撑扫描 pending 订单，但如果取消 worker 只查 `pending + created_at < deadline`，后续可评估 `(status, created_at ASC)` 是否更贴合。
+- Audit 导出：当前应用层 keyset cursor 已避免 offset 深分页，但还缺 `(created_at, event_id)` 索引。
+- Subscriptions：按 `expired_at` 分区方便过期数据维护，但未来分区要持续创建，避免大量数据落 default。
+
+### 10.8 Outbox Pattern 解决什么
+
+基础问题：支付成功后发放权益，如果直接在支付事务里同步做所有事情，事务会变长，且外部依赖失败会影响扣款主链路；如果事务提交后再发消息，进程崩溃可能丢消息。
+
+项目做法：
+
+- 支付事务内完成扣款、订单 paid、钱包流水和 `entitlement_outbox` 插入。
+- 事务提交后后台 worker 扫描 outbox。
+- worker 用 `FOR UPDATE SKIP LOCKED` 抢任务，用 RedisLock 按 `order_id` 互斥。
+- 发放订阅时用 `(user_id, app_id, source_order_id)` 唯一索引防重。
+
+顶层结论：Outbox 把“支付事实”和“待发放事件”放进同一个数据库事务，解决本地事务和异步处理之间的可靠衔接。
+
+项目里的 outbox 状态模型：
+
+```text
+pending -> processing -> done
+pending -> processing -> failed -> processing -> done
+```
+
+字段语义：
+
+- `event_id`：outbox 主键，标识一条待处理事件。
+- `order_id`：关联订单，也是 RedisLock 的业务互斥粒度。
+- `status`：`pending`、`processing`、`failed`、`done`。
+- `retry_count`：失败重试次数。
+- `next_run_at`：下一次可被 worker 扫描的时间。
+- `locked_at`：被 worker 标记 processing 的时间。
+- `last_error`：最近一次失败原因。
+
+支付事务内发生什么：
+
+1. `lockOrder` 对订单行 `FOR UPDATE`，防止重复支付并发竞争。
+2. `DebitInTx` 在同一个事务内锁钱包行、扣余额、写钱包流水。
+3. 插入 `entitlement_outbox(order_id, status='pending', next_run_at=now)`。
+4. 更新订单为 `paid`，写入 `tx_id`。
+5. 事务提交后，支付事实和待发放事件同时持久化。
+
+worker 处理流程：
+
+1. 周期扫描 `status IN ('pending','failed') AND next_run_at <= now()`。
+2. 在 DB transaction 内用 `FOR UPDATE SKIP LOCKED` 锁住一批 outbox 行。
+3. 将抢到的事件更新为 `processing`，避免其他 worker 重复处理。
+4. 对单个 order 加 RedisLock：`entitlement:order:{order_id}`。
+5. 开启 DB transaction，重新锁订单行并校验订单仍为 `paid`。
+6. 创建 subscription，并回填 `orders.subscription_id`。
+7. 更新 outbox 状态为 `done`。
+8. 如果失败，更新为 `failed`，`retry_count + 1`，`next_run_at = now + retry_count^2 秒`。
+
+为什么需要 `FOR UPDATE SKIP LOCKED`：
+
+- 多 worker 可以并行扫描同一张 outbox 表。
+- 普通 `FOR UPDATE` 遇到已锁行会等待，吞吐差。
+- `SKIP LOCKED` 会跳过别人正在处理的行，直接抢下一批可处理任务。
+- 它适合任务队列表，但不是严格公平队列，需要配合失败恢复和积压监控。
+
+为什么还要 RedisLock：
+
+- `SKIP LOCKED` 保护的是 outbox 行级抢占。
+- RedisLock 保护的是业务维度的同一 `order_id`，防止重复事件、异常重试、多实例边界下同一订单被并发发放。
+- RedisLock 不是最终一致性保证，只是降低重复处理概率和并发冲突。
+
+为什么还要唯一索引：
+
+- 锁都可能失效：Redis 锁可能过期，worker 可能崩溃，重复事件可能进入系统。
+- 真正不可突破的防线应该在事实表上。
+- 项目在 subscriptions 各分区建立 `(user_id, app_id, source_order_id)` partial unique index，保证同一订单只能发放一次权益。
+
+Q：Outbox 和直接发 MQ 有什么区别？
+
+A：直接发 MQ 有“本地事务提交成功但发消息失败”或“发消息成功但本地事务回滚”的一致性窗口。Outbox 把消息先写入同一个业务数据库事务，事务提交后再由 worker 异步处理，至少保证“业务事实存在时，待处理事件也存在”。后续投递或处理失败可以通过 outbox 状态重试。
+
+Q：Outbox 会不会重复消费？
+
+A：会，Outbox 通常保证的是 at-least-once，而不是 exactly-once。worker 失败重试、锁超时、进程重启都可能导致重复处理，所以消费逻辑必须幂等。本项目用 RedisLock 减少并发重复，用订单行锁校验状态，用 subscriptions 唯一索引做最终防重。
+
+Q：processing 状态的任务如果 worker 崩溃怎么办？
+
+A：这是当前实现需要继续强化的点。理想做法是增加 processing 超时恢复机制，例如扫描 `status='processing' AND locked_at < now()-timeout` 的任务，把它们重置为 failed 或 pending，并记录告警。否则 processing 任务可能长期卡住。
+
+Q：Outbox 的缺点是什么？
+
+A：它引入了额外表、worker、状态机、重试和监控复杂度；事件处理不是实时强同步，会有最终一致延迟；表会增长，需要归档或清理 done 历史；如果没有 backlog、失败率和处理耗时指标，线上排障会比较被动。
 
 ## 11. 当前 PostgreSQL 风险和优化点
 

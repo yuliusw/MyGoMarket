@@ -11,6 +11,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gin-contrib/pprof"
+
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/yuliusw/RPA-market/common/audit"
@@ -54,6 +56,7 @@ func main() {
 	RegisterService()
 	// 3. 初始化 Gin 引擎
 	r := gin.Default()
+	pprof.Register(r)
 	r.Use(middleware.GinLogger())
 	r.Use(metrics.HTTPMiddleware())
 	r.Use(middleware.ConfiguredRequestPoolFastFail())

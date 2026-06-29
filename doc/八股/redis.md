@@ -1,6 +1,6 @@
 # Redis 八股与项目实战
 
-本文只整理当前项目真实对上代码的 Redis 用法，覆盖连接池、Session、限流、排行榜、发布锁、分布式锁工具、故障降级和面试拷打点。
+本文只整理当前项目真实对上代码的 Redis 用法，覆盖连接池、Session、限流、排行榜、Cache-Aside、发布锁、分布式锁、缓存一致性、故障降级和面试拷打点。讲法按“基础概念 -> 项目落地 -> 顶层追问”组织，方便被继续细问。
 
 ## 1. 项目里 Redis 用在哪里
 
@@ -9,9 +9,11 @@
 | Redis 初始化与连接池 | `common/database/redis.go` | `redis.NewClient`、`Ping` | 是 |
 | JWT + Session 顶号 | `services/iam/repository/user_repository.go`、`common/middleware/auth.go` | `SET`、`GET`、`DEL` | 是 |
 | Market 下载排行榜 | `services/market/app/market.go` | `Pipeline`、`ZINCRBY`、`EXPIRE`、`ZREVRANGE WITHSCORES` | 是 |
+| Market 应用详情缓存 | `services/market/app/market.go` | `GET`、`SET`、`DEL`、空值标记、TTL jitter、`singleflight` | 是 |
+| Market 热榜响应缓存 | `services/market/app/market.go` | JSON value、短 TTL、下载后定向失效 | 是 |
 | Market 发布幂等并发锁 | `services/market/app/market.go` | `SETNX`、`DEL` | 是 |
 | Redis 滑动窗口限流 | `common/middleware/redis_sliding_window.go` | Lua、`ZREMRANGEBYSCORE`、`ZCARD`、`ZADD`、`PEXPIRE` | 配置支持，默认未启用 |
-| Redis 分布式锁工具 | `common/utils/lock/redis_lock.go` | `SETNX`、Lua compare-and-delete、轮询自旋 | 工具类，当前主链路未直接调用 |
+| 权益发放互斥锁 | `services/order/repository/order_repository.go`、`common/utils/lock/redis_lock.go` | `SETNX`、UUID value、Lua compare-and-delete | 是 |
 | go-redis 连接池配置 | `config/config.yaml`、`common/config/config.go` | pool size、timeout | 是 |
 
 默认配置里 `features.rate_limit.backend` 是 `memory`，所以公开接口限流默认走内存令牌桶；如果改成 `redis`，会走 Redis Lua 滑动窗口。
@@ -403,7 +405,85 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_apps_developer_idempotency_key
 - 更严谨做法是 value 用 UUID，删除时用 Lua compare-and-delete。
 - 项目已经有 `common/utils/lock/redis_lock.go` 提供 UUID value + Lua 解锁工具，但 Market 发布当前没有用该工具。
 
-## 7. RedisLock 工具类
+## 7. Market 应用详情缓存：Cache-Aside + singleflight
+
+位置：`services/market/app/market.go`
+
+基础概念：
+
+- Cache-Aside 是“业务先查缓存，缓存 miss 再查 DB，查到后回填缓存”。
+- 写路径通常先写 DB，再删除缓存，而不是直接更新缓存。
+- 删除缓存失败会导致短期脏读，所以要靠短 TTL、重试或消息失效降低窗口。
+
+项目实现：
+
+```go
+func appDetailCacheKey(appID uuid.UUID) string {
+    return fmt.Sprintf("market:app:detail:%s", appID.String())
+}
+```
+
+读路径：
+
+1. `GET /api/v1/market/apps/:app_id` 先读 Redis。
+2. 命中正常 JSON 时直接反序列化返回。
+3. 命中空值标记 `__nil__` 时返回 not found，避免不存在 ID 反复打 DB。
+4. miss 时通过 `appDetailSF.Do(key, func(){...})` 合并同一 app_id 的并发回源。
+5. 回源查到 DB 后写 Redis，TTL 为 `5m + rand(0~60s)`。
+6. 回源查不到实体时写 30 秒空值标记。
+
+写路径：
+
+- 发布、更新、下架、删除后调用 `invalidateAppDetailCache` 删除 `market:app:detail:{app_id}`。
+- 这是典型“DB 是事实源，Redis 是可丢可重建缓存”的边界。
+
+为什么不是先删缓存再写 DB：
+
+- 先删缓存后写 DB，写 DB 期间如果有读请求 miss 回源，会把旧 DB 值重新写入缓存。
+- 先写 DB 再删缓存仍可能有短窗口，但窗口通常更小，且项目有短 TTL 兜底。
+
+顶层追问：缓存一致性怎么保证？
+
+- 项目没有追求 Redis 与 DB 强一致，采用最终一致。
+- 强一致事实在 PostgreSQL，缓存只优化读延迟。
+- 失效策略是写后删缓存，辅以 TTL 兜底。
+- 高并发热点 miss 由 `singleflight` 降低 DB 回源压力。
+- 不存在 ID 用短 TTL 空值缓存防穿透，而不是永久缓存，避免后续真实创建后长期误判。
+
+雷点：
+
+- `singleflight` 只在单进程内合并请求，多实例部署时每个实例仍可能各自回源一次。
+- Redis 写失败不影响主链路，缓存层会退化为 DB 直查。
+- 当前没有 Bloom Filter。对于 app_id 是 UUID 且已经有参数校验的场景，空值缓存比 Bloom Filter 更轻。
+
+## 8. Market 热榜响应缓存：短 TTL 聚合缓存
+
+位置：`services/market/app/market.go`
+
+key：
+
+```go
+market:rank:cache:{type}:{limit}
+```
+
+实现：
+
+- 热榜底层事实来自 Redis ZSET：daily、weekly、total。
+- 热榜接口还会把响应体 JSON 缓存 10 秒，减少每次都 `ZREVRANGE` 后批量查 DB 的开销。
+- 下载成功后会删除默认 `limit=20` 的 daily/weekly/total 响应缓存。
+
+为什么 TTL 只有 10 秒：
+
+- 热榜允许秒级延迟，不要求每次下载后所有 limit 的缓存都立刻精确。
+- 短 TTL 可以降低缓存失效遗漏带来的不一致窗口。
+- 如果所有 limit 都主动枚举删除，复杂度和 Redis 操作会增加。
+
+雷点：
+
+- 当前下载后只定向删除 `limit=20` 的缓存，其他 limit 依赖 10 秒 TTL 自然过期。
+- 热榜 ZSET 和响应缓存是两层 Redis 数据，面试时要分清：ZSET 是排行榜状态，JSON 是接口聚合响应缓存。
+
+## 9. RedisLock 工具类与权益发放互斥
 
 位置：`common/utils/lock/redis_lock.go`
 
@@ -433,6 +513,13 @@ for time.Now().Before(deadline) {
 }
 ```
 
+项目当前使用位置：
+
+- `services/order/repository/order_repository.go` 的权益 outbox worker。
+- 处理单个 order 的权益发放前创建锁：`entitlement:order:{order_id}`，TTL 为 30 秒。
+- RedisLock 用于避免多 worker 或多实例并发处理同一订单权益。
+- 数据库侧还通过 `SELECT ... FOR UPDATE SKIP LOCKED` 抢占 outbox 批次，并通过 subscriptions 分区上的 `(user_id, app_id, source_order_id)` 唯一索引兜底防重复发放。
+
 可讲亮点：
 
 - value 用 UUID，避免误删别人的锁。
@@ -444,9 +531,10 @@ for time.Now().Before(deadline) {
 - 没有锁续期，看门狗能力缺失。
 - 自旋固定 100ms，缺少随机抖动，高并发可能形成惊群。
 - 单 Redis 实例分布式锁不是强一致锁。Redis 主从故障切换场景可能丢锁。
-- 当前工具类存在，但主链路未看到直接调用，讲项目时不要说所有锁都用了这个工具。
+- 权益发放不能只靠 RedisLock，项目最终防线是 DB 行锁、outbox 状态机和订阅唯一索引。
+- Market 发布锁当前仍是简化版 `SetNX + Del`，不要误讲成也用了 RedisLock。
 
-## 8. Redis 和 PostgreSQL 的边界
+## 10. Redis 和 PostgreSQL 的边界
 
 本项目边界划分：
 
@@ -458,6 +546,8 @@ for time.Now().Before(deadline) {
 - Session 存 Redis，但用户账号在 PostgreSQL。
 - 热榜实时分数在 Redis，但下载指标持久化在 PostgreSQL。
 - 上传并发锁在 Redis，但应用发布幂等唯一性最终靠 PostgreSQL 唯一索引。
+- 应用详情和热榜响应在 Redis，但应用实体、状态和下载指标事实源在 PostgreSQL。
+- 权益发放互斥用 RedisLock，但 outbox 状态、订单状态、订阅唯一性在 PostgreSQL 兜底。
 - 限流可以 Redis 全局化，也可以内存单实例化。
 
 面试总结：
@@ -466,9 +556,9 @@ for time.Now().Before(deadline) {
 - Redis 很适合做缓存、计数器、排行榜、锁、限流、Session。
 - 真正一致性要靠 DB 事务/唯一约束/行锁兜底。
 
-## 9. Redis 常见拷打题
+## 11. Redis 常见拷打题
 
-### 9.1 缓存穿透、击穿、雪崩
+### 11.1 缓存穿透、击穿、雪崩
 
 项目已有应用详情 Cache-Aside 缓存，仍要能把通用缓存问题和代码实现对应起来。
 
@@ -486,7 +576,7 @@ for time.Now().Before(deadline) {
 - Redis 限流失败时项目选择降级放行。
 - Session 不适合空值缓存，认证失败直接 401。
 
-### 9.2 Redis 分布式锁正确性
+### 11.2 Redis 分布式锁正确性
 
 必答点：
 
@@ -501,7 +591,7 @@ for time.Now().Before(deadline) {
 - `RedisLock` 工具类是比较标准的 UUID + Lua 解锁。
 - Market 发布锁当前是简化版 `SetNX + Del`，存在误删风险，但 DB 唯一索引兜底。
 
-### 9.3 Pipeline、事务、Lua 区别
+### 11.3 Pipeline、事务、Lua 区别
 
 - Pipeline：合并网络往返，不保证原子性。
 - MULTI/EXEC：事务队列，执行时连续执行，但不能基于中间结果做复杂判断。
@@ -512,14 +602,14 @@ for time.Now().Before(deadline) {
 - 排行榜用 Pipeline，因为允许短期不一致。
 - 滑动窗口限流用 Lua，因为必须原子判断 count 并写入。
 
-### 9.4 Redis ZSET 排行榜为什么合适
+### 11.4 Redis ZSET 排行榜为什么合适
 
 - `ZINCRBY` 更新分数。
 - `ZREVRANGE WITHSCORES` 获取 TopN。
 - 可按时间维度拆 key，方便 TTL。
 - 缺点是大 key、深分页和内存占用。
 
-### 9.5 Session 放 Redis 的优缺点
+### 11.5 Session 放 Redis 的优缺点
 
 优点：
 
@@ -533,7 +623,26 @@ for time.Now().Before(deadline) {
 - 每次私有请求多一次 Redis 查询。
 - Cookie、跨域、安全属性要处理好。
 
-## 10. 当前 Redis 风险和可优化点
+### 11.6 缓存一致性怎么答
+
+基础答案：
+
+- 缓存一致性通常不是靠 Redis 和 DB 两阶段提交解决，而是明确事实源和可接受的不一致窗口。
+- 常见策略有更新 DB 后删缓存、延迟双删、订阅 binlog、消息广播失效、短 TTL 兜底。
+
+项目答案：
+
+- Market 应用详情：写 DB 后主动 `DEL market:app:detail:{app_id}`，TTL 兜底。
+- Market 热榜响应缓存：下载后删除默认 Top20 缓存，其他 limit 依赖 10 秒 TTL。
+- Casbin 权限缓存：不是 Redis，而是本地 LRU；角色权限变化通过 RocketMQ 广播 `invalidate_domain` 或 `purge_all`，TTL 兜底。
+- Redis ZSET 热榜：作为实时视图，允许与 PostgreSQL `app_download_metrics` 有短期偏差，DB 是持久事实源。
+
+被追问“为什么不用延迟双删”：
+
+- 当前项目写后删除 + 短 TTL 已能覆盖应用详情这种低频写、高频读场景。
+- 延迟双删会引入额外 goroutine/队列和时序复杂度，只有在脏读窗口不可接受且有明确压测证据时再加。
+
+## 12. 当前 Redis 风险和可优化点
 
 - Market 发布锁建议改用 `RedisLock` 工具类的 UUID value + Lua 解锁。
 - Redis key 建议统一加系统和环境前缀，例如 `rpa:{env}:user:session:{userID}`。

@@ -12,7 +12,7 @@
 | RWMutex | `common/middleware/rate_limit.go`、`common/middleware/broker.go`、`common/queue/kafka/kafka.go`、`common/queue/rocketmq/rocketmq.go` | 读多写少场景，降低读路径锁竞争 |
 | sync.Once | `common/utils/pool/gopool.go`、`common/queue/kafka/kafka.go`、`common/queue/rocketmq/rocketmq.go`、生成的 pb.go | 单例初始化，保证只初始化一次 |
 | atomic.Value | `common/utils/lock/optimistic.go` | 无锁读、CAS 乐观更新、版本快照 |
-| goroutine | `main.go`、`common/audit/audit.go`、`common/audit/export.go`、`common/middleware/rate_limit.go` | 并发启动 HTTP/gRPC、后台审计、补偿 worker、CSV pipe 写入、限流清理 |
+| goroutine | `main.go`、`common/audit/audit.go`、`common/audit/export.go`、`common/middleware/rate_limit.go`、`services/order/repository/order_repository.go` | 并发启动 HTTP/gRPC、后台审计、补偿 worker、CSV pipe 写入、MinIO 导出上传、outbox worker、限流清理 |
 | event | `common/audit/audit.go`、`services/market/app/market.go`、`services/iam/app/role_auth.go` | 审计事件、角色权限变更事件、Market 关键操作事件 |
 | context | 几乎所有 repository、HTTP handler、gRPC service、Redis/MinIO/MQ 调用 | 取消、超时、请求作用域、数据库/Redis/MinIO/MQ 调用链传递 |
 | defer | 各种 `cancel()`、`Close()`、`Unlock()`、临时文件删除、panic recover | 资源释放、锁释放、上下文取消、清理临时文件 |
@@ -897,35 +897,82 @@ gRPC server 在 goroutine 中 `Serve(listener)`。
 位置：`common/audit/export.go:113`
 
 ```go
-pr, pw := io.Pipe()
+httpReader, httpWriter := io.Pipe()
+minioReader, minioWriter := io.Pipe()
+writer := io.MultiWriter(httpWriter, minioWriter)
 go func() {
-    err := ExportCSV(c.Request.Context(), db, pw, filter)
-    _ = pw.CloseWithError(err)
+    err := ExportCSV(c.Request.Context(), db, writer, filter)
+    _ = httpWriter.CloseWithError(err)
+    _ = minioWriter.CloseWithError(err)
 }()
-c.DataFromReader(http.StatusOK, -1, "text/csv; charset=utf-8", pr, headers)
+c.DataFromReader(http.StatusOK, -1, "text/csv; charset=utf-8", httpReader, headers)
 ```
+
+当前项目实际有两条 pipe：
+
+- `httpReader/httpWriter`：Gin 从 reader 读，导出 goroutine 往 writer 写，形成 HTTP 流式响应。
+- `minioReader/minioWriter`：如果 MinIO 可用，导出内容通过 `io.MultiWriter` 同时写入 MinIO 上传 goroutine。
 
 调用链：
 
 1. HTTP 请求进入 CSV 导出 handler。
-2. 创建 `io.Pipe()`。
+2. 创建 HTTP pipe 和 MinIO pipe。
 3. goroutine 往 pipe writer 写 CSV。
 4. Gin 从 pipe reader 流式返回给客户端。
-5. 写入结束或出错时 `CloseWithError(err)`。
+5. MinIO goroutine 从另一条 pipe reader 读取并上传对象。
+6. 写入结束或出错时 `CloseWithError(err)`。
 
 可讲亮点：
 
 - 不需要把整个 CSV 全部加载到内存。
 - 支持边查边写边返回。
 - 适合大文件导出。
+- 结合 keyset cursor，每批只查 500 条，控制应用内存。
+- 同一份 CSV 可同时给 HTTP 客户端和 MinIO 归档。
 
 雷点：
 
 - 如果客户端断开，`c.Request.Context()` 取消，DB 查询应停止。
 - Pipe 读写双方必须正确关闭，否则可能 goroutine 泄露。
 - `CloseWithError` 能把导出错误传递给 reader。
+- `io.MultiWriter` 是同步写，任一 writer 慢都会拖慢导出；MinIO 上传慢可能影响 HTTP 响应速度。
+- 当前是应用层 keyset cursor，不是 PostgreSQL `DECLARE CURSOR`。
 
-### 9.7 限流清理 goroutine
+面试追问：为什么不会 OOM？
+
+- DB 查询每批 500 条，不会一次性加载全量数据。
+- CSV writer 写入 pipe，pipe 没有无限缓存；下游读得慢时上游会阻塞，形成天然背压。
+- HTTP 响应通过 reader 流式发送，不需要先生成完整文件。
+
+面试追问：背压的代价是什么？
+
+- 客户端慢或 MinIO 慢会让导出 goroutine 阻塞，单次导出占用连接和 goroutine 时间变长。
+- 生产场景如果导出非常大，更适合做异步导出任务表，前端轮询状态，完成后下载 MinIO 文件。
+
+### 9.7 Outbox worker goroutine
+
+位置：`services/order/repository/order_repository.go`
+
+并发控制层次：
+
+1. DB 事务中查询 outbox：`FOR UPDATE SKIP LOCKED`。
+2. 抢到的事件先更新为 `processing`。
+3. 处理单个 order 前加 RedisLock：`entitlement:order:{order_id}`。
+4. 发放订阅仍在 DB transaction 内锁订单行。
+5. subscriptions 分区上的 `(user_id, app_id, source_order_id)` 唯一索引做最终防重。
+
+为什么需要多层：
+
+- `SKIP LOCKED` 解决多 worker 扫同一 outbox 表时的任务抢占。
+- RedisLock 解决同一 order 的跨进程互斥，尤其是异常重试或重复事件场景。
+- 唯一索引解决最终幂等，防止锁失效或重复处理导致重复发放权益。
+
+面试追问：`SKIP LOCKED` 有什么风险？
+
+- 它会跳过被其他事务锁住的行，吞吐更好，但不是严格公平队列。
+- 如果某些行长期 processing 且没有恢复机制，会被正常扫描绕开，所以需要状态超时重置或告警。
+
+### 9.8 限流清理 goroutine
 
 位置：`common/middleware/rate_limit.go:55`
 
